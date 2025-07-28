@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.base.schema.json",
+  "name": "aurora",
+  "service": "workspace",
+  "dockerComposeFile": "docker-compose.yml",
+  "workspaceFolder": "/home/vscode/workspace",
+  "remoteUser": "vscode",
+  "remoteEnv": {
+    "AURORA_DATABASE_URL": "postgres://${containerEnv:PGHOST}:${containerEnv:PGPORT}/${containerEnv:PGDATABASE}?sslmode=disable"
+  },
+  "containerEnv": {
+    "PGDATABASE": "aurora",
+    "PGHOST": "127.0.0.1",
+    "PGPORT": "5432"
+  },
+  "forwardPorts": [
+    5432
+  ]
+}
