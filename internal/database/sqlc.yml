@@ -1,0 +1,47 @@
+version: "2"
+sql:
+  - schema: "ent/query"
+    queries: "ent/query"
+    engine: "postgresql"
+    gen:
+      go:
+        out: "ent"
+        package: "ent"
+        sql_package: "pgx/v5"
+        emit_db_tags: true
+        emit_interface: true
+        emit_json_tags: true
+        emit_empty_slices: true
+        omit_unused_structs: true
+        emit_all_enum_values: true
+        emit_enum_valid_method: true
+        emit_prepared_queries: true
+        emit_result_struct_pointers: true
+        emit_params_struct_pointers: true
+        emit_pointers_for_null_types: true
+        query_parameter_limit: 0
+        output_files_suffix: _gen
+        output_db_file_name: db_gen.go
+        output_models_file_name: models_gen.go
+        output_querier_file_name: querier_gen.go
+        output_batch_file_name: querier_batch_gen.go
+        output_copyfrom_file_name: querier_copy_from_gen.go
+        overrides:
+          - column: "aurora_schema_revisions.id"
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
+          - column: "aurora_schema_revisions.executed_at"
+            go_type:
+              import: "time"
+              type: "Time"
+          - column: "aurora_schema_revisions.execution_time"
+            go_type:
+              import: "time"
+              type: "Duration"
+    rules:
+      - sqlc/db-prepare
+overrides:
+  go:
+    rename:
+      aurora_schema_revision: Revision
