@@ -8,14 +8,12 @@ package ent
 import (
 	"context"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 const createTableRevisions = `-- name: CreateTableRevisions :exec
 CREATE TABLE IF NOT EXISTS aurora_schema_revisions (
     -- primary key column
-    id UUID PRIMARY KEY,
+    id TEXT PRIMARY KEY,
     -- aurora_schema_revisions name column
     description TEXT NOT NULL,
     -- execution timestamp column
@@ -46,7 +44,7 @@ INSERT INTO aurora_schema_revisions (
 `
 
 type ExecInsertRevisionParams struct {
-	ID            uuid.UUID     `db:"id" json:"id"`
+	ID            string        `db:"id" json:"id"`
 	Description   string        `db:"description" json:"description"`
 	ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
 	ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
@@ -76,7 +74,7 @@ WHERE
 `
 
 type GetRevisionParams struct {
-	ID uuid.UUID `db:"id" json:"id"`
+	ID string `db:"id" json:"id"`
 }
 
 // Retrieves a row from the table 'aurora_schema_revisions' with option ':one'
@@ -108,7 +106,7 @@ RETURNING id, description, executed_at, execution_time
 `
 
 type InsertRevisionParams struct {
-	ID            uuid.UUID     `db:"id" json:"id"`
+	ID            string        `db:"id" json:"id"`
 	Description   string        `db:"description" json:"description"`
 	ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
 	ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`

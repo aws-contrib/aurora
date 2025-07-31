@@ -8,7 +8,7 @@ SET search_path TO public;
 -- name: CreateTableRevisions :exec
 CREATE TABLE IF NOT EXISTS aurora_schema_revisions (
     -- primary key column
-    id UUID PRIMARY KEY,
+    id TEXT PRIMARY KEY,
     -- aurora_schema_revisions name column
     description TEXT NOT NULL,
     -- execution timestamp column

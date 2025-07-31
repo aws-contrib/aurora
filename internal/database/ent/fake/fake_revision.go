@@ -10,7 +10,7 @@ import (
 // NewFakeRevision returns a new fake revision.
 func NewFakeRevision() *ent.Revision {
 	return &ent.Revision{
-		ID:            uuid.New(),
+		ID:            uuid.New().String(),
 		Description:   "schema",
 		ExecutedAt:    time.Now().Truncate(time.Millisecond),
 		ExecutionTime: 500 * time.Millisecond,

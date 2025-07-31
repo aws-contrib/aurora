@@ -11,6 +11,8 @@ Package ent provides an extension to the ent package for database operations.
 ## Index
 
 - [func WithURL\(\) string](<#WithURL>)
+- [type Applier](<#Applier>)
+- [type ApplyRevisionParams](<#ApplyRevisionParams>)
 - [type Batch](<#Batch>)
 - [type DBTX](<#DBTX>)
 - [type ExecInsertRevisionParams](<#ExecInsertRevisionParams>)
@@ -24,6 +26,7 @@ Package ent provides an extension to the ent package for database operations.
 - [type GatewayOptionFunc](<#GatewayOptionFunc>)
   - [func \(fn GatewayOptionFunc\) Apply\(cfg \*pgxpool.Config\) error](<#GatewayOptionFunc.Apply>)
 - [type GetRevisionParams](<#GetRevisionParams>)
+  - [func \(x \*GetRevisionParams\) SetRevision\(entity \*Revision\)](<#GetRevisionParams.SetRevision>)
 - [type GetRevisionParamsConverter](<#GetRevisionParamsConverter>)
 - [type GetRevisionParamsConverterImpl](<#GetRevisionParamsConverterImpl>)
   - [func \(c \*GetRevisionParamsConverterImpl\) SetFromRevision\(target \*GetRevisionParams, source \*Revision\)](<#GetRevisionParamsConverterImpl.SetFromRevision>)
@@ -40,6 +43,7 @@ Package ent provides an extension to the ent package for database operations.
   - [func \(fn QuerierFunc\) Run\(querier Querier\) error](<#QuerierFunc.Run>)
 - [type Queries](<#Queries>)
   - [func New\(db DBTX\) \*Queries](<#New>)
+  - [func \(x \*Queries\) ApplyRevision\(ctx context.Context, params \*ApplyRevisionParams\) error](<#Queries.ApplyRevision>)
   - [func \(x \*Queries\) Close\(\)](<#Queries.Close>)
   - [func \(q \*Queries\) CreateTableRevisions\(ctx context.Context\) error](<#Queries.CreateTableRevisions>)
   - [func \(q \*Queries\) ExecInsertRevision\(ctx context.Context, arg \*ExecInsertRevisionParams\) error](<#Queries.ExecInsertRevision>)
@@ -50,10 +54,11 @@ Package ent provides an extension to the ent package for database operations.
   - [func \(x \*Queries\) RunInTx\(ctx context.Context, action QuerierAction\) \(err error\)](<#Queries.RunInTx>)
   - [func \(q \*Queries\) WithTx\(tx pgx.Tx\) \*Queries](<#Queries.WithTx>)
 - [type Revision](<#Revision>)
+  - [func \(x \*Revision\) GetName\(\) string](<#Revision.GetName>)
 
 
 <a name="WithURL"></a>
-## func [WithURL](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L34>)
+## func [WithURL](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L36>)
 
 ```go
 func WithURL() string
@@ -61,8 +66,33 @@ func WithURL() string
 
 WithURL returns the database URL.
 
+<a name="Applier"></a>
+## type [Applier](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L14-L16>)
+
+
+
+```go
+type Applier interface {
+    ApplyRevision(ctx context.Context, params *ApplyRevisionParams) error
+}
+```
+
+<a name="ApplyRevisionParams"></a>
+## type [ApplyRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L19-L24>)
+
+ApplyRevisionParams represents the parameters for executing a revision.
+
+```go
+type ApplyRevisionParams struct {
+    // Revision contains the parameters for executing a revision.
+    Revision *Revision
+    // FileSystem is the filesystem where the revision files are located.
+    FileSystem fs.FS
+}
+```
+
 <a name="Batch"></a>
-## type [Batch](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_ext.go#L31-L34>)
+## type [Batch](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_ext.go#L35-L38>)
 
 Batch represents a batch of results.
 
@@ -87,13 +117,13 @@ type DBTX interface {
 ```
 
 <a name="ExecInsertRevisionParams"></a>
-## type [ExecInsertRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L48-L53>)
+## type [ExecInsertRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L46-L51>)
 
 
 
 ```go
 type ExecInsertRevisionParams struct {
-    ID            uuid.UUID     `db:"id" json:"id"`
+    ID            string        `db:"id" json:"id"`
     Description   string        `db:"description" json:"description"`
     ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
     ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
@@ -101,7 +131,7 @@ type ExecInsertRevisionParams struct {
 ```
 
 <a name="ExecInsertRevisionParams.SetRevision"></a>
-### func \(\*ExecInsertRevisionParams\) [SetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv_ext.go#L12>)
+### func \(\*ExecInsertRevisionParams\) [SetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv_ext.go#L18>)
 
 ```go
 func (x *ExecInsertRevisionParams) SetRevision(entity *Revision)
@@ -140,7 +170,7 @@ func (c *ExecInsertRevisionParamsConverterImpl) SetFromRevision(target *ExecInse
 
 
 <a name="Gateway"></a>
-## type [Gateway](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_ext.go#L14-L23>)
+## type [Gateway](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_ext.go#L16-L27>)
 
 Gateway represents the database gateway.
 
@@ -148,6 +178,8 @@ Gateway represents the database gateway.
 type Gateway interface {
     // inherit from Querier
     Querier
+    // inherit from Applier
+    Applier
     // RunInTx runs the given function in a transaction.
     RunInTx(context.Context, QuerierAction) error
     // Ping verifies a connection to the database is still alive.
@@ -158,7 +190,7 @@ type Gateway interface {
 ```
 
 <a name="Open"></a>
-### func [Open](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L43>)
+### func [Open](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L45>)
 
 ```go
 func Open(ctx context.Context, uri string, options ...GatewayOption) (_ Gateway, err error)
@@ -167,7 +199,7 @@ func Open(ctx context.Context, uri string, options ...GatewayOption) (_ Gateway,
 Open opens a database connection to the given URL.
 
 <a name="GatewayOption"></a>
-## type [GatewayOption](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L18-L21>)
+## type [GatewayOption](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L20-L23>)
 
 GatewayOption represents a gateway option.
 
@@ -179,7 +211,7 @@ type GatewayOption interface {
 ```
 
 <a name="GatewayOptionFunc"></a>
-## type [GatewayOptionFunc](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L26>)
+## type [GatewayOptionFunc](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L28>)
 
 GatewayOptionFunc is a function that applies a GatewayOption.
 
@@ -188,7 +220,7 @@ type GatewayOptionFunc func(*pgxpool.Config) error
 ```
 
 <a name="GatewayOptionFunc.Apply"></a>
-### func \(GatewayOptionFunc\) [Apply](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L29>)
+### func \(GatewayOptionFunc\) [Apply](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L31>)
 
 ```go
 func (fn GatewayOptionFunc) Apply(cfg *pgxpool.Config) error
@@ -197,15 +229,24 @@ func (fn GatewayOptionFunc) Apply(cfg *pgxpool.Config) error
 Apply applies the GatewayOptionFunc to the Gateway.
 
 <a name="GetRevisionParams"></a>
-## type [GetRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L78-L80>)
+## type [GetRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L76-L78>)
 
 
 
 ```go
 type GetRevisionParams struct {
-    ID uuid.UUID `db:"id" json:"id"`
+    ID string `db:"id" json:"id"`
 }
 ```
+
+<a name="GetRevisionParams.SetRevision"></a>
+### func \(\*GetRevisionParams\) [SetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv_ext.go#L6>)
+
+```go
+func (x *GetRevisionParams) SetRevision(entity *Revision)
+```
+
+SetRevision sets the params from the entity.
 
 <a name="GetRevisionParamsConverter"></a>
 ## type [GetRevisionParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv.go#L7-L10>)
@@ -238,13 +279,13 @@ func (c *GetRevisionParamsConverterImpl) SetFromRevision(target *GetRevisionPara
 
 
 <a name="InsertRevisionParams"></a>
-## type [InsertRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L110-L115>)
+## type [InsertRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L108-L113>)
 
 
 
 ```go
 type InsertRevisionParams struct {
-    ID            uuid.UUID     `db:"id" json:"id"`
+    ID            string        `db:"id" json:"id"`
     Description   string        `db:"description" json:"description"`
     ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
     ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
@@ -252,7 +293,7 @@ type InsertRevisionParams struct {
 ```
 
 <a name="InsertRevisionParams.SetRevision"></a>
-### func \(\*InsertRevisionParams\) [SetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv_ext.go#L6>)
+### func \(\*InsertRevisionParams\) [SetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv_ext.go#L12>)
 
 ```go
 func (x *InsertRevisionParams) SetRevision(entity *Revision)
@@ -291,7 +332,7 @@ func (c *InsertRevisionParamsConverterImpl) SetFromRevision(target *InsertRevisi
 
 
 <a name="ListRevisionsParams"></a>
-## type [ListRevisionsParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L151-L154>)
+## type [ListRevisionsParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L149-L152>)
 
 
 
@@ -323,7 +364,7 @@ type Querier interface {
 ```
 
 <a name="QuerierAction"></a>
-## type [QuerierAction](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_ext.go#L37-L40>)
+## type [QuerierAction](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_ext.go#L41-L44>)
 
 QuerierAction represents a query action.
 
@@ -335,7 +376,7 @@ type QuerierAction interface {
 ```
 
 <a name="NewQueryPipeline"></a>
-### func [NewQueryPipeline](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_ext.go#L53>)
+### func [NewQueryPipeline](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_ext.go#L57>)
 
 ```go
 func NewQueryPipeline(collection ...QuerierFunc) QuerierAction
@@ -344,7 +385,7 @@ func NewQueryPipeline(collection ...QuerierFunc) QuerierAction
 NewQueryPipeline returns a new QuerierFunc that runs the given steps.
 
 <a name="QuerierFunc"></a>
-## type [QuerierFunc](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_ext.go#L45>)
+## type [QuerierFunc](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_ext.go#L49>)
 
 QuerierFunc is a function that runs a query.
 
@@ -353,7 +394,7 @@ type QuerierFunc func(Querier) error
 ```
 
 <a name="QuerierFunc.Run"></a>
-### func \(QuerierFunc\) [Run](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_ext.go#L48>)
+### func \(QuerierFunc\) [Run](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_ext.go#L52>)
 
 ```go
 func (fn QuerierFunc) Run(querier Querier) error
@@ -381,8 +422,17 @@ func New(db DBTX) *Queries
 
 
 
+<a name="Queries.ApplyRevision"></a>
+### func \(\*Queries\) [ApplyRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L27>)
+
+```go
+func (x *Queries) ApplyRevision(ctx context.Context, params *ApplyRevisionParams) error
+```
+
+ApplyRevision executes a revision.
+
 <a name="Queries.Close"></a>
-### func \(\*Queries\) [Close](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L99>)
+### func \(\*Queries\) [Close](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L101>)
 
 ```go
 func (x *Queries) Close()
@@ -391,7 +441,7 @@ func (x *Queries) Close()
 Close closes the connection to the database.
 
 <a name="Queries.CreateTableRevisions"></a>
-### func \(\*Queries\) [CreateTableRevisions](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L29>)
+### func \(\*Queries\) [CreateTableRevisions](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L27>)
 
 ```go
 func (q *Queries) CreateTableRevisions(ctx context.Context) error
@@ -400,7 +450,7 @@ func (q *Queries) CreateTableRevisions(ctx context.Context) error
 Creates a table named 'aurora\_schema\_revisions' with the following columns:
 
 <a name="Queries.ExecInsertRevision"></a>
-### func \(\*Queries\) [ExecInsertRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L56>)
+### func \(\*Queries\) [ExecInsertRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L54>)
 
 ```go
 func (q *Queries) ExecInsertRevision(ctx context.Context, arg *ExecInsertRevisionParams) error
@@ -409,7 +459,7 @@ func (q *Queries) ExecInsertRevision(ctx context.Context, arg *ExecInsertRevisio
 Inserts a row into the table 'aurora\_schema\_revisions' with option ':exec'
 
 <a name="Queries.GetRevision"></a>
-### func \(\*Queries\) [GetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L83>)
+### func \(\*Queries\) [GetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L81>)
 
 ```go
 func (q *Queries) GetRevision(ctx context.Context, arg *GetRevisionParams) (*Revision, error)
@@ -418,7 +468,7 @@ func (q *Queries) GetRevision(ctx context.Context, arg *GetRevisionParams) (*Rev
 Retrieves a row from the table 'aurora\_schema\_revisions' with option ':one'
 
 <a name="Queries.InsertRevision"></a>
-### func \(\*Queries\) [InsertRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L118>)
+### func \(\*Queries\) [InsertRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L116>)
 
 ```go
 func (q *Queries) InsertRevision(ctx context.Context, arg *InsertRevisionParams) (*Revision, error)
@@ -427,7 +477,7 @@ func (q *Queries) InsertRevision(ctx context.Context, arg *InsertRevisionParams)
 Inserts a row into the table 'aurora\_schema\_revisions' with option ':one'
 
 <a name="Queries.ListRevisions"></a>
-### func \(\*Queries\) [ListRevisions](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L157>)
+### func \(\*Queries\) [ListRevisions](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L155>)
 
 ```go
 func (q *Queries) ListRevisions(ctx context.Context, arg *ListRevisionsParams) ([]*Revision, error)
@@ -436,7 +486,7 @@ func (q *Queries) ListRevisions(ctx context.Context, arg *ListRevisionsParams) (
 Retrieves a list of rows from the table 'aurora\_schema\_revisions' with option ':many'
 
 <a name="Queries.Ping"></a>
-### func \(\*Queries\) [Ping](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L89>)
+### func \(\*Queries\) [Ping](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L91>)
 
 ```go
 func (x *Queries) Ping(ctx context.Context) error
@@ -445,7 +495,7 @@ func (x *Queries) Ping(ctx context.Context) error
 Ping verifies a connection to the database is still alive,
 
 <a name="Queries.RunInTx"></a>
-### func \(\*Queries\) [RunInTx](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L67>)
+### func \(\*Queries\) [RunInTx](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L69>)
 
 ```go
 func (x *Queries) RunInTx(ctx context.Context, action QuerierAction) (err error)
@@ -463,17 +513,26 @@ func (q *Queries) WithTx(tx pgx.Tx) *Queries
 
 
 <a name="Revision"></a>
-## type [Revision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_gen.go#L13-L18>)
+## type [Revision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_gen.go#L11-L16>)
 
 
 
 ```go
 type Revision struct {
-    ID            uuid.UUID     `db:"id" json:"id"`
+    ID            string        `db:"id" json:"id"`
     Description   string        `db:"description" json:"description"`
     ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
     ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
 }
 ```
+
+<a name="Revision.GetName"></a>
+### func \(\*Revision\) [GetName](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_ext.go#L4>)
+
+```go
+func (x *Revision) GetName() string
+```
+
+GetName returns the name of the revision file based on its ID and description.
 
 Generated by [gomarkdoc](<https://github.com/princjef/gomarkdoc>)

@@ -1,3 +1,5 @@
+//go:build !goverter
+
 // Package ent provides an extension to the ent package for database operations.
 package ent
 

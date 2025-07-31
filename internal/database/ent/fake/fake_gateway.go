@@ -9,6 +9,18 @@ import (
 )
 
 type FakeGateway struct {
+	ApplyRevisionStub        func(context.Context, *ent.ApplyRevisionParams) error
+	applyRevisionMutex       sync.RWMutex
+	applyRevisionArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.ApplyRevisionParams
+	}
+	applyRevisionReturns struct {
+		result1 error
+	}
+	applyRevisionReturnsOnCall map[int]struct {
+		result1 error
+	}
 	CloseStub        func()
 	closeMutex       sync.RWMutex
 	closeArgsForCall []struct {
@@ -103,6 +115,68 @@ type FakeGateway struct {
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
+}
+
+func (fake *FakeGateway) ApplyRevision(arg1 context.Context, arg2 *ent.ApplyRevisionParams) error {
+	fake.applyRevisionMutex.Lock()
+	ret, specificReturn := fake.applyRevisionReturnsOnCall[len(fake.applyRevisionArgsForCall)]
+	fake.applyRevisionArgsForCall = append(fake.applyRevisionArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.ApplyRevisionParams
+	}{arg1, arg2})
+	stub := fake.ApplyRevisionStub
+	fakeReturns := fake.applyRevisionReturns
+	fake.recordInvocation("ApplyRevision", []interface{}{arg1, arg2})
+	fake.applyRevisionMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeGateway) ApplyRevisionCallCount() int {
+	fake.applyRevisionMutex.RLock()
+	defer fake.applyRevisionMutex.RUnlock()
+	return len(fake.applyRevisionArgsForCall)
+}
+
+func (fake *FakeGateway) ApplyRevisionCalls(stub func(context.Context, *ent.ApplyRevisionParams) error) {
+	fake.applyRevisionMutex.Lock()
+	defer fake.applyRevisionMutex.Unlock()
+	fake.ApplyRevisionStub = stub
+}
+
+func (fake *FakeGateway) ApplyRevisionArgsForCall(i int) (context.Context, *ent.ApplyRevisionParams) {
+	fake.applyRevisionMutex.RLock()
+	defer fake.applyRevisionMutex.RUnlock()
+	argsForCall := fake.applyRevisionArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeGateway) ApplyRevisionReturns(result1 error) {
+	fake.applyRevisionMutex.Lock()
+	defer fake.applyRevisionMutex.Unlock()
+	fake.ApplyRevisionStub = nil
+	fake.applyRevisionReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) ApplyRevisionReturnsOnCall(i int, result1 error) {
+	fake.applyRevisionMutex.Lock()
+	defer fake.applyRevisionMutex.Unlock()
+	fake.ApplyRevisionStub = nil
+	if fake.applyRevisionReturnsOnCall == nil {
+		fake.applyRevisionReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.applyRevisionReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
 }
 
 func (fake *FakeGateway) Close() {

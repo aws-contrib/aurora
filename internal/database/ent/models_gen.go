@@ -6,12 +6,10 @@ package ent
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Revision struct {
-	ID            uuid.UUID     `db:"id" json:"id"`
+	ID            string        `db:"id" json:"id"`
 	Description   string        `db:"description" json:"description"`
 	ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
 	ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
