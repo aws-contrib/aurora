@@ -113,6 +113,20 @@ type FakeGateway struct {
 	runInTxReturnsOnCall map[int]struct {
 		result1 error
 	}
+	WaitForJobStub        func(context.Context, *ent.WaitForJobParams) (bool, error)
+	waitForJobMutex       sync.RWMutex
+	waitForJobArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.WaitForJobParams
+	}
+	waitForJobReturns struct {
+		result1 bool
+		result2 error
+	}
+	waitForJobReturnsOnCall map[int]struct {
+		result1 bool
+		result2 error
+	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
@@ -642,6 +656,71 @@ func (fake *FakeGateway) RunInTxReturnsOnCall(i int, result1 error) {
 	fake.runInTxReturnsOnCall[i] = struct {
 		result1 error
 	}{result1}
+}
+
+func (fake *FakeGateway) WaitForJob(arg1 context.Context, arg2 *ent.WaitForJobParams) (bool, error) {
+	fake.waitForJobMutex.Lock()
+	ret, specificReturn := fake.waitForJobReturnsOnCall[len(fake.waitForJobArgsForCall)]
+	fake.waitForJobArgsForCall = append(fake.waitForJobArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.WaitForJobParams
+	}{arg1, arg2})
+	stub := fake.WaitForJobStub
+	fakeReturns := fake.waitForJobReturns
+	fake.recordInvocation("WaitForJob", []interface{}{arg1, arg2})
+	fake.waitForJobMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeGateway) WaitForJobCallCount() int {
+	fake.waitForJobMutex.RLock()
+	defer fake.waitForJobMutex.RUnlock()
+	return len(fake.waitForJobArgsForCall)
+}
+
+func (fake *FakeGateway) WaitForJobCalls(stub func(context.Context, *ent.WaitForJobParams) (bool, error)) {
+	fake.waitForJobMutex.Lock()
+	defer fake.waitForJobMutex.Unlock()
+	fake.WaitForJobStub = stub
+}
+
+func (fake *FakeGateway) WaitForJobArgsForCall(i int) (context.Context, *ent.WaitForJobParams) {
+	fake.waitForJobMutex.RLock()
+	defer fake.waitForJobMutex.RUnlock()
+	argsForCall := fake.waitForJobArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeGateway) WaitForJobReturns(result1 bool, result2 error) {
+	fake.waitForJobMutex.Lock()
+	defer fake.waitForJobMutex.Unlock()
+	fake.WaitForJobStub = nil
+	fake.waitForJobReturns = struct {
+		result1 bool
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGateway) WaitForJobReturnsOnCall(i int, result1 bool, result2 error) {
+	fake.waitForJobMutex.Lock()
+	defer fake.waitForJobMutex.Unlock()
+	fake.WaitForJobStub = nil
+	if fake.waitForJobReturnsOnCall == nil {
+		fake.waitForJobReturnsOnCall = make(map[int]struct {
+			result1 bool
+			result2 error
+		})
+	}
+	fake.waitForJobReturnsOnCall[i] = struct {
+		result1 bool
+		result2 error
+	}{result1, result2}
 }
 
 func (fake *FakeGateway) Invocations() map[string][][]interface{} {

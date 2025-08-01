@@ -19,6 +19,8 @@ type Querier interface {
 	InsertRevision(ctx context.Context, arg *InsertRevisionParams) (*Revision, error)
 	// Retrieves a list of rows from the table 'aurora_schema_revisions' with option ':many'
 	ListRevisions(ctx context.Context, arg *ListRevisionsParams) ([]*Revision, error)
+	// Waits for a job to complete by its ID.
+	WaitForJob(ctx context.Context, arg *WaitForJobParams) (bool, error)
 }
 
 var _ Querier = (*Queries)(nil)

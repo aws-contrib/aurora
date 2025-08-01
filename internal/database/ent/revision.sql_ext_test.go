@@ -36,7 +36,7 @@ var _ = Describe("Gateway", Ordered, func() {
 
 			BeforeEach(func() {
 				fs := &FakeReadFileFS{}
-				fs.ReadFileReturns([]byte("SELECT 1;"), nil)
+				fs.ReadFileReturns([]byte("CREATE TABLE IF NOT EXISTS aurora_schema_table_test(id TEXT);"), nil)
 
 				params = &ent.ApplyRevisionParams{}
 				params.FileSystem = fs
@@ -61,7 +61,7 @@ var _ = Describe("Gateway", Ordered, func() {
 			When("the gateway fails", func() {
 				BeforeEach(func() {
 					fs := params.FileSystem.(*FakeReadFileFS)
-					fs.ReadFileReturns([]byte("I AM WRONG;"), nil)
+					fs.ReadFileReturns([]byte("UNKNOWN"), nil)
 				})
 
 				It("returns an error", func(ctx SpecContext) {

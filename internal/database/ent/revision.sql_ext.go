@@ -4,10 +4,13 @@ package ent
 
 import (
 	"context"
+	"fmt"
 	"io/fs"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/jackc/pgx/v5"
 )
 
 var asyncre = regexp.MustCompile(`(?i)CONCURRENTLY`)
@@ -37,9 +40,26 @@ func (x *Queries) ApplyRevision(ctx context.Context, params *ApplyRevisionParams
 	// Apply the statements one by one
 	for _, query := range strings.SplitAfter(string(data), ";") {
 		query = asyncre.ReplaceAllString(query, "ASYNC")
+
+		params := &WaitForJobParams{}
 		// execute the revision
-		if _, err = x.db.Exec(ctx, query); err != nil {
-			return err
+		rerr := x.db.QueryRow(ctx, query).Scan(&params.JobID)
+
+		switch {
+		case rerr == pgx.ErrNoRows:
+		// We are good to go because the operation does not return job id
+		case rerr != nil:
+			return rerr
+		default:
+			ok, werr := x.WaitForJob(ctx, params)
+			switch {
+			case werr == pgx.ErrNoRows:
+				// We are good to go because the operation does not return job id
+			case werr != nil:
+				return werr
+			case !ok:
+				return fmt.Errorf("job %s did not complete successfully", params.JobID)
+			}
 		}
 	}
 
