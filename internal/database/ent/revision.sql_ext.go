@@ -5,9 +5,12 @@ package ent
 import (
 	"context"
 	"io/fs"
+	"regexp"
 	"strings"
 	"time"
 )
+
+var asyncre = regexp.MustCompile(`(?i)CONCURRENTLY`)
 
 //counterfeiter:generate -o ./fake io/fs.ReadFileFS
 
@@ -33,6 +36,7 @@ func (x *Queries) ApplyRevision(ctx context.Context, params *ApplyRevisionParams
 	start := time.Now()
 	// Apply the statements one by one
 	for _, query := range strings.SplitAfter(string(data), ";") {
+		query = asyncre.ReplaceAllString(query, "ASYNC")
 		// execute the revision
 		if _, err = x.db.Exec(ctx, query); err != nil {
 			return err
