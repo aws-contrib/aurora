@@ -14,8 +14,16 @@ const createTableRevisions = `-- name: CreateTableRevisions :exec
 CREATE TABLE IF NOT EXISTS aurora_schema_revisions (
     -- primary key column
     id TEXT PRIMARY KEY,
-    -- aurora_schema_revisions name column
+    -- revision name
     description TEXT NOT NULL,
+    -- total number of statements
+    total INT NOT NULL DEFAULT 0,
+    -- count of statements executed in this revision
+    count INT NOT NULL DEFAULT 0,
+    -- error issued during the execution of the revision
+    error TEXT NULL,
+    -- error_stmt is the statement that caused the error
+    error_stmt TEXT NULL,
     -- execution timestamp column
     executed_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     -- execution time column
@@ -29,23 +37,77 @@ func (q *Queries) CreateTableRevisions(ctx context.Context) error {
 	return err
 }
 
+const deleteRevision = `-- name: DeleteRevision :one
+DELETE FROM aurora_schema_revisions
+WHERE id = $1
+RETURNING id, description, total, count, error, error_stmt, executed_at, execution_time
+`
+
+type DeleteRevisionParams struct {
+	ID string `db:"id" json:"id"`
+}
+
+// Deletes a row from the table 'aurora_schema_revisions' with option ':one'
+func (q *Queries) DeleteRevision(ctx context.Context, arg *DeleteRevisionParams) (*Revision, error) {
+	row := q.db.QueryRow(ctx, deleteRevision, arg.ID)
+	var i Revision
+	err := row.Scan(
+		&i.ID,
+		&i.Description,
+		&i.Total,
+		&i.Count,
+		&i.Error,
+		&i.ErrorStmt,
+		&i.ExecutedAt,
+		&i.ExecutionTime,
+	)
+	return &i, err
+}
+
+const execDeleteRevision = `-- name: ExecDeleteRevision :exec
+DELETE FROM aurora_schema_revisions
+WHERE id = $1
+`
+
+type ExecDeleteRevisionParams struct {
+	ID string `db:"id" json:"id"`
+}
+
+// Deletes a row from the table 'aurora_schema_revisions' with option ':exec'
+func (q *Queries) ExecDeleteRevision(ctx context.Context, arg *ExecDeleteRevisionParams) error {
+	_, err := q.db.Exec(ctx, execDeleteRevision, arg.ID)
+	return err
+}
+
 const execInsertRevision = `-- name: ExecInsertRevision :exec
 INSERT INTO aurora_schema_revisions (
     id,
     description,
+    total,
+    count,
+    error,
+    error_stmt,
     executed_at,
     execution_time
 ) VALUES (
     $1,
     $2,
     $3,
-    $4
+    $4,
+    $5,
+    $6,
+    $7,
+    $8
 )
 `
 
 type ExecInsertRevisionParams struct {
 	ID            string        `db:"id" json:"id"`
 	Description   string        `db:"description" json:"description"`
+	Total         int           `db:"total" json:"total"`
+	Count         int           `db:"count" json:"count"`
+	Error         *string       `db:"error" json:"error"`
+	ErrorStmt     *string       `db:"error_stmt" json:"error_stmt"`
 	ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
 	ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
 }
@@ -55,6 +117,129 @@ func (q *Queries) ExecInsertRevision(ctx context.Context, arg *ExecInsertRevisio
 	_, err := q.db.Exec(ctx, execInsertRevision,
 		arg.ID,
 		arg.Description,
+		arg.Total,
+		arg.Count,
+		arg.Error,
+		arg.ErrorStmt,
+		arg.ExecutedAt,
+		arg.ExecutionTime,
+	)
+	return err
+}
+
+const execUpdateRevision = `-- name: ExecUpdateRevision :exec
+UPDATE aurora_schema_revisions
+SET
+    description = CASE
+        WHEN 'description' = ANY($1::TEXT [])
+            THEN $2
+        ELSE description
+    END,
+    total = CASE
+        WHEN 'total' = ANY($1::TEXT [])
+            THEN $3
+        ELSE total
+    END,
+    count = CASE
+        WHEN 'count' = ANY($1::TEXT [])
+            THEN $4
+        ELSE count
+    END,
+    error = CASE
+        WHEN 'error' = ANY($1::TEXT [])
+            THEN $5
+        ELSE error
+    END,
+    error_stmt = CASE
+        WHEN 'error_stmt' = ANY($1::TEXT [])
+            THEN $6
+        ELSE error_stmt
+    END,
+    executed_at = CASE
+        WHEN 'executed_at' = ANY($1::TEXT [])
+            THEN $7
+        ELSE executed_at
+    END,
+    execution_time = CASE
+        WHEN 'execution_time' = ANY($1::TEXT [])
+            THEN $8
+        ELSE execution_time
+    END
+WHERE
+    id = $9
+`
+
+type ExecUpdateRevisionParams struct {
+	UpdateMask    []string      `db:"update_mask" json:"update_mask"`
+	Description   string        `db:"description" json:"description"`
+	Total         int           `db:"total" json:"total"`
+	Count         int           `db:"count" json:"count"`
+	Error         *string       `db:"error" json:"error"`
+	ErrorStmt     *string       `db:"error_stmt" json:"error_stmt"`
+	ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
+	ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
+	ID            string        `db:"id" json:"id"`
+}
+
+// Updates a row in the table 'revision' with option ':exec'
+func (q *Queries) ExecUpdateRevision(ctx context.Context, arg *ExecUpdateRevisionParams) error {
+	_, err := q.db.Exec(ctx, execUpdateRevision,
+		arg.UpdateMask,
+		arg.Description,
+		arg.Total,
+		arg.Count,
+		arg.Error,
+		arg.ErrorStmt,
+		arg.ExecutedAt,
+		arg.ExecutionTime,
+		arg.ID,
+	)
+	return err
+}
+
+const execUpsertRevision = `-- name: ExecUpsertRevision :exec
+INSERT INTO aurora_schema_revisions (
+    id,
+    description,
+    total,
+    count,
+    error,
+    error_stmt,
+    executed_at,
+    execution_time
+) VALUES (
+    $1,
+    $2,
+    $3,
+    $4,
+    $5,
+    $6,
+    $7,
+    $8
+)
+ON CONFLICT (id) DO UPDATE SET id = $1
+`
+
+type ExecUpsertRevisionParams struct {
+	ID            string        `db:"id" json:"id"`
+	Description   string        `db:"description" json:"description"`
+	Total         int           `db:"total" json:"total"`
+	Count         int           `db:"count" json:"count"`
+	Error         *string       `db:"error" json:"error"`
+	ErrorStmt     *string       `db:"error_stmt" json:"error_stmt"`
+	ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
+	ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
+}
+
+// Upserts a row into the table 'aurora_schema_revisions' with option ':exec'
+func (q *Queries) ExecUpsertRevision(ctx context.Context, arg *ExecUpsertRevisionParams) error {
+	_, err := q.db.Exec(ctx, execUpsertRevision,
+		arg.ID,
+		arg.Description,
+		arg.Total,
+		arg.Count,
+		arg.Error,
+		arg.ErrorStmt,
 		arg.ExecutedAt,
 		arg.ExecutionTime,
 	)
@@ -65,6 +250,10 @@ const getRevision = `-- name: GetRevision :one
 SELECT
     id,
     description,
+    total,
+    count,
+    error,
+    error_stmt,
     executed_at,
     execution_time
 FROM
@@ -84,6 +273,10 @@ func (q *Queries) GetRevision(ctx context.Context, arg *GetRevisionParams) (*Rev
 	err := row.Scan(
 		&i.ID,
 		&i.Description,
+		&i.Total,
+		&i.Count,
+		&i.Error,
+		&i.ErrorStmt,
 		&i.ExecutedAt,
 		&i.ExecutionTime,
 	)
@@ -94,20 +287,32 @@ const insertRevision = `-- name: InsertRevision :one
 INSERT INTO aurora_schema_revisions (
     id,
     description,
+    total,
+    count,
+    error,
+    error_stmt,
     executed_at,
     execution_time
 ) VALUES (
     $1,
     $2,
     $3,
-    $4
+    $4,
+    $5,
+    $6,
+    $7,
+    $8
 )
-RETURNING id, description, executed_at, execution_time
+RETURNING id, description, total, count, error, error_stmt, executed_at, execution_time
 `
 
 type InsertRevisionParams struct {
 	ID            string        `db:"id" json:"id"`
 	Description   string        `db:"description" json:"description"`
+	Total         int           `db:"total" json:"total"`
+	Count         int           `db:"count" json:"count"`
+	Error         *string       `db:"error" json:"error"`
+	ErrorStmt     *string       `db:"error_stmt" json:"error_stmt"`
 	ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
 	ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
 }
@@ -117,6 +322,10 @@ func (q *Queries) InsertRevision(ctx context.Context, arg *InsertRevisionParams)
 	row := q.db.QueryRow(ctx, insertRevision,
 		arg.ID,
 		arg.Description,
+		arg.Total,
+		arg.Count,
+		arg.Error,
+		arg.ErrorStmt,
 		arg.ExecutedAt,
 		arg.ExecutionTime,
 	)
@@ -124,6 +333,10 @@ func (q *Queries) InsertRevision(ctx context.Context, arg *InsertRevisionParams)
 	err := row.Scan(
 		&i.ID,
 		&i.Description,
+		&i.Total,
+		&i.Count,
+		&i.Error,
+		&i.ErrorStmt,
 		&i.ExecutedAt,
 		&i.ExecutionTime,
 	)
@@ -134,6 +347,10 @@ const listRevisions = `-- name: ListRevisions :many
 SELECT
     id,
     description,
+    total,
+    count,
+    error,
+    error_stmt,
     executed_at,
     execution_time
 FROM
@@ -164,6 +381,10 @@ func (q *Queries) ListRevisions(ctx context.Context, arg *ListRevisionsParams) (
 		if err := rows.Scan(
 			&i.ID,
 			&i.Description,
+			&i.Total,
+			&i.Count,
+			&i.Error,
+			&i.ErrorStmt,
 			&i.ExecutedAt,
 			&i.ExecutionTime,
 		); err != nil {
@@ -175,4 +396,147 @@ func (q *Queries) ListRevisions(ctx context.Context, arg *ListRevisionsParams) (
 		return nil, err
 	}
 	return items, nil
+}
+
+const updateRevision = `-- name: UpdateRevision :one
+UPDATE aurora_schema_revisions
+SET
+    description = CASE
+        WHEN 'description' = ANY($1::TEXT [])
+            THEN $2
+        ELSE description
+    END,
+    total = CASE
+        WHEN 'total' = ANY($1::TEXT [])
+            THEN $3
+        ELSE total
+    END,
+    count = CASE
+        WHEN 'count' = ANY($1::TEXT [])
+            THEN $4
+        ELSE count
+    END,
+    error = CASE
+        WHEN 'error' = ANY($1::TEXT [])
+            THEN $5
+        ELSE error
+    END,
+    error_stmt = CASE
+        WHEN 'error_stmt' = ANY($1::TEXT [])
+            THEN $6
+        ELSE error_stmt
+    END,
+    executed_at = CASE
+        WHEN 'executed_at' = ANY($1::TEXT [])
+            THEN $7
+        ELSE executed_at
+    END,
+    execution_time = CASE
+        WHEN 'execution_time' = ANY($1::TEXT [])
+            THEN $8
+        ELSE execution_time
+    END
+WHERE
+    id = $9
+RETURNING id, description, total, count, error, error_stmt, executed_at, execution_time
+`
+
+type UpdateRevisionParams struct {
+	UpdateMask    []string      `db:"update_mask" json:"update_mask"`
+	Description   string        `db:"description" json:"description"`
+	Total         int           `db:"total" json:"total"`
+	Count         int           `db:"count" json:"count"`
+	Error         *string       `db:"error" json:"error"`
+	ErrorStmt     *string       `db:"error_stmt" json:"error_stmt"`
+	ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
+	ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
+	ID            string        `db:"id" json:"id"`
+}
+
+// Updates a row in the table 'revision' with option ':one'
+func (q *Queries) UpdateRevision(ctx context.Context, arg *UpdateRevisionParams) (*Revision, error) {
+	row := q.db.QueryRow(ctx, updateRevision,
+		arg.UpdateMask,
+		arg.Description,
+		arg.Total,
+		arg.Count,
+		arg.Error,
+		arg.ErrorStmt,
+		arg.ExecutedAt,
+		arg.ExecutionTime,
+		arg.ID,
+	)
+	var i Revision
+	err := row.Scan(
+		&i.ID,
+		&i.Description,
+		&i.Total,
+		&i.Count,
+		&i.Error,
+		&i.ErrorStmt,
+		&i.ExecutedAt,
+		&i.ExecutionTime,
+	)
+	return &i, err
+}
+
+const upsertRevision = `-- name: UpsertRevision :one
+INSERT INTO aurora_schema_revisions (
+    id,
+    description,
+    total,
+    count,
+    error,
+    error_stmt,
+    executed_at,
+    execution_time
+) VALUES (
+    $1,
+    $2,
+    $3,
+    $4,
+    $5,
+    $6,
+    $7,
+    $8
+)
+ON CONFLICT (id) DO UPDATE SET id = $1
+RETURNING id, description, total, count, error, error_stmt, executed_at, execution_time
+`
+
+type UpsertRevisionParams struct {
+	ID            string        `db:"id" json:"id"`
+	Description   string        `db:"description" json:"description"`
+	Total         int           `db:"total" json:"total"`
+	Count         int           `db:"count" json:"count"`
+	Error         *string       `db:"error" json:"error"`
+	ErrorStmt     *string       `db:"error_stmt" json:"error_stmt"`
+	ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
+	ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
+}
+
+// Upserts a row into the table 'aurora_schema_revisions' with option ':one'
+func (q *Queries) UpsertRevision(ctx context.Context, arg *UpsertRevisionParams) (*Revision, error) {
+	row := q.db.QueryRow(ctx, upsertRevision,
+		arg.ID,
+		arg.Description,
+		arg.Total,
+		arg.Count,
+		arg.Error,
+		arg.ErrorStmt,
+		arg.ExecutedAt,
+		arg.ExecutionTime,
+	)
+	var i Revision
+	err := row.Scan(
+		&i.ID,
+		&i.Description,
+		&i.Total,
+		&i.Count,
+		&i.Error,
+		&i.ErrorStmt,
+		&i.ExecutedAt,
+		&i.ExecutionTime,
+	)
+	return &i, err
 }

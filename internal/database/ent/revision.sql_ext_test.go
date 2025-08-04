@@ -10,64 +10,168 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Gateway", Ordered, func() {
-	var gateway ent.Gateway
+var _ = Describe("RevisionRepository", func() {
+	var repository *ent.RevisionRepository
 
 	BeforeEach(func(ctx SpecContext) {
-		var err error
-		gateway, err = NewGateway()
-		Expect(err).NotTo(HaveOccurred())
-		Expect(gateway.CreateTableRevisions(ctx)).To(Succeed())
+		repository = &ent.RevisionRepository{
+			Gateway:    NewFakeGateway(),
+			FileSystem: NewFakeFileSystem(),
+		}
 	})
 
-	AfterEach(func() {
-		gateway.Close()
-	})
+	Describe("ApplyRevision", func() {
+		var params *ent.ApplyRevisionParams
 
-	Describe("Revision", func() {
-		var entity *ent.Revision
-
-		BeforeAll(func() {
-			entity = NewFakeRevision()
+		BeforeEach(func() {
+			params = &ent.ApplyRevisionParams{}
+			params.Revision = NewFakeRevision()
 		})
 
-		Describe("ApplyRevision", func() {
-			var params *ent.ApplyRevisionParams
+		It("applies a revision", func(ctx SpecContext) {
+			Expect(repository.ApplyRevision(ctx, params)).To(Succeed())
+		})
 
+		ItReturnsError := func(msg string) {
+			It("returns an error", func(ctx SpecContext) {
+				Expect(repository.ApplyRevision(ctx, params)).To(MatchError(msg))
+			})
+		}
+
+		When("the file system fails", func() {
 			BeforeEach(func() {
-				fs := &FakeReadFileFS{}
-				fs.ReadFileReturns([]byte("CREATE TABLE IF NOT EXISTS aurora_schema_table_test(id TEXT);"), nil)
-
-				params = &ent.ApplyRevisionParams{}
-				params.FileSystem = fs
-				params.Revision = entity
+				fs := repository.FileSystem.(*FakeFileSystem)
+				fs.ReadFileReturns(nil, fmt.Errorf("oh no"))
 			})
 
-			It("applies a revision", func(ctx SpecContext) {
-				Expect(gateway.ApplyRevision(ctx, params)).To(Succeed())
-			})
+			ItReturnsError("oh no")
+		})
 
-			When("the file system fails", func() {
+		When("the gateway fails", func() {
+			When("the upsert revision fails", func() {
 				BeforeEach(func() {
-					fs := params.FileSystem.(*FakeReadFileFS)
-					fs.ReadFileReturns(nil, fmt.Errorf("oh no"))
+					gateway := repository.Gateway.(*FakeGateway)
+					gateway.UpsertRevisionReturns(nil, fmt.Errorf("oh no"))
 				})
 
-				It("returns an error", func(ctx SpecContext) {
-					Expect(gateway.ApplyRevision(ctx, params)).To(MatchError("oh no"))
-				})
+				ItReturnsError("oh no")
 			})
 
-			When("the gateway fails", func() {
+			When("the execute revision fails", func() {
 				BeforeEach(func() {
-					fs := params.FileSystem.(*FakeReadFileFS)
-					fs.ReadFileReturns([]byte("UNKNOWN"), nil)
+					row := &FakeRow{}
+					row.ScanReturns(fmt.Errorf("oh no"))
+
+					tx := repository.Gateway.(*FakeGateway).Tx().(*FakeDBTX)
+					tx.QueryRowReturns(row)
 				})
 
-				It("returns an error", func(ctx SpecContext) {
-					Expect(gateway.ApplyRevision(ctx, params)).NotTo(Succeed())
+				It("does not return an error", func(ctx SpecContext) {
+					Expect(repository.ApplyRevision(ctx, params)).To(Succeed())
+					Expect(params.Revision.Error).NotTo(BeNil())
+					Expect(*params.Revision.Error).To(Equal("oh no"))
 				})
 			})
+
+			When("the update revision fails", func() {
+				BeforeEach(func() {
+					gateway := repository.Gateway.(*FakeGateway)
+					gateway.ExecUpdateRevisionReturns(fmt.Errorf("oh no"))
+				})
+
+				ItReturnsError("oh no")
+			})
+
+			When("the job is not found", func() {
+				BeforeEach(func() {
+					gateway := repository.Gateway.(*FakeGateway)
+					gateway.GetJobReturns(nil, ent.ErrNoRows)
+				})
+
+				It("applies a revision", func(ctx SpecContext) {
+					Expect(repository.ApplyRevision(ctx, params)).To(Succeed())
+					Expect(params.Revision.Error).To(BeNil())
+				})
+			})
+
+			When("the job waiting fails", func() {
+				BeforeEach(func() {
+					gateway := repository.Gateway.(*FakeGateway)
+					gateway.GetJobReturns(nil, fmt.Errorf("oh no"))
+				})
+
+				It("does not return an error", func(ctx SpecContext) {
+					Expect(repository.ApplyRevision(ctx, params)).To(Succeed())
+					Expect(params.Revision.Error).NotTo(BeNil())
+					Expect(*params.Revision.Error).To(Equal("oh no"))
+				})
+			})
+
+			When("the job fails", func() {
+				BeforeEach(func() {
+					entity := NewFakeJob()
+					entity.Status = "failed"
+					entity.Details = "oh no"
+
+					gateway := repository.Gateway.(*FakeGateway)
+					gateway.GetJobReturns(entity, nil)
+				})
+
+				It("does not return an error", func(ctx SpecContext) {
+					Expect(repository.ApplyRevision(ctx, params)).To(Succeed())
+					Expect(params.Revision.Error).NotTo(BeNil())
+					Expect(*params.Revision.Error).To(Equal("oh no"))
+				})
+			})
+		})
+	})
+
+	Describe("ListRevisions", func() {
+		var params *ent.ListRevisionsParams
+
+		BeforeEach(func() {
+			params = &ent.ListRevisionsParams{}
+		})
+
+		It("list the revisions", func(ctx SpecContext) {
+			revisions, err := repository.ListRevisions(ctx, params)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(revisions).NotTo(BeEmpty())
+		})
+
+		ItReturnsError := func(msg string) {
+			It("returns an error", func(ctx SpecContext) {
+				revisions, err := repository.ListRevisions(ctx, params)
+				Expect(err).To(MatchError(msg))
+				Expect(revisions).To(BeEmpty())
+			})
+		}
+
+		When("the file system fails", func() {
+			BeforeEach(func() {
+				fs := repository.FileSystem.(*FakeFileSystem)
+				fs.GlobReturns(nil, fmt.Errorf("oh no"))
+			})
+
+			ItReturnsError("oh no")
+		})
+
+		When("the file system fails", func() {
+			BeforeEach(func() {
+				fs := repository.FileSystem.(*FakeFileSystem)
+				fs.ReadFileReturns(nil, fmt.Errorf("oh no"))
+			})
+
+			ItReturnsError("oh no")
+		})
+
+		When("the gateway fails", func() {
+			BeforeEach(func() {
+				gateway := repository.Gateway.(*FakeGateway)
+				gateway.GetRevisionReturns(nil, fmt.Errorf("oh no"))
+			})
+
+			ItReturnsError("oh no")
 		})
 	})
 })

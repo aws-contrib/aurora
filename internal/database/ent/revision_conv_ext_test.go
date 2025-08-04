@@ -72,3 +72,129 @@ var _ = Describe("ExecInsertRevisionParams", func() {
 		})
 	})
 })
+
+var _ = Describe("UpsertRevisionParams", func() {
+	var params ent.UpsertRevisionParams
+
+	BeforeEach(func() {
+		params = ent.UpsertRevisionParams{}
+	})
+
+	Describe("SetRevision", func() {
+		var entity *ent.Revision
+
+		BeforeEach(func() {
+			entity = NewFakeRevision()
+		})
+
+		It("sets the entity", func() {
+			params.SetRevision(entity)
+			Expect(params).NotTo(BeZero())
+		})
+	})
+})
+
+var _ = Describe("ExecUpsertRevisionParams", func() {
+	var params ent.ExecUpsertRevisionParams
+
+	BeforeEach(func() {
+		params = ent.ExecUpsertRevisionParams{}
+	})
+
+	Describe("SetRevision", func() {
+		var entity *ent.Revision
+
+		BeforeEach(func() {
+			entity = NewFakeRevision()
+		})
+
+		It("sets the entity", func() {
+			params.SetRevision(entity)
+			Expect(params).NotTo(BeZero())
+		})
+	})
+})
+
+var _ = Describe("UpdateRevisionParams", func() {
+	var params ent.UpdateRevisionParams
+
+	BeforeEach(func() {
+		params = ent.UpdateRevisionParams{}
+	})
+
+	Describe("SetRevision", func() {
+		var entity *ent.Revision
+
+		BeforeEach(func() {
+			entity = NewFakeRevision()
+		})
+
+		It("sets the entity", func() {
+			params.SetRevision(entity)
+			Expect(params).NotTo(BeZero())
+		})
+	})
+})
+
+var _ = Describe("ExecUpdateRevisionParams", func() {
+	var params ent.ExecUpdateRevisionParams
+
+	BeforeEach(func() {
+		params = ent.ExecUpdateRevisionParams{}
+	})
+
+	Describe("SetRevision", func() {
+		var entity *ent.Revision
+
+		BeforeEach(func() {
+			entity = NewFakeRevision()
+		})
+
+		It("sets the entity", func() {
+			params.SetRevision(entity)
+			Expect(params).NotTo(BeZero())
+		})
+	})
+})
+
+var _ = Describe("DeleteRevisionParams", func() {
+	var params ent.DeleteRevisionParams
+
+	BeforeEach(func() {
+		params = ent.DeleteRevisionParams{}
+	})
+
+	Describe("SetRevision", func() {
+		var entity *ent.Revision
+
+		BeforeEach(func() {
+			entity = NewFakeRevision()
+		})
+
+		It("sets the entity", func() {
+			params.SetRevision(entity)
+			Expect(params).NotTo(BeZero())
+		})
+	})
+})
+
+var _ = Describe("ExecDeleteRevisionParams", func() {
+	var params ent.ExecDeleteRevisionParams
+
+	BeforeEach(func() {
+		params = ent.ExecDeleteRevisionParams{}
+	})
+
+	Describe("SetRevision", func() {
+		var entity *ent.Revision
+
+		BeforeEach(func() {
+			entity = NewFakeRevision()
+		})
+
+		It("sets the entity", func() {
+			params.SetRevision(entity)
+			Expect(params).NotTo(BeZero())
+		})
+	})
+})

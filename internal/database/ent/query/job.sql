@@ -4,6 +4,65 @@
 
 SET search_path TO public;
 
--- Waits for a job to complete by its ID.
--- name: WaitForJob :one
-SELECT sys.wait_for_job(sqlc.arg(job_id)::TEXT)::BOOLEAN AS ok;
+-- The schema 'sys' is created to hold system-related tables.
+-- name: CreateSchemaSys :exec
+CREATE SCHEMA IF NOT EXISTS sys;
+
+-- Creates a table named 'sys.jobs' with the following columns:
+-- The table 'sys.jobs' is created to track jobs in the system.
+-- name: CreateTableJobs :exec
+CREATE TABLE IF NOT EXISTS sys.jobs (
+    -- primary key column
+    id TEXT PRIMARY KEY,
+    -- revision name
+    status TEXT NOT NULL,
+    -- total number of statements
+    details TEXT NOT NULL
+);
+
+-- Inserts a row into the table 'sys.jobs' with option ':one'
+-- name: InsertJob :one
+INSERT INTO sys.jobs (
+    id,
+    status,
+    details
+) VALUES (
+    sqlc.arg(id),
+    sqlc.arg(status),
+    sqlc.arg(details)
+)
+RETURNING *;
+
+-- Inserts a row into the table 'sys.jobs' with option ':exec'
+-- name: ExecInsertJob :exec
+INSERT INTO sys.jobs (
+    id,
+    status,
+    details
+) VALUES (
+    sqlc.arg(id),
+    sqlc.arg(status),
+    sqlc.arg(details)
+);
+
+-- Retrieves a row from the table 'sys.jobs' with option ':one'
+-- name: GetJob :one
+SELECT
+    id,
+    status,
+    details
+FROM
+    sys.jobs
+WHERE
+    id = sqlc.arg(id);
+
+-- Deletes a row from the table 'sys.jobs' with option ':one'
+-- name: DeleteJob :one
+DELETE FROM sys.jobs
+WHERE id = sqlc.arg(id)
+RETURNING *;
+
+-- Deletes a row from the table 'sys.jobs' with option ':exec'
+-- name: ExecDeleteJob :exec
+DELETE FROM sys.jobs
+WHERE id = sqlc.arg(id);

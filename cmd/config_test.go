@@ -24,8 +24,14 @@ var _ = Describe("Config", func() {
 
 			Expect(config.Environments).To(HaveLen(1))
 			Expect(config.Environments[0].Name).To(Equal("aws"))
-			Expect(config.Environments[0].Migration.GetDir()).To(Equal("file://database/migration"))
-			Expect(config.Environments[0].GetURL()).To(Equal("postgres://example-api:DSQL_TOKEN@example.com/example-api"))
+
+			dir, err := config.Environments[0].Migration.GetDir()
+			Expect(err).NotTo(HaveOccurred())
+			Expect(dir).To(Equal("file://database/migration"))
+
+			url, err := config.Environments[0].GetURL()
+			Expect(err).NotTo(HaveOccurred())
+			Expect(url).To(Equal("postgres://example-api:DSQL_TOKEN@example.com/example-api"))
 			Expect(config.Data).To(HaveLen(1))
 			Expect(config.Variables).To(HaveLen(3))
 		})

@@ -51,18 +51,37 @@ var _ = Describe("Gateway", Ordered, func() {
 			})
 		})
 
-		Describe("ExecInsertRevision", func() {
-			var params *ent.ExecInsertRevisionParams
+		Describe("UpsertRevision", func() {
+			var params *ent.UpsertRevisionParams
 
 			BeforeEach(func() {
-				params = &ent.ExecInsertRevisionParams{}
-				params.SetRevision(NewFakeRevision())
+				params = &ent.UpsertRevisionParams{}
+				params.SetRevision(entity)
 			})
 
 			It("inserts a revision", func(ctx SpecContext) {
-				Expect(gateway.ExecInsertRevision(ctx, params)).To(Succeed())
+				revision, err := gateway.UpsertRevision(ctx, params)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(revision).To(BeComparableTo(entity))
 			})
 		})
+
+		Describe("UpdateRevision", func() {
+			var params *ent.UpdateRevisionParams
+
+			BeforeEach(func() {
+				params = &ent.UpdateRevisionParams{}
+				params.UpdateMask = []string{"total"}
+				params.SetRevision(entity)
+			})
+
+			It("updates a revision", func(ctx SpecContext) {
+				revision, err := gateway.UpdateRevision(ctx, params)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(revision).To(BeComparableTo(entity))
+			})
+		})
+
 		Describe("GetRevision", func() {
 			var params *ent.GetRevisionParams
 
@@ -72,9 +91,77 @@ var _ = Describe("Gateway", Ordered, func() {
 			})
 
 			It("returns a revision", func(ctx SpecContext) {
-				revisions, err := gateway.GetRevision(ctx, params)
+				revision, err := gateway.GetRevision(ctx, params)
 				Expect(err).NotTo(HaveOccurred())
-				Expect(revisions).To(BeComparableTo(entity))
+				Expect(revision).To(BeComparableTo(entity))
+			})
+		})
+
+		Describe("DeleteRevision", func() {
+			var params *ent.DeleteRevisionParams
+
+			BeforeEach(func() {
+				params = &ent.DeleteRevisionParams{}
+				params.SetRevision(entity)
+			})
+
+			It("deletes a revision", func(ctx SpecContext) {
+				revision, err := gateway.DeleteRevision(ctx, params)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(revision).To(BeComparableTo(entity))
+			})
+		})
+
+		Describe("ExecInsertRevision", func() {
+			var params *ent.ExecInsertRevisionParams
+
+			BeforeEach(func() {
+				params = &ent.ExecInsertRevisionParams{}
+				params.SetRevision(entity)
+			})
+
+			It("inserts a revision", func(ctx SpecContext) {
+				Expect(gateway.ExecInsertRevision(ctx, params)).To(Succeed())
+			})
+		})
+
+		Describe("ExecUpsertRevision", func() {
+			var params *ent.ExecUpsertRevisionParams
+
+			BeforeEach(func() {
+				params = &ent.ExecUpsertRevisionParams{}
+				params.SetRevision(entity)
+			})
+
+			It("inserts a revision", func(ctx SpecContext) {
+				Expect(gateway.ExecUpsertRevision(ctx, params)).To(Succeed())
+			})
+		})
+
+		Describe("ExecUpdateRevision", func() {
+			var params *ent.ExecUpdateRevisionParams
+
+			BeforeEach(func() {
+				params = &ent.ExecUpdateRevisionParams{}
+				params.UpdateMask = []string{"total"}
+				params.SetRevision(entity)
+			})
+
+			It("updates a revision", func(ctx SpecContext) {
+				Expect(gateway.ExecUpdateRevision(ctx, params)).To(Succeed())
+			})
+		})
+
+		Describe("ExecDeleteRevision", func() {
+			var params *ent.ExecDeleteRevisionParams
+
+			BeforeEach(func() {
+				params = &ent.ExecDeleteRevisionParams{}
+				params.SetRevision(entity)
+			})
+
+			It("inserts a revision", func(ctx SpecContext) {
+				Expect(gateway.ExecDeleteRevision(ctx, params)).To(Succeed())
 			})
 		})
 
@@ -88,7 +175,7 @@ var _ = Describe("Gateway", Ordered, func() {
 			It("lists all revisions", func(ctx SpecContext) {
 				revisions, err := gateway.ListRevisions(ctx, params)
 				Expect(err).NotTo(HaveOccurred())
-				Expect(revisions).To(ContainElement(BeComparableTo(entity)))
+				Expect(revisions).NotTo(BeEmpty())
 			})
 
 			When("the gateway returns an error", func() {

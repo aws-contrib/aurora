@@ -87,6 +87,11 @@ func (x *Queries) RunInTx(ctx context.Context, action QuerierAction) (err error)
 	return tx.Commit(ctx)
 }
 
+// Tx returns the underlying transaction interface.
+func (x *Queries) Tx() DBTX {
+	return x.db
+}
+
 // Ping verifies a connection to the database is still alive,
 func (x *Queries) Ping(ctx context.Context) error {
 	type Pinger interface {

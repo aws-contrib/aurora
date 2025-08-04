@@ -16,8 +16,8 @@ import (
 type Gateway interface {
 	// inherit from Querier
 	Querier
-	// inherit from Applier
-	Applier
+	// Tx returns the underlying transaction interface.
+	Tx() DBTX
 	// RunInTx runs the given function in a transaction.
 	RunInTx(context.Context, QuerierAction) error
 	// Ping verifies a connection to the database is still alive.

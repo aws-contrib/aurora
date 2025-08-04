@@ -8,9 +8,19 @@ import (
 	"time"
 )
 
+type Job struct {
+	ID      string `db:"id" json:"id"`
+	Status  string `db:"status" json:"status"`
+	Details string `db:"details" json:"details"`
+}
+
 type Revision struct {
 	ID            string        `db:"id" json:"id"`
 	Description   string        `db:"description" json:"description"`
+	Total         int           `db:"total" json:"total"`
+	Count         int           `db:"count" json:"count"`
+	Error         *string       `db:"error" json:"error"`
+	ErrorStmt     *string       `db:"error_stmt" json:"error_stmt"`
 	ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
 	ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
 }

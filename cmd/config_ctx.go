@@ -9,7 +9,7 @@ import (
 	"github.com/zclconf/go-cty/cty/function"
 )
 
-var context = &hcl.EvalContext{
+var rootCtx = &hcl.EvalContext{
 	Functions: map[string]function.Function{
 		"getenv": function.New(&function.Spec{
 			Params: []function.Parameter{

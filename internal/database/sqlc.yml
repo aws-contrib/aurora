@@ -27,6 +27,12 @@ sql:
         output_batch_file_name: querier_batch_gen.go
         output_copyfrom_file_name: querier_copy_from_gen.go
         overrides:
+          - column: "aurora_schema_revisions.total"
+            go_type:
+              type: "int"
+          - column: "aurora_schema_revisions.count"
+            go_type:
+              type: "int"
           - column: "aurora_schema_revisions.executed_at"
             go_type:
               import: "time"
@@ -40,4 +46,5 @@ sql:
 overrides:
   go:
     rename:
+      sys_job: Job
       aurora_schema_revision: Revision

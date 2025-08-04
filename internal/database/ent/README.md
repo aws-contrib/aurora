@@ -10,32 +10,83 @@ Package ent provides an extension to the ent package for database operations.
 
 ## Index
 
+- [Variables](<#variables>)
+- [func IsErrorCode\(err error, code string\) bool](<#IsErrorCode>)
+- [func IsErrorNotFound\(err error\) bool](<#IsErrorNotFound>)
 - [func WithURL\(\) string](<#WithURL>)
-- [type Applier](<#Applier>)
 - [type ApplyRevisionParams](<#ApplyRevisionParams>)
 - [type Batch](<#Batch>)
 - [type DBTX](<#DBTX>)
+- [type DeleteJobParams](<#DeleteJobParams>)
+  - [func \(x \*DeleteJobParams\) SetJob\(entity \*Job\)](<#DeleteJobParams.SetJob>)
+- [type DeleteJobParamsConverter](<#DeleteJobParamsConverter>)
+- [type DeleteJobParamsConverterImpl](<#DeleteJobParamsConverterImpl>)
+  - [func \(c \*DeleteJobParamsConverterImpl\) SetFromJob\(target \*DeleteJobParams, source \*Job\)](<#DeleteJobParamsConverterImpl.SetFromJob>)
+- [type DeleteRevisionParams](<#DeleteRevisionParams>)
+  - [func \(x \*DeleteRevisionParams\) SetRevision\(entity \*Revision\)](<#DeleteRevisionParams.SetRevision>)
+- [type DeleteRevisionParamsConverter](<#DeleteRevisionParamsConverter>)
+- [type DeleteRevisionParamsConverterImpl](<#DeleteRevisionParamsConverterImpl>)
+  - [func \(c \*DeleteRevisionParamsConverterImpl\) SetFromRevision\(target \*DeleteRevisionParams, source \*Revision\)](<#DeleteRevisionParamsConverterImpl.SetFromRevision>)
+- [type Error](<#Error>)
+- [type ExecDeleteJobParams](<#ExecDeleteJobParams>)
+  - [func \(x \*ExecDeleteJobParams\) SetJob\(entity \*Job\)](<#ExecDeleteJobParams.SetJob>)
+- [type ExecDeleteJobParamsConverter](<#ExecDeleteJobParamsConverter>)
+- [type ExecDeleteJobParamsConverterImpl](<#ExecDeleteJobParamsConverterImpl>)
+  - [func \(c \*ExecDeleteJobParamsConverterImpl\) SetFromJob\(target \*ExecDeleteJobParams, source \*Job\)](<#ExecDeleteJobParamsConverterImpl.SetFromJob>)
+- [type ExecDeleteRevisionParams](<#ExecDeleteRevisionParams>)
+  - [func \(x \*ExecDeleteRevisionParams\) SetRevision\(entity \*Revision\)](<#ExecDeleteRevisionParams.SetRevision>)
+- [type ExecDeleteRevisionParamsConverter](<#ExecDeleteRevisionParamsConverter>)
+- [type ExecDeleteRevisionParamsConverterImpl](<#ExecDeleteRevisionParamsConverterImpl>)
+  - [func \(c \*ExecDeleteRevisionParamsConverterImpl\) SetFromRevision\(target \*ExecDeleteRevisionParams, source \*Revision\)](<#ExecDeleteRevisionParamsConverterImpl.SetFromRevision>)
+- [type ExecInsertJobParams](<#ExecInsertJobParams>)
+  - [func \(x \*ExecInsertJobParams\) SetJob\(entity \*Job\)](<#ExecInsertJobParams.SetJob>)
+- [type ExecInsertJobParamsConverter](<#ExecInsertJobParamsConverter>)
+- [type ExecInsertJobParamsConverterImpl](<#ExecInsertJobParamsConverterImpl>)
+  - [func \(c \*ExecInsertJobParamsConverterImpl\) SetFromJob\(target \*ExecInsertJobParams, source \*Job\)](<#ExecInsertJobParamsConverterImpl.SetFromJob>)
 - [type ExecInsertRevisionParams](<#ExecInsertRevisionParams>)
   - [func \(x \*ExecInsertRevisionParams\) SetRevision\(entity \*Revision\)](<#ExecInsertRevisionParams.SetRevision>)
 - [type ExecInsertRevisionParamsConverter](<#ExecInsertRevisionParamsConverter>)
 - [type ExecInsertRevisionParamsConverterImpl](<#ExecInsertRevisionParamsConverterImpl>)
   - [func \(c \*ExecInsertRevisionParamsConverterImpl\) SetFromRevision\(target \*ExecInsertRevisionParams, source \*Revision\)](<#ExecInsertRevisionParamsConverterImpl.SetFromRevision>)
+- [type ExecUpdateRevisionParams](<#ExecUpdateRevisionParams>)
+  - [func \(x \*ExecUpdateRevisionParams\) SetRevision\(entity \*Revision\)](<#ExecUpdateRevisionParams.SetRevision>)
+- [type ExecUpdateRevisionParamsConverter](<#ExecUpdateRevisionParamsConverter>)
+- [type ExecUpdateRevisionParamsConverterImpl](<#ExecUpdateRevisionParamsConverterImpl>)
+  - [func \(c \*ExecUpdateRevisionParamsConverterImpl\) SetFromRevision\(target \*ExecUpdateRevisionParams, source \*Revision\)](<#ExecUpdateRevisionParamsConverterImpl.SetFromRevision>)
+- [type ExecUpsertRevisionParams](<#ExecUpsertRevisionParams>)
+  - [func \(x \*ExecUpsertRevisionParams\) SetRevision\(entity \*Revision\)](<#ExecUpsertRevisionParams.SetRevision>)
+- [type ExecUpsertRevisionParamsConverter](<#ExecUpsertRevisionParamsConverter>)
+- [type ExecUpsertRevisionParamsConverterImpl](<#ExecUpsertRevisionParamsConverterImpl>)
+  - [func \(c \*ExecUpsertRevisionParamsConverterImpl\) SetFromRevision\(target \*ExecUpsertRevisionParams, source \*Revision\)](<#ExecUpsertRevisionParamsConverterImpl.SetFromRevision>)
+- [type FileSystem](<#FileSystem>)
 - [type Gateway](<#Gateway>)
   - [func Open\(ctx context.Context, uri string, options ...GatewayOption\) \(\_ Gateway, err error\)](<#Open>)
 - [type GatewayOption](<#GatewayOption>)
 - [type GatewayOptionFunc](<#GatewayOptionFunc>)
   - [func \(fn GatewayOptionFunc\) Apply\(cfg \*pgxpool.Config\) error](<#GatewayOptionFunc.Apply>)
+- [type GetJobParams](<#GetJobParams>)
+  - [func \(x \*GetJobParams\) SetJob\(entity \*Job\)](<#GetJobParams.SetJob>)
+- [type GetJobParamsConverter](<#GetJobParamsConverter>)
+- [type GetJobParamsConverterImpl](<#GetJobParamsConverterImpl>)
+  - [func \(c \*GetJobParamsConverterImpl\) SetFromJob\(target \*GetJobParams, source \*Job\)](<#GetJobParamsConverterImpl.SetFromJob>)
 - [type GetRevisionParams](<#GetRevisionParams>)
   - [func \(x \*GetRevisionParams\) SetRevision\(entity \*Revision\)](<#GetRevisionParams.SetRevision>)
 - [type GetRevisionParamsConverter](<#GetRevisionParamsConverter>)
 - [type GetRevisionParamsConverterImpl](<#GetRevisionParamsConverterImpl>)
   - [func \(c \*GetRevisionParamsConverterImpl\) SetFromRevision\(target \*GetRevisionParams, source \*Revision\)](<#GetRevisionParamsConverterImpl.SetFromRevision>)
+- [type InsertJobParams](<#InsertJobParams>)
+  - [func \(x \*InsertJobParams\) SetJob\(entity \*Job\)](<#InsertJobParams.SetJob>)
+- [type InsertJobParamsConverter](<#InsertJobParamsConverter>)
+- [type InsertJobParamsConverterImpl](<#InsertJobParamsConverterImpl>)
+  - [func \(c \*InsertJobParamsConverterImpl\) SetFromJob\(target \*InsertJobParams, source \*Job\)](<#InsertJobParamsConverterImpl.SetFromJob>)
 - [type InsertRevisionParams](<#InsertRevisionParams>)
   - [func \(x \*InsertRevisionParams\) SetRevision\(entity \*Revision\)](<#InsertRevisionParams.SetRevision>)
 - [type InsertRevisionParamsConverter](<#InsertRevisionParamsConverter>)
 - [type InsertRevisionParamsConverterImpl](<#InsertRevisionParamsConverterImpl>)
   - [func \(c \*InsertRevisionParamsConverterImpl\) SetFromRevision\(target \*InsertRevisionParams, source \*Revision\)](<#InsertRevisionParamsConverterImpl.SetFromRevision>)
+- [type Job](<#Job>)
 - [type ListRevisionsParams](<#ListRevisionsParams>)
+- [type LockRevisionParams](<#LockRevisionParams>)
 - [type Querier](<#Querier>)
 - [type QuerierAction](<#QuerierAction>)
   - [func NewQueryPipeline\(collection ...QuerierFunc\) QuerierAction](<#NewQueryPipeline>)
@@ -43,22 +94,95 @@ Package ent provides an extension to the ent package for database operations.
   - [func \(fn QuerierFunc\) Run\(querier Querier\) error](<#QuerierFunc.Run>)
 - [type Queries](<#Queries>)
   - [func New\(db DBTX\) \*Queries](<#New>)
-  - [func \(x \*Queries\) ApplyRevision\(ctx context.Context, params \*ApplyRevisionParams\) error](<#Queries.ApplyRevision>)
   - [func \(x \*Queries\) Close\(\)](<#Queries.Close>)
+  - [func \(q \*Queries\) CreateSchemaSys\(ctx context.Context\) error](<#Queries.CreateSchemaSys>)
+  - [func \(q \*Queries\) CreateTableJobs\(ctx context.Context\) error](<#Queries.CreateTableJobs>)
   - [func \(q \*Queries\) CreateTableRevisions\(ctx context.Context\) error](<#Queries.CreateTableRevisions>)
+  - [func \(q \*Queries\) DeleteJob\(ctx context.Context, arg \*DeleteJobParams\) \(\*Job, error\)](<#Queries.DeleteJob>)
+  - [func \(q \*Queries\) DeleteRevision\(ctx context.Context, arg \*DeleteRevisionParams\) \(\*Revision, error\)](<#Queries.DeleteRevision>)
+  - [func \(q \*Queries\) ExecDeleteJob\(ctx context.Context, arg \*ExecDeleteJobParams\) error](<#Queries.ExecDeleteJob>)
+  - [func \(q \*Queries\) ExecDeleteRevision\(ctx context.Context, arg \*ExecDeleteRevisionParams\) error](<#Queries.ExecDeleteRevision>)
+  - [func \(q \*Queries\) ExecInsertJob\(ctx context.Context, arg \*ExecInsertJobParams\) error](<#Queries.ExecInsertJob>)
   - [func \(q \*Queries\) ExecInsertRevision\(ctx context.Context, arg \*ExecInsertRevisionParams\) error](<#Queries.ExecInsertRevision>)
+  - [func \(q \*Queries\) ExecUpdateRevision\(ctx context.Context, arg \*ExecUpdateRevisionParams\) error](<#Queries.ExecUpdateRevision>)
+  - [func \(q \*Queries\) ExecUpsertRevision\(ctx context.Context, arg \*ExecUpsertRevisionParams\) error](<#Queries.ExecUpsertRevision>)
+  - [func \(q \*Queries\) GetJob\(ctx context.Context, arg \*GetJobParams\) \(\*Job, error\)](<#Queries.GetJob>)
   - [func \(q \*Queries\) GetRevision\(ctx context.Context, arg \*GetRevisionParams\) \(\*Revision, error\)](<#Queries.GetRevision>)
+  - [func \(q \*Queries\) InsertJob\(ctx context.Context, arg \*InsertJobParams\) \(\*Job, error\)](<#Queries.InsertJob>)
   - [func \(q \*Queries\) InsertRevision\(ctx context.Context, arg \*InsertRevisionParams\) \(\*Revision, error\)](<#Queries.InsertRevision>)
   - [func \(q \*Queries\) ListRevisions\(ctx context.Context, arg \*ListRevisionsParams\) \(\[\]\*Revision, error\)](<#Queries.ListRevisions>)
   - [func \(x \*Queries\) Ping\(ctx context.Context\) error](<#Queries.Ping>)
   - [func \(x \*Queries\) RunInTx\(ctx context.Context, action QuerierAction\) \(err error\)](<#Queries.RunInTx>)
-  - [func \(q \*Queries\) WaitForJob\(ctx context.Context, arg \*WaitForJobParams\) \(bool, error\)](<#Queries.WaitForJob>)
+  - [func \(x \*Queries\) Tx\(\) DBTX](<#Queries.Tx>)
+  - [func \(q \*Queries\) UpdateRevision\(ctx context.Context, arg \*UpdateRevisionParams\) \(\*Revision, error\)](<#Queries.UpdateRevision>)
+  - [func \(q \*Queries\) UpsertRevision\(ctx context.Context, arg \*UpsertRevisionParams\) \(\*Revision, error\)](<#Queries.UpsertRevision>)
   - [func \(q \*Queries\) WithTx\(tx pgx.Tx\) \*Queries](<#Queries.WithTx>)
 - [type Revision](<#Revision>)
   - [func \(x \*Revision\) GetName\(\) string](<#Revision.GetName>)
   - [func \(x \*Revision\) SetName\(name string\)](<#Revision.SetName>)
-- [type WaitForJobParams](<#WaitForJobParams>)
+- [type RevisionRepository](<#RevisionRepository>)
+  - [func \(x \*RevisionRepository\) ApplyRevision\(ctx context.Context, params \*ApplyRevisionParams\) error](<#RevisionRepository.ApplyRevision>)
+  - [func \(x \*RevisionRepository\) ListRevisions\(ctx context.Context, \_ \*ListRevisionsParams\) \(collection \[\]\*Revision, \_ error\)](<#RevisionRepository.ListRevisions>)
+  - [func \(x \*RevisionRepository\) LockRevision\(ctx context.Context, params \*LockRevisionParams\) error](<#RevisionRepository.LockRevision>)
+  - [func \(x \*RevisionRepository\) UnlockRevision\(ctx context.Context, params \*UnlockRevisionParams\) error](<#RevisionRepository.UnlockRevision>)
+- [type UnlockRevisionParams](<#UnlockRevisionParams>)
+- [type UpdateRevisionParams](<#UpdateRevisionParams>)
+  - [func \(x \*UpdateRevisionParams\) SetRevision\(entity \*Revision\)](<#UpdateRevisionParams.SetRevision>)
+- [type UpdateRevisionParamsConverter](<#UpdateRevisionParamsConverter>)
+- [type UpdateRevisionParamsConverterImpl](<#UpdateRevisionParamsConverterImpl>)
+  - [func \(c \*UpdateRevisionParamsConverterImpl\) SetFromRevision\(target \*UpdateRevisionParams, source \*Revision\)](<#UpdateRevisionParamsConverterImpl.SetFromRevision>)
+- [type UpsertRevisionParams](<#UpsertRevisionParams>)
+  - [func \(x \*UpsertRevisionParams\) SetRevision\(entity \*Revision\)](<#UpsertRevisionParams.SetRevision>)
+- [type UpsertRevisionParamsConverter](<#UpsertRevisionParamsConverter>)
+- [type UpsertRevisionParamsConverterImpl](<#UpsertRevisionParamsConverterImpl>)
+  - [func \(c \*UpsertRevisionParamsConverterImpl\) SetFromRevision\(target \*UpsertRevisionParams, source \*Revision\)](<#UpsertRevisionParamsConverterImpl.SetFromRevision>)
 
+
+## Variables
+
+<a name="ErrTooManyRows"></a>
+
+```go
+var (
+    // ErrTooManyRows occurs when more rows than expected are returned.
+    ErrTooManyRows = pgx.ErrTooManyRows
+    // ErrNoRows occurs when rows are expected but none are returned.
+    ErrNoRows = pgx.ErrNoRows
+)
+```
+
+<a name="ErrCodeUniqueViolation"></a>
+
+```go
+var ErrCodeUniqueViolation = pgerrcode.UniqueViolation
+```
+
+<a name="Mutex"></a>Mutex is a special revision that represents a lock on the database.
+
+```go
+var Mutex = &Revision{
+    ID:          "20060102150405",
+    Description: "lock",
+}
+```
+
+<a name="IsErrorCode"></a>
+## func [IsErrorCode](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/errors_ext.go#L29>)
+
+```go
+func IsErrorCode(err error, code string) bool
+```
+
+IsErrorCode reports whether the error is a PostgreSQL error with the given code.
+
+<a name="IsErrorNotFound"></a>
+## func [IsErrorNotFound](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/errors_ext.go#L19>)
+
+```go
+func IsErrorNotFound(err error) bool
+```
+
+IsErrorNotFound reports whether the error is a "not found" error.
 
 <a name="WithURL"></a>
 ## func [WithURL](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L36>)
@@ -69,19 +193,8 @@ func WithURL() string
 
 WithURL returns the database URL.
 
-<a name="Applier"></a>
-## type [Applier](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L17-L19>)
-
-
-
-```go
-type Applier interface {
-    ApplyRevision(ctx context.Context, params *ApplyRevisionParams) error
-}
-```
-
 <a name="ApplyRevisionParams"></a>
-## type [ApplyRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L22-L27>)
+## type [ApplyRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L91-L94>)
 
 ApplyRevisionParams represents the parameters for executing a revision.
 
@@ -89,8 +202,6 @@ ApplyRevisionParams represents the parameters for executing a revision.
 type ApplyRevisionParams struct {
     // Revision contains the parameters for executing a revision.
     Revision *Revision
-    // FileSystem is the filesystem where the revision files are located.
-    FileSystem fs.FS
 }
 ```
 
@@ -119,8 +230,269 @@ type DBTX interface {
 }
 ```
 
+<a name="DeleteJobParams"></a>
+## type [DeleteJobParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L46-L48>)
+
+
+
+```go
+type DeleteJobParams struct {
+    ID string `db:"id" json:"id"`
+}
+```
+
+<a name="DeleteJobParams.SetJob"></a>
+### func \(\*DeleteJobParams\) [SetJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job_conv_ext.go#L24>)
+
+```go
+func (x *DeleteJobParams) SetJob(entity *Job)
+```
+
+SetJob sets the params from the entity.
+
+<a name="DeleteJobParamsConverter"></a>
+## type [DeleteJobParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job_conv.go#L34-L37>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type DeleteJobParamsConverter interface {
+    // goverter:update target
+    SetFromJob(target *DeleteJobParams, source *Job)
+}
+```
+
+<a name="DeleteJobParamsConverterImpl"></a>
+## type [DeleteJobParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L6>)
+
+
+
+```go
+type DeleteJobParamsConverterImpl struct{}
+```
+
+<a name="DeleteJobParamsConverterImpl.SetFromJob"></a>
+### func \(\*DeleteJobParamsConverterImpl\) [SetFromJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L8>)
+
+```go
+func (c *DeleteJobParamsConverterImpl) SetFromJob(target *DeleteJobParams, source *Job)
+```
+
+
+
+<a name="DeleteRevisionParams"></a>
+## type [DeleteRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L46-L48>)
+
+
+
+```go
+type DeleteRevisionParams struct {
+    ID string `db:"id" json:"id"`
+}
+```
+
+<a name="DeleteRevisionParams.SetRevision"></a>
+### func \(\*DeleteRevisionParams\) [SetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv_ext.go#L48>)
+
+```go
+func (x *DeleteRevisionParams) SetRevision(entity *Revision)
+```
+
+SetRevision sets the params from the entity.
+
+<a name="DeleteRevisionParamsConverter"></a>
+## type [DeleteRevisionParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv.go#L72-L75>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type DeleteRevisionParamsConverter interface {
+    // goverter:update target
+    SetFromRevision(target *DeleteRevisionParams, source *Revision)
+}
+```
+
+<a name="DeleteRevisionParamsConverterImpl"></a>
+## type [DeleteRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L14>)
+
+
+
+```go
+type DeleteRevisionParamsConverterImpl struct{}
+```
+
+<a name="DeleteRevisionParamsConverterImpl.SetFromRevision"></a>
+### func \(\*DeleteRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L16>)
+
+```go
+func (c *DeleteRevisionParamsConverterImpl) SetFromRevision(target *DeleteRevisionParams, source *Revision)
+```
+
+
+
+<a name="Error"></a>
+## type [Error](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/errors_ext.go#L24>)
+
+PgError represents an error reported by the PostgreSQL server.
+
+```go
+type Error = pgconn.PgError
+```
+
+<a name="ExecDeleteJobParams"></a>
+## type [ExecDeleteJobParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L63-L65>)
+
+
+
+```go
+type ExecDeleteJobParams struct {
+    ID string `db:"id" json:"id"`
+}
+```
+
+<a name="ExecDeleteJobParams.SetJob"></a>
+### func \(\*ExecDeleteJobParams\) [SetJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job_conv_ext.go#L30>)
+
+```go
+func (x *ExecDeleteJobParams) SetJob(entity *Job)
+```
+
+SetJob sets the params from the entity.
+
+<a name="ExecDeleteJobParamsConverter"></a>
+## type [ExecDeleteJobParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job_conv.go#L43-L46>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type ExecDeleteJobParamsConverter interface {
+    // goverter:update target
+    SetFromJob(target *ExecDeleteJobParams, source *Job)
+}
+```
+
+<a name="ExecDeleteJobParamsConverterImpl"></a>
+## type [ExecDeleteJobParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L22>)
+
+
+
+```go
+type ExecDeleteJobParamsConverterImpl struct{}
+```
+
+<a name="ExecDeleteJobParamsConverterImpl.SetFromJob"></a>
+### func \(\*ExecDeleteJobParamsConverterImpl\) [SetFromJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L24>)
+
+```go
+func (c *ExecDeleteJobParamsConverterImpl) SetFromJob(target *ExecDeleteJobParams, source *Job)
+```
+
+
+
+<a name="ExecDeleteRevisionParams"></a>
+## type [ExecDeleteRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L72-L74>)
+
+
+
+```go
+type ExecDeleteRevisionParams struct {
+    ID string `db:"id" json:"id"`
+}
+```
+
+<a name="ExecDeleteRevisionParams.SetRevision"></a>
+### func \(\*ExecDeleteRevisionParams\) [SetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv_ext.go#L54>)
+
+```go
+func (x *ExecDeleteRevisionParams) SetRevision(entity *Revision)
+```
+
+SetRevision sets the params from the entity.
+
+<a name="ExecDeleteRevisionParamsConverter"></a>
+## type [ExecDeleteRevisionParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv.go#L81-L84>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type ExecDeleteRevisionParamsConverter interface {
+    // goverter:update target
+    SetFromRevision(target *ExecDeleteRevisionParams, source *Revision)
+}
+```
+
+<a name="ExecDeleteRevisionParamsConverterImpl"></a>
+## type [ExecDeleteRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L30>)
+
+
+
+```go
+type ExecDeleteRevisionParamsConverterImpl struct{}
+```
+
+<a name="ExecDeleteRevisionParamsConverterImpl.SetFromRevision"></a>
+### func \(\*ExecDeleteRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L32>)
+
+```go
+func (c *ExecDeleteRevisionParamsConverterImpl) SetFromRevision(target *ExecDeleteRevisionParams, source *Revision)
+```
+
+
+
+<a name="ExecInsertJobParams"></a>
+## type [ExecInsertJobParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L85-L89>)
+
+
+
+```go
+type ExecInsertJobParams struct {
+    ID      string `db:"id" json:"id"`
+    Status  string `db:"status" json:"status"`
+    Details string `db:"details" json:"details"`
+}
+```
+
+<a name="ExecInsertJobParams.SetJob"></a>
+### func \(\*ExecInsertJobParams\) [SetJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job_conv_ext.go#L18>)
+
+```go
+func (x *ExecInsertJobParams) SetJob(entity *Job)
+```
+
+SetJob sets the params from the entity.
+
+<a name="ExecInsertJobParamsConverter"></a>
+## type [ExecInsertJobParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job_conv.go#L25-L28>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type ExecInsertJobParamsConverter interface {
+    // goverter:update target
+    SetFromJob(target *ExecInsertJobParams, source *Job)
+}
+```
+
+<a name="ExecInsertJobParamsConverterImpl"></a>
+## type [ExecInsertJobParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L38>)
+
+
+
+```go
+type ExecInsertJobParamsConverterImpl struct{}
+```
+
+<a name="ExecInsertJobParamsConverterImpl.SetFromJob"></a>
+### func \(\*ExecInsertJobParamsConverterImpl\) [SetFromJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L40>)
+
+```go
+func (c *ExecInsertJobParamsConverterImpl) SetFromJob(target *ExecInsertJobParams, source *Job)
+```
+
+
+
 <a name="ExecInsertRevisionParams"></a>
-## type [ExecInsertRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L46-L51>)
+## type [ExecInsertRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L104-L113>)
 
 
 
@@ -128,6 +500,10 @@ type DBTX interface {
 type ExecInsertRevisionParams struct {
     ID            string        `db:"id" json:"id"`
     Description   string        `db:"description" json:"description"`
+    Total         int           `db:"total" json:"total"`
+    Count         int           `db:"count" json:"count"`
+    Error         *string       `db:"error" json:"error"`
+    ErrorStmt     *string       `db:"error_stmt" json:"error_stmt"`
     ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
     ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
 }
@@ -155,7 +531,7 @@ type ExecInsertRevisionParamsConverter interface {
 ```
 
 <a name="ExecInsertRevisionParamsConverterImpl"></a>
-## type [ExecInsertRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L6>)
+## type [ExecInsertRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L48>)
 
 
 
@@ -164,13 +540,142 @@ type ExecInsertRevisionParamsConverterImpl struct{}
 ```
 
 <a name="ExecInsertRevisionParamsConverterImpl.SetFromRevision"></a>
-### func \(\*ExecInsertRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L8>)
+### func \(\*ExecInsertRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L50>)
 
 ```go
 func (c *ExecInsertRevisionParamsConverterImpl) SetFromRevision(target *ExecInsertRevisionParams, source *Revision)
 ```
 
 
+
+<a name="ExecUpdateRevisionParams"></a>
+## type [ExecUpdateRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L172-L182>)
+
+
+
+```go
+type ExecUpdateRevisionParams struct {
+    UpdateMask    []string      `db:"update_mask" json:"update_mask"`
+    Description   string        `db:"description" json:"description"`
+    Total         int           `db:"total" json:"total"`
+    Count         int           `db:"count" json:"count"`
+    Error         *string       `db:"error" json:"error"`
+    ErrorStmt     *string       `db:"error_stmt" json:"error_stmt"`
+    ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
+    ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
+    ID            string        `db:"id" json:"id"`
+}
+```
+
+<a name="ExecUpdateRevisionParams.SetRevision"></a>
+### func \(\*ExecUpdateRevisionParams\) [SetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv_ext.go#L42>)
+
+```go
+func (x *ExecUpdateRevisionParams) SetRevision(entity *Revision)
+```
+
+SetRevision sets the params from the entity.
+
+<a name="ExecUpdateRevisionParamsConverter"></a>
+## type [ExecUpdateRevisionParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv.go#L62-L66>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type ExecUpdateRevisionParamsConverter interface {
+    // goverter:update target
+    // goverter:ignore UpdateMask
+    SetFromRevision(target *ExecUpdateRevisionParams, source *Revision)
+}
+```
+
+<a name="ExecUpdateRevisionParamsConverterImpl"></a>
+## type [ExecUpdateRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L63>)
+
+
+
+```go
+type ExecUpdateRevisionParamsConverterImpl struct{}
+```
+
+<a name="ExecUpdateRevisionParamsConverterImpl.SetFromRevision"></a>
+### func \(\*ExecUpdateRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L65>)
+
+```go
+func (c *ExecUpdateRevisionParamsConverterImpl) SetFromRevision(target *ExecUpdateRevisionParams, source *Revision)
+```
+
+
+
+<a name="ExecUpsertRevisionParams"></a>
+## type [ExecUpsertRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L223-L232>)
+
+
+
+```go
+type ExecUpsertRevisionParams struct {
+    ID            string        `db:"id" json:"id"`
+    Description   string        `db:"description" json:"description"`
+    Total         int           `db:"total" json:"total"`
+    Count         int           `db:"count" json:"count"`
+    Error         *string       `db:"error" json:"error"`
+    ErrorStmt     *string       `db:"error_stmt" json:"error_stmt"`
+    ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
+    ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
+}
+```
+
+<a name="ExecUpsertRevisionParams.SetRevision"></a>
+### func \(\*ExecUpsertRevisionParams\) [SetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv_ext.go#L30>)
+
+```go
+func (x *ExecUpsertRevisionParams) SetRevision(entity *Revision)
+```
+
+SetRevision sets the params from the entity.
+
+<a name="ExecUpsertRevisionParamsConverter"></a>
+## type [ExecUpsertRevisionParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv.go#L43-L46>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type ExecUpsertRevisionParamsConverter interface {
+    // goverter:update target
+    SetFromRevision(target *ExecUpsertRevisionParams, source *Revision)
+}
+```
+
+<a name="ExecUpsertRevisionParamsConverterImpl"></a>
+## type [ExecUpsertRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L78>)
+
+
+
+```go
+type ExecUpsertRevisionParamsConverterImpl struct{}
+```
+
+<a name="ExecUpsertRevisionParamsConverterImpl.SetFromRevision"></a>
+### func \(\*ExecUpsertRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L80>)
+
+```go
+func (c *ExecUpsertRevisionParamsConverterImpl) SetFromRevision(target *ExecUpsertRevisionParams, source *Revision)
+```
+
+
+
+<a name="FileSystem"></a>
+## type [FileSystem](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L28-L32>)
+
+FileSystem represents a filesystem that supports globbing and reading files.
+
+```go
+type FileSystem interface {
+    fs.FS
+    fs.GlobFS
+    fs.ReadFileFS
+}
+```
 
 <a name="Gateway"></a>
 ## type [Gateway](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_ext.go#L16-L27>)
@@ -181,8 +686,8 @@ Gateway represents the database gateway.
 type Gateway interface {
     // inherit from Querier
     Querier
-    // inherit from Applier
-    Applier
+    // Tx returns the underlying transaction interface.
+    Tx() DBTX
     // RunInTx runs the given function in a transaction.
     RunInTx(context.Context, QuerierAction) error
     // Ping verifies a connection to the database is still alive.
@@ -231,8 +736,58 @@ func (fn GatewayOptionFunc) Apply(cfg *pgxpool.Config) error
 
 Apply applies the GatewayOptionFunc to the Gateway.
 
+<a name="GetJobParams"></a>
+## type [GetJobParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L108-L110>)
+
+
+
+```go
+type GetJobParams struct {
+    ID string `db:"id" json:"id"`
+}
+```
+
+<a name="GetJobParams.SetJob"></a>
+### func \(\*GetJobParams\) [SetJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job_conv_ext.go#L6>)
+
+```go
+func (x *GetJobParams) SetJob(entity *Job)
+```
+
+SetJob sets the params from the entity.
+
+<a name="GetJobParamsConverter"></a>
+## type [GetJobParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job_conv.go#L7-L10>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type GetJobParamsConverter interface {
+    // goverter:update target
+    SetFromJob(target *GetJobParams, source *Job)
+}
+```
+
+<a name="GetJobParamsConverterImpl"></a>
+## type [GetJobParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L93>)
+
+
+
+```go
+type GetJobParamsConverterImpl struct{}
+```
+
+<a name="GetJobParamsConverterImpl.SetFromJob"></a>
+### func \(\*GetJobParamsConverterImpl\) [SetFromJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L95>)
+
+```go
+func (c *GetJobParamsConverterImpl) SetFromJob(target *GetJobParams, source *Job)
+```
+
+
+
 <a name="GetRevisionParams"></a>
-## type [GetRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L76-L78>)
+## type [GetRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L265-L267>)
 
 
 
@@ -264,7 +819,7 @@ type GetRevisionParamsConverter interface {
 ```
 
 <a name="GetRevisionParamsConverterImpl"></a>
-## type [GetRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L17>)
+## type [GetRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L101>)
 
 
 
@@ -273,7 +828,7 @@ type GetRevisionParamsConverterImpl struct{}
 ```
 
 <a name="GetRevisionParamsConverterImpl.SetFromRevision"></a>
-### func \(\*GetRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L19>)
+### func \(\*GetRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L103>)
 
 ```go
 func (c *GetRevisionParamsConverterImpl) SetFromRevision(target *GetRevisionParams, source *Revision)
@@ -281,8 +836,60 @@ func (c *GetRevisionParamsConverterImpl) SetFromRevision(target *GetRevisionPara
 
 
 
+<a name="InsertJobParams"></a>
+## type [InsertJobParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L133-L137>)
+
+
+
+```go
+type InsertJobParams struct {
+    ID      string `db:"id" json:"id"`
+    Status  string `db:"status" json:"status"`
+    Details string `db:"details" json:"details"`
+}
+```
+
+<a name="InsertJobParams.SetJob"></a>
+### func \(\*InsertJobParams\) [SetJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job_conv_ext.go#L12>)
+
+```go
+func (x *InsertJobParams) SetJob(entity *Job)
+```
+
+SetJob sets the params from the entity.
+
+<a name="InsertJobParamsConverter"></a>
+## type [InsertJobParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job_conv.go#L16-L19>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type InsertJobParamsConverter interface {
+    // goverter:update target
+    SetFromJob(target *InsertJobParams, source *Job)
+}
+```
+
+<a name="InsertJobParamsConverterImpl"></a>
+## type [InsertJobParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L109>)
+
+
+
+```go
+type InsertJobParamsConverterImpl struct{}
+```
+
+<a name="InsertJobParamsConverterImpl.SetFromJob"></a>
+### func \(\*InsertJobParamsConverterImpl\) [SetFromJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L111>)
+
+```go
+func (c *InsertJobParamsConverterImpl) SetFromJob(target *InsertJobParams, source *Job)
+```
+
+
+
 <a name="InsertRevisionParams"></a>
-## type [InsertRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L108-L113>)
+## type [InsertRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L309-L318>)
 
 
 
@@ -290,6 +897,10 @@ func (c *GetRevisionParamsConverterImpl) SetFromRevision(target *GetRevisionPara
 type InsertRevisionParams struct {
     ID            string        `db:"id" json:"id"`
     Description   string        `db:"description" json:"description"`
+    Total         int           `db:"total" json:"total"`
+    Count         int           `db:"count" json:"count"`
+    Error         *string       `db:"error" json:"error"`
+    ErrorStmt     *string       `db:"error_stmt" json:"error_stmt"`
     ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
     ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
 }
@@ -317,7 +928,7 @@ type InsertRevisionParamsConverter interface {
 ```
 
 <a name="InsertRevisionParamsConverterImpl"></a>
-## type [InsertRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L25>)
+## type [InsertRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L119>)
 
 
 
@@ -326,7 +937,7 @@ type InsertRevisionParamsConverterImpl struct{}
 ```
 
 <a name="InsertRevisionParamsConverterImpl.SetFromRevision"></a>
-### func \(\*InsertRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L27>)
+### func \(\*InsertRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L121>)
 
 ```go
 func (c *InsertRevisionParamsConverterImpl) SetFromRevision(target *InsertRevisionParams, source *Revision)
@@ -334,8 +945,21 @@ func (c *InsertRevisionParamsConverterImpl) SetFromRevision(target *InsertRevisi
 
 
 
+<a name="Job"></a>
+## type [Job](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_gen.go#L11-L15>)
+
+
+
+```go
+type Job struct {
+    ID      string `db:"id" json:"id"`
+    Status  string `db:"status" json:"status"`
+    Details string `db:"details" json:"details"`
+}
+```
+
 <a name="ListRevisionsParams"></a>
-## type [ListRevisionsParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L149-L152>)
+## type [ListRevisionsParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L366-L369>)
 
 
 
@@ -346,25 +970,64 @@ type ListRevisionsParams struct {
 }
 ```
 
+<a name="LockRevisionParams"></a>
+## type [LockRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L43-L48>)
+
+LockRevisionParams represents the parameters for locking a revision.
+
+```go
+type LockRevisionParams struct {
+    // Revision contains the parameters for locking a revision.
+    Revision *Revision
+    // Timeout is the maximum time to wait for the lock.
+    Timeout time.Duration
+}
+```
+
 <a name="Querier"></a>
-## type [Querier](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_gen.go#L11-L24>)
+## type [Querier](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_gen.go#L11-L49>)
 
 
 
 ```go
 type Querier interface {
+    // The schema 'sys' is created to hold system-related tables.
+    CreateSchemaSys(ctx context.Context) error
+    // Creates a table named 'sys.jobs' with the following columns:
+    // The table 'sys.jobs' is created to track jobs in the system.
+    CreateTableJobs(ctx context.Context) error
     // Creates a table named 'aurora_schema_revisions' with the following columns:
     CreateTableRevisions(ctx context.Context) error
+    // Deletes a row from the table 'sys.jobs' with option ':one'
+    DeleteJob(ctx context.Context, arg *DeleteJobParams) (*Job, error)
+    // Deletes a row from the table 'aurora_schema_revisions' with option ':one'
+    DeleteRevision(ctx context.Context, arg *DeleteRevisionParams) (*Revision, error)
+    // Deletes a row from the table 'sys.jobs' with option ':exec'
+    ExecDeleteJob(ctx context.Context, arg *ExecDeleteJobParams) error
+    // Deletes a row from the table 'aurora_schema_revisions' with option ':exec'
+    ExecDeleteRevision(ctx context.Context, arg *ExecDeleteRevisionParams) error
+    // Inserts a row into the table 'sys.jobs' with option ':exec'
+    ExecInsertJob(ctx context.Context, arg *ExecInsertJobParams) error
     // Inserts a row into the table 'aurora_schema_revisions' with option ':exec'
     ExecInsertRevision(ctx context.Context, arg *ExecInsertRevisionParams) error
+    // Updates a row in the table 'revision' with option ':exec'
+    ExecUpdateRevision(ctx context.Context, arg *ExecUpdateRevisionParams) error
+    // Upserts a row into the table 'aurora_schema_revisions' with option ':exec'
+    ExecUpsertRevision(ctx context.Context, arg *ExecUpsertRevisionParams) error
+    // Retrieves a row from the table 'sys.jobs' with option ':one'
+    GetJob(ctx context.Context, arg *GetJobParams) (*Job, error)
     // Retrieves a row from the table 'aurora_schema_revisions' with option ':one'
     GetRevision(ctx context.Context, arg *GetRevisionParams) (*Revision, error)
+    // Inserts a row into the table 'sys.jobs' with option ':one'
+    InsertJob(ctx context.Context, arg *InsertJobParams) (*Job, error)
     // Inserts a row into the table 'aurora_schema_revisions' with option ':one'
     InsertRevision(ctx context.Context, arg *InsertRevisionParams) (*Revision, error)
     // Retrieves a list of rows from the table 'aurora_schema_revisions' with option ':many'
     ListRevisions(ctx context.Context, arg *ListRevisionsParams) ([]*Revision, error)
-    // Waits for a job to complete by its ID.
-    WaitForJob(ctx context.Context, arg *WaitForJobParams) (bool, error)
+    // Updates a row in the table 'revision' with option ':one'
+    UpdateRevision(ctx context.Context, arg *UpdateRevisionParams) (*Revision, error)
+    // Upserts a row into the table 'aurora_schema_revisions' with option ':one'
+    UpsertRevision(ctx context.Context, arg *UpsertRevisionParams) (*Revision, error)
 }
 ```
 
@@ -427,17 +1090,8 @@ func New(db DBTX) *Queries
 
 
 
-<a name="Queries.ApplyRevision"></a>
-### func \(\*Queries\) [ApplyRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L30>)
-
-```go
-func (x *Queries) ApplyRevision(ctx context.Context, params *ApplyRevisionParams) error
-```
-
-ApplyRevision executes a revision.
-
 <a name="Queries.Close"></a>
-### func \(\*Queries\) [Close](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L101>)
+### func \(\*Queries\) [Close](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L106>)
 
 ```go
 func (x *Queries) Close()
@@ -445,8 +1099,26 @@ func (x *Queries) Close()
 
 Close closes the connection to the database.
 
+<a name="Queries.CreateSchemaSys"></a>
+### func \(\*Queries\) [CreateSchemaSys](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L17>)
+
+```go
+func (q *Queries) CreateSchemaSys(ctx context.Context) error
+```
+
+The schema 'sys' is created to hold system\-related tables.
+
+<a name="Queries.CreateTableJobs"></a>
+### func \(\*Queries\) [CreateTableJobs](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L35>)
+
+```go
+func (q *Queries) CreateTableJobs(ctx context.Context) error
+```
+
+Creates a table named 'sys.jobs' with the following columns: The table 'sys.jobs' is created to track jobs in the system.
+
 <a name="Queries.CreateTableRevisions"></a>
-### func \(\*Queries\) [CreateTableRevisions](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L27>)
+### func \(\*Queries\) [CreateTableRevisions](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L35>)
 
 ```go
 func (q *Queries) CreateTableRevisions(ctx context.Context) error
@@ -454,8 +1126,53 @@ func (q *Queries) CreateTableRevisions(ctx context.Context) error
 
 Creates a table named 'aurora\_schema\_revisions' with the following columns:
 
+<a name="Queries.DeleteJob"></a>
+### func \(\*Queries\) [DeleteJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L51>)
+
+```go
+func (q *Queries) DeleteJob(ctx context.Context, arg *DeleteJobParams) (*Job, error)
+```
+
+Deletes a row from the table 'sys.jobs' with option ':one'
+
+<a name="Queries.DeleteRevision"></a>
+### func \(\*Queries\) [DeleteRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L51>)
+
+```go
+func (q *Queries) DeleteRevision(ctx context.Context, arg *DeleteRevisionParams) (*Revision, error)
+```
+
+Deletes a row from the table 'aurora\_schema\_revisions' with option ':one'
+
+<a name="Queries.ExecDeleteJob"></a>
+### func \(\*Queries\) [ExecDeleteJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L68>)
+
+```go
+func (q *Queries) ExecDeleteJob(ctx context.Context, arg *ExecDeleteJobParams) error
+```
+
+Deletes a row from the table 'sys.jobs' with option ':exec'
+
+<a name="Queries.ExecDeleteRevision"></a>
+### func \(\*Queries\) [ExecDeleteRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L77>)
+
+```go
+func (q *Queries) ExecDeleteRevision(ctx context.Context, arg *ExecDeleteRevisionParams) error
+```
+
+Deletes a row from the table 'aurora\_schema\_revisions' with option ':exec'
+
+<a name="Queries.ExecInsertJob"></a>
+### func \(\*Queries\) [ExecInsertJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L92>)
+
+```go
+func (q *Queries) ExecInsertJob(ctx context.Context, arg *ExecInsertJobParams) error
+```
+
+Inserts a row into the table 'sys.jobs' with option ':exec'
+
 <a name="Queries.ExecInsertRevision"></a>
-### func \(\*Queries\) [ExecInsertRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L54>)
+### func \(\*Queries\) [ExecInsertRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L116>)
 
 ```go
 func (q *Queries) ExecInsertRevision(ctx context.Context, arg *ExecInsertRevisionParams) error
@@ -463,8 +1180,35 @@ func (q *Queries) ExecInsertRevision(ctx context.Context, arg *ExecInsertRevisio
 
 Inserts a row into the table 'aurora\_schema\_revisions' with option ':exec'
 
+<a name="Queries.ExecUpdateRevision"></a>
+### func \(\*Queries\) [ExecUpdateRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L185>)
+
+```go
+func (q *Queries) ExecUpdateRevision(ctx context.Context, arg *ExecUpdateRevisionParams) error
+```
+
+Updates a row in the table 'revision' with option ':exec'
+
+<a name="Queries.ExecUpsertRevision"></a>
+### func \(\*Queries\) [ExecUpsertRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L235>)
+
+```go
+func (q *Queries) ExecUpsertRevision(ctx context.Context, arg *ExecUpsertRevisionParams) error
+```
+
+Upserts a row into the table 'aurora\_schema\_revisions' with option ':exec'
+
+<a name="Queries.GetJob"></a>
+### func \(\*Queries\) [GetJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L113>)
+
+```go
+func (q *Queries) GetJob(ctx context.Context, arg *GetJobParams) (*Job, error)
+```
+
+Retrieves a row from the table 'sys.jobs' with option ':one'
+
 <a name="Queries.GetRevision"></a>
-### func \(\*Queries\) [GetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L81>)
+### func \(\*Queries\) [GetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L270>)
 
 ```go
 func (q *Queries) GetRevision(ctx context.Context, arg *GetRevisionParams) (*Revision, error)
@@ -472,8 +1216,17 @@ func (q *Queries) GetRevision(ctx context.Context, arg *GetRevisionParams) (*Rev
 
 Retrieves a row from the table 'aurora\_schema\_revisions' with option ':one'
 
+<a name="Queries.InsertJob"></a>
+### func \(\*Queries\) [InsertJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L140>)
+
+```go
+func (q *Queries) InsertJob(ctx context.Context, arg *InsertJobParams) (*Job, error)
+```
+
+Inserts a row into the table 'sys.jobs' with option ':one'
+
 <a name="Queries.InsertRevision"></a>
-### func \(\*Queries\) [InsertRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L116>)
+### func \(\*Queries\) [InsertRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L321>)
 
 ```go
 func (q *Queries) InsertRevision(ctx context.Context, arg *InsertRevisionParams) (*Revision, error)
@@ -482,7 +1235,7 @@ func (q *Queries) InsertRevision(ctx context.Context, arg *InsertRevisionParams)
 Inserts a row into the table 'aurora\_schema\_revisions' with option ':one'
 
 <a name="Queries.ListRevisions"></a>
-### func \(\*Queries\) [ListRevisions](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L155>)
+### func \(\*Queries\) [ListRevisions](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L372>)
 
 ```go
 func (q *Queries) ListRevisions(ctx context.Context, arg *ListRevisionsParams) ([]*Revision, error)
@@ -491,7 +1244,7 @@ func (q *Queries) ListRevisions(ctx context.Context, arg *ListRevisionsParams) (
 Retrieves a list of rows from the table 'aurora\_schema\_revisions' with option ':many'
 
 <a name="Queries.Ping"></a>
-### func \(\*Queries\) [Ping](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L91>)
+### func \(\*Queries\) [Ping](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L96>)
 
 ```go
 func (x *Queries) Ping(ctx context.Context) error
@@ -508,14 +1261,32 @@ func (x *Queries) RunInTx(ctx context.Context, action QuerierAction) (err error)
 
 RunInTx runs the given function in a transaction.
 
-<a name="Queries.WaitForJob"></a>
-### func \(\*Queries\) [WaitForJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L21>)
+<a name="Queries.Tx"></a>
+### func \(\*Queries\) [Tx](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L91>)
 
 ```go
-func (q *Queries) WaitForJob(ctx context.Context, arg *WaitForJobParams) (bool, error)
+func (x *Queries) Tx() DBTX
 ```
 
-Waits for a job to complete by its ID.
+Tx returns the underlying transaction interface.
+
+<a name="Queries.UpdateRevision"></a>
+### func \(\*Queries\) [UpdateRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L457>)
+
+```go
+func (q *Queries) UpdateRevision(ctx context.Context, arg *UpdateRevisionParams) (*Revision, error)
+```
+
+Updates a row in the table 'revision' with option ':one'
+
+<a name="Queries.UpsertRevision"></a>
+### func \(\*Queries\) [UpsertRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L519>)
+
+```go
+func (q *Queries) UpsertRevision(ctx context.Context, arg *UpsertRevisionParams) (*Revision, error)
+```
+
+Upserts a row into the table 'aurora\_schema\_revisions' with option ':one'
 
 <a name="Queries.WithTx"></a>
 ### func \(\*Queries\) [WithTx](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_gen.go#L28>)
@@ -527,7 +1298,7 @@ func (q *Queries) WithTx(tx pgx.Tx) *Queries
 
 
 <a name="Revision"></a>
-## type [Revision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_gen.go#L11-L16>)
+## type [Revision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_gen.go#L17-L26>)
 
 
 
@@ -535,6 +1306,10 @@ func (q *Queries) WithTx(tx pgx.Tx) *Queries
 type Revision struct {
     ID            string        `db:"id" json:"id"`
     Description   string        `db:"description" json:"description"`
+    Total         int           `db:"total" json:"total"`
+    Count         int           `db:"count" json:"count"`
+    Error         *string       `db:"error" json:"error"`
+    ErrorStmt     *string       `db:"error_stmt" json:"error_stmt"`
     ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
     ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
 }
@@ -558,15 +1333,182 @@ func (x *Revision) SetName(name string)
 
 SetName sets the name of the revision file.
 
-<a name="WaitForJobParams"></a>
-## type [WaitForJobParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L16-L18>)
+<a name="RevisionRepository"></a>
+## type [RevisionRepository](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L35-L40>)
+
+RevisionRepository represents a repository for managing revisions.
+
+```go
+type RevisionRepository struct {
+    // Gateway represents the database gateway.
+    Gateway Gateway
+    // FileSystem is the filesystem where the revision files are located.
+    FileSystem fs.FS
+}
+```
+
+<a name="RevisionRepository.ApplyRevision"></a>
+### func \(\*RevisionRepository\) [ApplyRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L97>)
+
+```go
+func (x *RevisionRepository) ApplyRevision(ctx context.Context, params *ApplyRevisionParams) error
+```
+
+ApplyRevision executes a revision.
+
+<a name="RevisionRepository.ListRevisions"></a>
+### func \(\*RevisionRepository\) [ListRevisions](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L187>)
+
+```go
+func (x *RevisionRepository) ListRevisions(ctx context.Context, _ *ListRevisionsParams) (collection []*Revision, _ error)
+```
+
+ListRevisions lists all revisions in the repository.
+
+<a name="RevisionRepository.LockRevision"></a>
+### func \(\*RevisionRepository\) [LockRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L51>)
+
+```go
+func (x *RevisionRepository) LockRevision(ctx context.Context, params *LockRevisionParams) error
+```
+
+LockRevision locks the revision for exclusive access.
+
+<a name="RevisionRepository.UnlockRevision"></a>
+### func \(\*RevisionRepository\) [UnlockRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L84>)
+
+```go
+func (x *RevisionRepository) UnlockRevision(ctx context.Context, params *UnlockRevisionParams) error
+```
+
+UnlockRevision unlocks the revision after exclusive access.
+
+<a name="UnlockRevisionParams"></a>
+## type [UnlockRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L78-L81>)
+
+UnlockRevisionParams represents the parameters for unlocking a revision.
+
+```go
+type UnlockRevisionParams struct {
+    // Revision contains the parameters for unlocking a revision.
+    Revision *Revision
+}
+```
+
+<a name="UpdateRevisionParams"></a>
+## type [UpdateRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L444-L454>)
 
 
 
 ```go
-type WaitForJobParams struct {
-    JobID string `db:"job_id" json:"job_id"`
+type UpdateRevisionParams struct {
+    UpdateMask    []string      `db:"update_mask" json:"update_mask"`
+    Description   string        `db:"description" json:"description"`
+    Total         int           `db:"total" json:"total"`
+    Count         int           `db:"count" json:"count"`
+    Error         *string       `db:"error" json:"error"`
+    ErrorStmt     *string       `db:"error_stmt" json:"error_stmt"`
+    ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
+    ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
+    ID            string        `db:"id" json:"id"`
 }
 ```
+
+<a name="UpdateRevisionParams.SetRevision"></a>
+### func \(\*UpdateRevisionParams\) [SetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv_ext.go#L36>)
+
+```go
+func (x *UpdateRevisionParams) SetRevision(entity *Revision)
+```
+
+SetRevision sets the params from the entity.
+
+<a name="UpdateRevisionParamsConverter"></a>
+## type [UpdateRevisionParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv.go#L52-L56>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type UpdateRevisionParamsConverter interface {
+    // goverter:update target
+    // goverter:ignore UpdateMask
+    SetFromRevision(target *UpdateRevisionParams, source *Revision)
+}
+```
+
+<a name="UpdateRevisionParamsConverterImpl"></a>
+## type [UpdateRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L134>)
+
+
+
+```go
+type UpdateRevisionParamsConverterImpl struct{}
+```
+
+<a name="UpdateRevisionParamsConverterImpl.SetFromRevision"></a>
+### func \(\*UpdateRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L136>)
+
+```go
+func (c *UpdateRevisionParamsConverterImpl) SetFromRevision(target *UpdateRevisionParams, source *Revision)
+```
+
+
+
+<a name="UpsertRevisionParams"></a>
+## type [UpsertRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L507-L516>)
+
+
+
+```go
+type UpsertRevisionParams struct {
+    ID            string        `db:"id" json:"id"`
+    Description   string        `db:"description" json:"description"`
+    Total         int           `db:"total" json:"total"`
+    Count         int           `db:"count" json:"count"`
+    Error         *string       `db:"error" json:"error"`
+    ErrorStmt     *string       `db:"error_stmt" json:"error_stmt"`
+    ExecutedAt    time.Time     `db:"executed_at" json:"executed_at"`
+    ExecutionTime time.Duration `db:"execution_time" json:"execution_time"`
+}
+```
+
+<a name="UpsertRevisionParams.SetRevision"></a>
+### func \(\*UpsertRevisionParams\) [SetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv_ext.go#L24>)
+
+```go
+func (x *UpsertRevisionParams) SetRevision(entity *Revision)
+```
+
+SetRevision sets the params from the entity.
+
+<a name="UpsertRevisionParamsConverter"></a>
+## type [UpsertRevisionParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision_conv.go#L34-L37>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type UpsertRevisionParamsConverter interface {
+    // goverter:update target
+    SetFromRevision(target *UpsertRevisionParams, source *Revision)
+}
+```
+
+<a name="UpsertRevisionParamsConverterImpl"></a>
+## type [UpsertRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L149>)
+
+
+
+```go
+type UpsertRevisionParamsConverterImpl struct{}
+```
+
+<a name="UpsertRevisionParamsConverterImpl.SetFromRevision"></a>
+### func \(\*UpsertRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L151>)
+
+```go
+func (c *UpsertRevisionParamsConverterImpl) SetFromRevision(target *UpsertRevisionParams, source *Revision)
+```
+
+
 
 Generated by [gomarkdoc](<https://github.com/princjef/gomarkdoc>)

@@ -9,18 +9,137 @@ import (
 	"context"
 )
 
-const waitForJob = `-- name: WaitForJob :one
-SELECT sys.wait_for_job($1::TEXT)::BOOLEAN AS ok
+const createSchemaSys = `-- name: CreateSchemaSys :exec
+CREATE SCHEMA IF NOT EXISTS sys
 `
 
-type WaitForJobParams struct {
-	JobID string `db:"job_id" json:"job_id"`
+// The schema 'sys' is created to hold system-related tables.
+func (q *Queries) CreateSchemaSys(ctx context.Context) error {
+	_, err := q.db.Exec(ctx, createSchemaSys)
+	return err
 }
 
-// Waits for a job to complete by its ID.
-func (q *Queries) WaitForJob(ctx context.Context, arg *WaitForJobParams) (bool, error) {
-	row := q.db.QueryRow(ctx, waitForJob, arg.JobID)
-	var ok bool
-	err := row.Scan(&ok)
-	return ok, err
+const createTableJobs = `-- name: CreateTableJobs :exec
+CREATE TABLE IF NOT EXISTS sys.jobs (
+    -- primary key column
+    id TEXT PRIMARY KEY,
+    -- revision name
+    status TEXT NOT NULL,
+    -- total number of statements
+    details TEXT NOT NULL
+)
+`
+
+// Creates a table named 'sys.jobs' with the following columns:
+// The table 'sys.jobs' is created to track jobs in the system.
+func (q *Queries) CreateTableJobs(ctx context.Context) error {
+	_, err := q.db.Exec(ctx, createTableJobs)
+	return err
+}
+
+const deleteJob = `-- name: DeleteJob :one
+DELETE FROM sys.jobs
+WHERE id = $1
+RETURNING id, status, details
+`
+
+type DeleteJobParams struct {
+	ID string `db:"id" json:"id"`
+}
+
+// Deletes a row from the table 'sys.jobs' with option ':one'
+func (q *Queries) DeleteJob(ctx context.Context, arg *DeleteJobParams) (*Job, error) {
+	row := q.db.QueryRow(ctx, deleteJob, arg.ID)
+	var i Job
+	err := row.Scan(&i.ID, &i.Status, &i.Details)
+	return &i, err
+}
+
+const execDeleteJob = `-- name: ExecDeleteJob :exec
+DELETE FROM sys.jobs
+WHERE id = $1
+`
+
+type ExecDeleteJobParams struct {
+	ID string `db:"id" json:"id"`
+}
+
+// Deletes a row from the table 'sys.jobs' with option ':exec'
+func (q *Queries) ExecDeleteJob(ctx context.Context, arg *ExecDeleteJobParams) error {
+	_, err := q.db.Exec(ctx, execDeleteJob, arg.ID)
+	return err
+}
+
+const execInsertJob = `-- name: ExecInsertJob :exec
+INSERT INTO sys.jobs (
+    id,
+    status,
+    details
+) VALUES (
+    $1,
+    $2,
+    $3
+)
+`
+
+type ExecInsertJobParams struct {
+	ID      string `db:"id" json:"id"`
+	Status  string `db:"status" json:"status"`
+	Details string `db:"details" json:"details"`
+}
+
+// Inserts a row into the table 'sys.jobs' with option ':exec'
+func (q *Queries) ExecInsertJob(ctx context.Context, arg *ExecInsertJobParams) error {
+	_, err := q.db.Exec(ctx, execInsertJob, arg.ID, arg.Status, arg.Details)
+	return err
+}
+
+const getJob = `-- name: GetJob :one
+SELECT
+    id,
+    status,
+    details
+FROM
+    sys.jobs
+WHERE
+    id = $1
+`
+
+type GetJobParams struct {
+	ID string `db:"id" json:"id"`
+}
+
+// Retrieves a row from the table 'sys.jobs' with option ':one'
+func (q *Queries) GetJob(ctx context.Context, arg *GetJobParams) (*Job, error) {
+	row := q.db.QueryRow(ctx, getJob, arg.ID)
+	var i Job
+	err := row.Scan(&i.ID, &i.Status, &i.Details)
+	return &i, err
+}
+
+const insertJob = `-- name: InsertJob :one
+INSERT INTO sys.jobs (
+    id,
+    status,
+    details
+) VALUES (
+    $1,
+    $2,
+    $3
+)
+RETURNING id, status, details
+`
+
+type InsertJobParams struct {
+	ID      string `db:"id" json:"id"`
+	Status  string `db:"status" json:"status"`
+	Details string `db:"details" json:"details"`
+}
+
+// Inserts a row into the table 'sys.jobs' with option ':one'
+func (q *Queries) InsertJob(ctx context.Context, arg *InsertJobParams) (*Job, error) {
+	row := q.db.QueryRow(ctx, insertJob, arg.ID, arg.Status, arg.Details)
+	var i Job
+	err := row.Scan(&i.ID, &i.Status, &i.Details)
+	return &i, err
 }

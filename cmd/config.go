@@ -3,6 +3,9 @@ package cmd
 
 import (
 	"encoding"
+	"fmt"
+	"net/url"
+	"strings"
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/gohcl"
@@ -50,7 +53,7 @@ func (c *Config) UnmarshalText(text []byte) error {
 		return derr
 	}
 
-	config.Eval(context)
+	config.Eval(rootCtx)
 
 	*c = config
 	return nil
@@ -102,9 +105,12 @@ type Environment struct {
 }
 
 // GetURL returns the URL of the environment.
-func (x *Environment) GetURL() string {
-	value, _ := x.URL.Value(x.Context)
-	return value.AsString()
+func (x *Environment) GetURL() (string, error) {
+	value, err := x.URL.Value(x.Context)
+	if err != nil {
+		return "", err
+	}
+	return value.AsString(), nil
 }
 
 var _ Node = &Environment{}
@@ -136,9 +142,12 @@ type Migration struct {
 }
 
 // GetDir returns the directory for migrations.
-func (x *Migration) GetDir() string {
-	value, _ := x.Dir.Value(x.Context)
-	return value.AsString()
+func (x *Migration) GetDir() (string, error) {
+	value, err := x.Dir.Value(x.Context)
+	if err != nil {
+		return "", err
+	}
+	return value.AsString(), nil
 }
 
 var _ Node = &Migration{}
@@ -171,9 +180,32 @@ var _ Node = &Data{}
 func (x *Data) Eval(ctx *hcl.EvalContext) (cty.Value, hcl.Diagnostics) {
 	x.Context = ctx
 	kv := GetValueMap(ctx.Variables["data"])
-	// TODO: Use the Remain to decode the data
 	attr := GetValueMap(kv[x.Type])
-	attr[x.Name] = cty.StringVal("DSQL_TOKEN")
+
+	switch x.Type {
+	case "aws_dsql_token":
+		token := &DSQLToken{}
+		// decode the token
+		if err := gohcl.DecodeBody(x.Remain, ctx, token); err != nil {
+			return cty.Value{}, err
+		}
+		// eval the token
+		value, err := token.Eval(ctx)
+		if err != nil {
+			return cty.Value{}, err
+		}
+
+		// done
+		attr[x.Name] = value
+	default:
+		return cty.Value{}, hcl.Diagnostics{
+			{
+				Severity:    hcl.DiagError,
+				Summary:     "The data type is not supported",
+				EvalContext: ctx,
+			},
+		}
+	}
 	// return the new value
 	return cty.ObjectVal(attr), nil
 }
@@ -206,4 +238,22 @@ func GetValueMap(v cty.Value) map[string]cty.Value {
 	}
 
 	return kv
+}
+
+// GetPath parses a URL and returns the path without the scheme.
+func GetPath(value string) (string, error) {
+	path, err := url.Parse(value)
+	if err != nil {
+		return "", err
+	}
+
+	switch path.Scheme {
+	case "file":
+		// remove the scheme
+		path.Scheme = ""
+	default:
+		return "", fmt.Errorf("unsupported config scheme: %s", path.Scheme)
+	}
+
+	return strings.TrimPrefix(path.String(), "//"), nil
 }

@@ -3,14 +3,98 @@
 
 package ent
 
+type DeleteJobParamsConverterImpl struct{}
+
+func (c *DeleteJobParamsConverterImpl) SetFromJob(target *DeleteJobParams, source *Job) {
+	if source != nil {
+		target.ID = source.ID
+	}
+}
+
+type DeleteRevisionParamsConverterImpl struct{}
+
+func (c *DeleteRevisionParamsConverterImpl) SetFromRevision(target *DeleteRevisionParams, source *Revision) {
+	if source != nil {
+		target.ID = source.ID
+	}
+}
+
+type ExecDeleteJobParamsConverterImpl struct{}
+
+func (c *ExecDeleteJobParamsConverterImpl) SetFromJob(target *ExecDeleteJobParams, source *Job) {
+	if source != nil {
+		target.ID = source.ID
+	}
+}
+
+type ExecDeleteRevisionParamsConverterImpl struct{}
+
+func (c *ExecDeleteRevisionParamsConverterImpl) SetFromRevision(target *ExecDeleteRevisionParams, source *Revision) {
+	if source != nil {
+		target.ID = source.ID
+	}
+}
+
+type ExecInsertJobParamsConverterImpl struct{}
+
+func (c *ExecInsertJobParamsConverterImpl) SetFromJob(target *ExecInsertJobParams, source *Job) {
+	if source != nil {
+		target.ID = source.ID
+		target.Status = source.Status
+		target.Details = source.Details
+	}
+}
+
 type ExecInsertRevisionParamsConverterImpl struct{}
 
 func (c *ExecInsertRevisionParamsConverterImpl) SetFromRevision(target *ExecInsertRevisionParams, source *Revision) {
 	if source != nil {
 		target.ID = source.ID
 		target.Description = source.Description
+		target.Total = source.Total
+		target.Count = source.Count
+		target.Error = source.Error
+		target.ErrorStmt = source.ErrorStmt
 		target.ExecutedAt = source.ExecutedAt
 		target.ExecutionTime = source.ExecutionTime
+	}
+}
+
+type ExecUpdateRevisionParamsConverterImpl struct{}
+
+func (c *ExecUpdateRevisionParamsConverterImpl) SetFromRevision(target *ExecUpdateRevisionParams, source *Revision) {
+	if source != nil {
+		target.Description = source.Description
+		target.Total = source.Total
+		target.Count = source.Count
+		target.Error = source.Error
+		target.ErrorStmt = source.ErrorStmt
+		target.ExecutedAt = source.ExecutedAt
+		target.ExecutionTime = source.ExecutionTime
+		target.ID = source.ID
+	}
+}
+
+type ExecUpsertRevisionParamsConverterImpl struct{}
+
+func (c *ExecUpsertRevisionParamsConverterImpl) SetFromRevision(target *ExecUpsertRevisionParams, source *Revision) {
+	if source != nil {
+		target.ID = source.ID
+		target.Description = source.Description
+		target.Total = source.Total
+		target.Count = source.Count
+		target.Error = source.Error
+		target.ErrorStmt = source.ErrorStmt
+		target.ExecutedAt = source.ExecutedAt
+		target.ExecutionTime = source.ExecutionTime
+	}
+}
+
+type GetJobParamsConverterImpl struct{}
+
+func (c *GetJobParamsConverterImpl) SetFromJob(target *GetJobParams, source *Job) {
+	if source != nil {
+		target.ID = source.ID
 	}
 }
 
@@ -22,12 +106,56 @@ func (c *GetRevisionParamsConverterImpl) SetFromRevision(target *GetRevisionPara
 	}
 }
 
+type InsertJobParamsConverterImpl struct{}
+
+func (c *InsertJobParamsConverterImpl) SetFromJob(target *InsertJobParams, source *Job) {
+	if source != nil {
+		target.ID = source.ID
+		target.Status = source.Status
+		target.Details = source.Details
+	}
+}
+
 type InsertRevisionParamsConverterImpl struct{}
 
 func (c *InsertRevisionParamsConverterImpl) SetFromRevision(target *InsertRevisionParams, source *Revision) {
 	if source != nil {
 		target.ID = source.ID
 		target.Description = source.Description
+		target.Total = source.Total
+		target.Count = source.Count
+		target.Error = source.Error
+		target.ErrorStmt = source.ErrorStmt
+		target.ExecutedAt = source.ExecutedAt
+		target.ExecutionTime = source.ExecutionTime
+	}
+}
+
+type UpdateRevisionParamsConverterImpl struct{}
+
+func (c *UpdateRevisionParamsConverterImpl) SetFromRevision(target *UpdateRevisionParams, source *Revision) {
+	if source != nil {
+		target.Description = source.Description
+		target.Total = source.Total
+		target.Count = source.Count
+		target.Error = source.Error
+		target.ErrorStmt = source.ErrorStmt
+		target.ExecutedAt = source.ExecutedAt
+		target.ExecutionTime = source.ExecutionTime
+		target.ID = source.ID
+	}
+}
+
+type UpsertRevisionParamsConverterImpl struct{}
+
+func (c *UpsertRevisionParamsConverterImpl) SetFromRevision(target *UpsertRevisionParams, source *Revision) {
+	if source != nil {
+		target.ID = source.ID
+		target.Description = source.Description
+		target.Total = source.Total
+		target.Count = source.Count
+		target.Error = source.Error
+		target.ErrorStmt = source.ErrorStmt
 		target.ExecutedAt = source.ExecutedAt
 		target.ExecutionTime = source.ExecutionTime
 	}

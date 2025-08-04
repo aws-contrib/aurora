@@ -9,21 +9,31 @@ import (
 )
 
 type FakeGateway struct {
-	ApplyRevisionStub        func(context.Context, *ent.ApplyRevisionParams) error
-	applyRevisionMutex       sync.RWMutex
-	applyRevisionArgsForCall []struct {
-		arg1 context.Context
-		arg2 *ent.ApplyRevisionParams
-	}
-	applyRevisionReturns struct {
-		result1 error
-	}
-	applyRevisionReturnsOnCall map[int]struct {
-		result1 error
-	}
 	CloseStub        func()
 	closeMutex       sync.RWMutex
 	closeArgsForCall []struct {
+	}
+	CreateSchemaSysStub        func(context.Context) error
+	createSchemaSysMutex       sync.RWMutex
+	createSchemaSysArgsForCall []struct {
+		arg1 context.Context
+	}
+	createSchemaSysReturns struct {
+		result1 error
+	}
+	createSchemaSysReturnsOnCall map[int]struct {
+		result1 error
+	}
+	CreateTableJobsStub        func(context.Context) error
+	createTableJobsMutex       sync.RWMutex
+	createTableJobsArgsForCall []struct {
+		arg1 context.Context
+	}
+	createTableJobsReturns struct {
+		result1 error
+	}
+	createTableJobsReturnsOnCall map[int]struct {
+		result1 error
 	}
 	CreateTableRevisionsStub        func(context.Context) error
 	createTableRevisionsMutex       sync.RWMutex
@@ -34,6 +44,70 @@ type FakeGateway struct {
 		result1 error
 	}
 	createTableRevisionsReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DeleteJobStub        func(context.Context, *ent.DeleteJobParams) (*ent.Job, error)
+	deleteJobMutex       sync.RWMutex
+	deleteJobArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.DeleteJobParams
+	}
+	deleteJobReturns struct {
+		result1 *ent.Job
+		result2 error
+	}
+	deleteJobReturnsOnCall map[int]struct {
+		result1 *ent.Job
+		result2 error
+	}
+	DeleteRevisionStub        func(context.Context, *ent.DeleteRevisionParams) (*ent.Revision, error)
+	deleteRevisionMutex       sync.RWMutex
+	deleteRevisionArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.DeleteRevisionParams
+	}
+	deleteRevisionReturns struct {
+		result1 *ent.Revision
+		result2 error
+	}
+	deleteRevisionReturnsOnCall map[int]struct {
+		result1 *ent.Revision
+		result2 error
+	}
+	ExecDeleteJobStub        func(context.Context, *ent.ExecDeleteJobParams) error
+	execDeleteJobMutex       sync.RWMutex
+	execDeleteJobArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.ExecDeleteJobParams
+	}
+	execDeleteJobReturns struct {
+		result1 error
+	}
+	execDeleteJobReturnsOnCall map[int]struct {
+		result1 error
+	}
+	ExecDeleteRevisionStub        func(context.Context, *ent.ExecDeleteRevisionParams) error
+	execDeleteRevisionMutex       sync.RWMutex
+	execDeleteRevisionArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.ExecDeleteRevisionParams
+	}
+	execDeleteRevisionReturns struct {
+		result1 error
+	}
+	execDeleteRevisionReturnsOnCall map[int]struct {
+		result1 error
+	}
+	ExecInsertJobStub        func(context.Context, *ent.ExecInsertJobParams) error
+	execInsertJobMutex       sync.RWMutex
+	execInsertJobArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.ExecInsertJobParams
+	}
+	execInsertJobReturns struct {
+		result1 error
+	}
+	execInsertJobReturnsOnCall map[int]struct {
 		result1 error
 	}
 	ExecInsertRevisionStub        func(context.Context, *ent.ExecInsertRevisionParams) error
@@ -48,6 +122,44 @@ type FakeGateway struct {
 	execInsertRevisionReturnsOnCall map[int]struct {
 		result1 error
 	}
+	ExecUpdateRevisionStub        func(context.Context, *ent.ExecUpdateRevisionParams) error
+	execUpdateRevisionMutex       sync.RWMutex
+	execUpdateRevisionArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.ExecUpdateRevisionParams
+	}
+	execUpdateRevisionReturns struct {
+		result1 error
+	}
+	execUpdateRevisionReturnsOnCall map[int]struct {
+		result1 error
+	}
+	ExecUpsertRevisionStub        func(context.Context, *ent.ExecUpsertRevisionParams) error
+	execUpsertRevisionMutex       sync.RWMutex
+	execUpsertRevisionArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.ExecUpsertRevisionParams
+	}
+	execUpsertRevisionReturns struct {
+		result1 error
+	}
+	execUpsertRevisionReturnsOnCall map[int]struct {
+		result1 error
+	}
+	GetJobStub        func(context.Context, *ent.GetJobParams) (*ent.Job, error)
+	getJobMutex       sync.RWMutex
+	getJobArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.GetJobParams
+	}
+	getJobReturns struct {
+		result1 *ent.Job
+		result2 error
+	}
+	getJobReturnsOnCall map[int]struct {
+		result1 *ent.Job
+		result2 error
+	}
 	GetRevisionStub        func(context.Context, *ent.GetRevisionParams) (*ent.Revision, error)
 	getRevisionMutex       sync.RWMutex
 	getRevisionArgsForCall []struct {
@@ -60,6 +172,20 @@ type FakeGateway struct {
 	}
 	getRevisionReturnsOnCall map[int]struct {
 		result1 *ent.Revision
+		result2 error
+	}
+	InsertJobStub        func(context.Context, *ent.InsertJobParams) (*ent.Job, error)
+	insertJobMutex       sync.RWMutex
+	insertJobArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.InsertJobParams
+	}
+	insertJobReturns struct {
+		result1 *ent.Job
+		result2 error
+	}
+	insertJobReturnsOnCall map[int]struct {
+		result1 *ent.Job
 		result2 error
 	}
 	InsertRevisionStub        func(context.Context, *ent.InsertRevisionParams) (*ent.Revision, error)
@@ -113,84 +239,46 @@ type FakeGateway struct {
 	runInTxReturnsOnCall map[int]struct {
 		result1 error
 	}
-	WaitForJobStub        func(context.Context, *ent.WaitForJobParams) (bool, error)
-	waitForJobMutex       sync.RWMutex
-	waitForJobArgsForCall []struct {
-		arg1 context.Context
-		arg2 *ent.WaitForJobParams
+	TxStub        func() ent.DBTX
+	txMutex       sync.RWMutex
+	txArgsForCall []struct {
 	}
-	waitForJobReturns struct {
-		result1 bool
+	txReturns struct {
+		result1 ent.DBTX
+	}
+	txReturnsOnCall map[int]struct {
+		result1 ent.DBTX
+	}
+	UpdateRevisionStub        func(context.Context, *ent.UpdateRevisionParams) (*ent.Revision, error)
+	updateRevisionMutex       sync.RWMutex
+	updateRevisionArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.UpdateRevisionParams
+	}
+	updateRevisionReturns struct {
+		result1 *ent.Revision
 		result2 error
 	}
-	waitForJobReturnsOnCall map[int]struct {
-		result1 bool
+	updateRevisionReturnsOnCall map[int]struct {
+		result1 *ent.Revision
+		result2 error
+	}
+	UpsertRevisionStub        func(context.Context, *ent.UpsertRevisionParams) (*ent.Revision, error)
+	upsertRevisionMutex       sync.RWMutex
+	upsertRevisionArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.UpsertRevisionParams
+	}
+	upsertRevisionReturns struct {
+		result1 *ent.Revision
+		result2 error
+	}
+	upsertRevisionReturnsOnCall map[int]struct {
+		result1 *ent.Revision
 		result2 error
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
-}
-
-func (fake *FakeGateway) ApplyRevision(arg1 context.Context, arg2 *ent.ApplyRevisionParams) error {
-	fake.applyRevisionMutex.Lock()
-	ret, specificReturn := fake.applyRevisionReturnsOnCall[len(fake.applyRevisionArgsForCall)]
-	fake.applyRevisionArgsForCall = append(fake.applyRevisionArgsForCall, struct {
-		arg1 context.Context
-		arg2 *ent.ApplyRevisionParams
-	}{arg1, arg2})
-	stub := fake.ApplyRevisionStub
-	fakeReturns := fake.applyRevisionReturns
-	fake.recordInvocation("ApplyRevision", []interface{}{arg1, arg2})
-	fake.applyRevisionMutex.Unlock()
-	if stub != nil {
-		return stub(arg1, arg2)
-	}
-	if specificReturn {
-		return ret.result1
-	}
-	return fakeReturns.result1
-}
-
-func (fake *FakeGateway) ApplyRevisionCallCount() int {
-	fake.applyRevisionMutex.RLock()
-	defer fake.applyRevisionMutex.RUnlock()
-	return len(fake.applyRevisionArgsForCall)
-}
-
-func (fake *FakeGateway) ApplyRevisionCalls(stub func(context.Context, *ent.ApplyRevisionParams) error) {
-	fake.applyRevisionMutex.Lock()
-	defer fake.applyRevisionMutex.Unlock()
-	fake.ApplyRevisionStub = stub
-}
-
-func (fake *FakeGateway) ApplyRevisionArgsForCall(i int) (context.Context, *ent.ApplyRevisionParams) {
-	fake.applyRevisionMutex.RLock()
-	defer fake.applyRevisionMutex.RUnlock()
-	argsForCall := fake.applyRevisionArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2
-}
-
-func (fake *FakeGateway) ApplyRevisionReturns(result1 error) {
-	fake.applyRevisionMutex.Lock()
-	defer fake.applyRevisionMutex.Unlock()
-	fake.ApplyRevisionStub = nil
-	fake.applyRevisionReturns = struct {
-		result1 error
-	}{result1}
-}
-
-func (fake *FakeGateway) ApplyRevisionReturnsOnCall(i int, result1 error) {
-	fake.applyRevisionMutex.Lock()
-	defer fake.applyRevisionMutex.Unlock()
-	fake.ApplyRevisionStub = nil
-	if fake.applyRevisionReturnsOnCall == nil {
-		fake.applyRevisionReturnsOnCall = make(map[int]struct {
-			result1 error
-		})
-	}
-	fake.applyRevisionReturnsOnCall[i] = struct {
-		result1 error
-	}{result1}
 }
 
 func (fake *FakeGateway) Close() {
@@ -215,6 +303,128 @@ func (fake *FakeGateway) CloseCalls(stub func()) {
 	fake.closeMutex.Lock()
 	defer fake.closeMutex.Unlock()
 	fake.CloseStub = stub
+}
+
+func (fake *FakeGateway) CreateSchemaSys(arg1 context.Context) error {
+	fake.createSchemaSysMutex.Lock()
+	ret, specificReturn := fake.createSchemaSysReturnsOnCall[len(fake.createSchemaSysArgsForCall)]
+	fake.createSchemaSysArgsForCall = append(fake.createSchemaSysArgsForCall, struct {
+		arg1 context.Context
+	}{arg1})
+	stub := fake.CreateSchemaSysStub
+	fakeReturns := fake.createSchemaSysReturns
+	fake.recordInvocation("CreateSchemaSys", []interface{}{arg1})
+	fake.createSchemaSysMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeGateway) CreateSchemaSysCallCount() int {
+	fake.createSchemaSysMutex.RLock()
+	defer fake.createSchemaSysMutex.RUnlock()
+	return len(fake.createSchemaSysArgsForCall)
+}
+
+func (fake *FakeGateway) CreateSchemaSysCalls(stub func(context.Context) error) {
+	fake.createSchemaSysMutex.Lock()
+	defer fake.createSchemaSysMutex.Unlock()
+	fake.CreateSchemaSysStub = stub
+}
+
+func (fake *FakeGateway) CreateSchemaSysArgsForCall(i int) context.Context {
+	fake.createSchemaSysMutex.RLock()
+	defer fake.createSchemaSysMutex.RUnlock()
+	argsForCall := fake.createSchemaSysArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeGateway) CreateSchemaSysReturns(result1 error) {
+	fake.createSchemaSysMutex.Lock()
+	defer fake.createSchemaSysMutex.Unlock()
+	fake.CreateSchemaSysStub = nil
+	fake.createSchemaSysReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) CreateSchemaSysReturnsOnCall(i int, result1 error) {
+	fake.createSchemaSysMutex.Lock()
+	defer fake.createSchemaSysMutex.Unlock()
+	fake.CreateSchemaSysStub = nil
+	if fake.createSchemaSysReturnsOnCall == nil {
+		fake.createSchemaSysReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.createSchemaSysReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) CreateTableJobs(arg1 context.Context) error {
+	fake.createTableJobsMutex.Lock()
+	ret, specificReturn := fake.createTableJobsReturnsOnCall[len(fake.createTableJobsArgsForCall)]
+	fake.createTableJobsArgsForCall = append(fake.createTableJobsArgsForCall, struct {
+		arg1 context.Context
+	}{arg1})
+	stub := fake.CreateTableJobsStub
+	fakeReturns := fake.createTableJobsReturns
+	fake.recordInvocation("CreateTableJobs", []interface{}{arg1})
+	fake.createTableJobsMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeGateway) CreateTableJobsCallCount() int {
+	fake.createTableJobsMutex.RLock()
+	defer fake.createTableJobsMutex.RUnlock()
+	return len(fake.createTableJobsArgsForCall)
+}
+
+func (fake *FakeGateway) CreateTableJobsCalls(stub func(context.Context) error) {
+	fake.createTableJobsMutex.Lock()
+	defer fake.createTableJobsMutex.Unlock()
+	fake.CreateTableJobsStub = stub
+}
+
+func (fake *FakeGateway) CreateTableJobsArgsForCall(i int) context.Context {
+	fake.createTableJobsMutex.RLock()
+	defer fake.createTableJobsMutex.RUnlock()
+	argsForCall := fake.createTableJobsArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeGateway) CreateTableJobsReturns(result1 error) {
+	fake.createTableJobsMutex.Lock()
+	defer fake.createTableJobsMutex.Unlock()
+	fake.CreateTableJobsStub = nil
+	fake.createTableJobsReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) CreateTableJobsReturnsOnCall(i int, result1 error) {
+	fake.createTableJobsMutex.Lock()
+	defer fake.createTableJobsMutex.Unlock()
+	fake.CreateTableJobsStub = nil
+	if fake.createTableJobsReturnsOnCall == nil {
+		fake.createTableJobsReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.createTableJobsReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
 }
 
 func (fake *FakeGateway) CreateTableRevisions(arg1 context.Context) error {
@@ -274,6 +484,322 @@ func (fake *FakeGateway) CreateTableRevisionsReturnsOnCall(i int, result1 error)
 		})
 	}
 	fake.createTableRevisionsReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) DeleteJob(arg1 context.Context, arg2 *ent.DeleteJobParams) (*ent.Job, error) {
+	fake.deleteJobMutex.Lock()
+	ret, specificReturn := fake.deleteJobReturnsOnCall[len(fake.deleteJobArgsForCall)]
+	fake.deleteJobArgsForCall = append(fake.deleteJobArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.DeleteJobParams
+	}{arg1, arg2})
+	stub := fake.DeleteJobStub
+	fakeReturns := fake.deleteJobReturns
+	fake.recordInvocation("DeleteJob", []interface{}{arg1, arg2})
+	fake.deleteJobMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeGateway) DeleteJobCallCount() int {
+	fake.deleteJobMutex.RLock()
+	defer fake.deleteJobMutex.RUnlock()
+	return len(fake.deleteJobArgsForCall)
+}
+
+func (fake *FakeGateway) DeleteJobCalls(stub func(context.Context, *ent.DeleteJobParams) (*ent.Job, error)) {
+	fake.deleteJobMutex.Lock()
+	defer fake.deleteJobMutex.Unlock()
+	fake.DeleteJobStub = stub
+}
+
+func (fake *FakeGateway) DeleteJobArgsForCall(i int) (context.Context, *ent.DeleteJobParams) {
+	fake.deleteJobMutex.RLock()
+	defer fake.deleteJobMutex.RUnlock()
+	argsForCall := fake.deleteJobArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeGateway) DeleteJobReturns(result1 *ent.Job, result2 error) {
+	fake.deleteJobMutex.Lock()
+	defer fake.deleteJobMutex.Unlock()
+	fake.DeleteJobStub = nil
+	fake.deleteJobReturns = struct {
+		result1 *ent.Job
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGateway) DeleteJobReturnsOnCall(i int, result1 *ent.Job, result2 error) {
+	fake.deleteJobMutex.Lock()
+	defer fake.deleteJobMutex.Unlock()
+	fake.DeleteJobStub = nil
+	if fake.deleteJobReturnsOnCall == nil {
+		fake.deleteJobReturnsOnCall = make(map[int]struct {
+			result1 *ent.Job
+			result2 error
+		})
+	}
+	fake.deleteJobReturnsOnCall[i] = struct {
+		result1 *ent.Job
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGateway) DeleteRevision(arg1 context.Context, arg2 *ent.DeleteRevisionParams) (*ent.Revision, error) {
+	fake.deleteRevisionMutex.Lock()
+	ret, specificReturn := fake.deleteRevisionReturnsOnCall[len(fake.deleteRevisionArgsForCall)]
+	fake.deleteRevisionArgsForCall = append(fake.deleteRevisionArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.DeleteRevisionParams
+	}{arg1, arg2})
+	stub := fake.DeleteRevisionStub
+	fakeReturns := fake.deleteRevisionReturns
+	fake.recordInvocation("DeleteRevision", []interface{}{arg1, arg2})
+	fake.deleteRevisionMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeGateway) DeleteRevisionCallCount() int {
+	fake.deleteRevisionMutex.RLock()
+	defer fake.deleteRevisionMutex.RUnlock()
+	return len(fake.deleteRevisionArgsForCall)
+}
+
+func (fake *FakeGateway) DeleteRevisionCalls(stub func(context.Context, *ent.DeleteRevisionParams) (*ent.Revision, error)) {
+	fake.deleteRevisionMutex.Lock()
+	defer fake.deleteRevisionMutex.Unlock()
+	fake.DeleteRevisionStub = stub
+}
+
+func (fake *FakeGateway) DeleteRevisionArgsForCall(i int) (context.Context, *ent.DeleteRevisionParams) {
+	fake.deleteRevisionMutex.RLock()
+	defer fake.deleteRevisionMutex.RUnlock()
+	argsForCall := fake.deleteRevisionArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeGateway) DeleteRevisionReturns(result1 *ent.Revision, result2 error) {
+	fake.deleteRevisionMutex.Lock()
+	defer fake.deleteRevisionMutex.Unlock()
+	fake.DeleteRevisionStub = nil
+	fake.deleteRevisionReturns = struct {
+		result1 *ent.Revision
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGateway) DeleteRevisionReturnsOnCall(i int, result1 *ent.Revision, result2 error) {
+	fake.deleteRevisionMutex.Lock()
+	defer fake.deleteRevisionMutex.Unlock()
+	fake.DeleteRevisionStub = nil
+	if fake.deleteRevisionReturnsOnCall == nil {
+		fake.deleteRevisionReturnsOnCall = make(map[int]struct {
+			result1 *ent.Revision
+			result2 error
+		})
+	}
+	fake.deleteRevisionReturnsOnCall[i] = struct {
+		result1 *ent.Revision
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGateway) ExecDeleteJob(arg1 context.Context, arg2 *ent.ExecDeleteJobParams) error {
+	fake.execDeleteJobMutex.Lock()
+	ret, specificReturn := fake.execDeleteJobReturnsOnCall[len(fake.execDeleteJobArgsForCall)]
+	fake.execDeleteJobArgsForCall = append(fake.execDeleteJobArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.ExecDeleteJobParams
+	}{arg1, arg2})
+	stub := fake.ExecDeleteJobStub
+	fakeReturns := fake.execDeleteJobReturns
+	fake.recordInvocation("ExecDeleteJob", []interface{}{arg1, arg2})
+	fake.execDeleteJobMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeGateway) ExecDeleteJobCallCount() int {
+	fake.execDeleteJobMutex.RLock()
+	defer fake.execDeleteJobMutex.RUnlock()
+	return len(fake.execDeleteJobArgsForCall)
+}
+
+func (fake *FakeGateway) ExecDeleteJobCalls(stub func(context.Context, *ent.ExecDeleteJobParams) error) {
+	fake.execDeleteJobMutex.Lock()
+	defer fake.execDeleteJobMutex.Unlock()
+	fake.ExecDeleteJobStub = stub
+}
+
+func (fake *FakeGateway) ExecDeleteJobArgsForCall(i int) (context.Context, *ent.ExecDeleteJobParams) {
+	fake.execDeleteJobMutex.RLock()
+	defer fake.execDeleteJobMutex.RUnlock()
+	argsForCall := fake.execDeleteJobArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeGateway) ExecDeleteJobReturns(result1 error) {
+	fake.execDeleteJobMutex.Lock()
+	defer fake.execDeleteJobMutex.Unlock()
+	fake.ExecDeleteJobStub = nil
+	fake.execDeleteJobReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) ExecDeleteJobReturnsOnCall(i int, result1 error) {
+	fake.execDeleteJobMutex.Lock()
+	defer fake.execDeleteJobMutex.Unlock()
+	fake.ExecDeleteJobStub = nil
+	if fake.execDeleteJobReturnsOnCall == nil {
+		fake.execDeleteJobReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.execDeleteJobReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) ExecDeleteRevision(arg1 context.Context, arg2 *ent.ExecDeleteRevisionParams) error {
+	fake.execDeleteRevisionMutex.Lock()
+	ret, specificReturn := fake.execDeleteRevisionReturnsOnCall[len(fake.execDeleteRevisionArgsForCall)]
+	fake.execDeleteRevisionArgsForCall = append(fake.execDeleteRevisionArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.ExecDeleteRevisionParams
+	}{arg1, arg2})
+	stub := fake.ExecDeleteRevisionStub
+	fakeReturns := fake.execDeleteRevisionReturns
+	fake.recordInvocation("ExecDeleteRevision", []interface{}{arg1, arg2})
+	fake.execDeleteRevisionMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeGateway) ExecDeleteRevisionCallCount() int {
+	fake.execDeleteRevisionMutex.RLock()
+	defer fake.execDeleteRevisionMutex.RUnlock()
+	return len(fake.execDeleteRevisionArgsForCall)
+}
+
+func (fake *FakeGateway) ExecDeleteRevisionCalls(stub func(context.Context, *ent.ExecDeleteRevisionParams) error) {
+	fake.execDeleteRevisionMutex.Lock()
+	defer fake.execDeleteRevisionMutex.Unlock()
+	fake.ExecDeleteRevisionStub = stub
+}
+
+func (fake *FakeGateway) ExecDeleteRevisionArgsForCall(i int) (context.Context, *ent.ExecDeleteRevisionParams) {
+	fake.execDeleteRevisionMutex.RLock()
+	defer fake.execDeleteRevisionMutex.RUnlock()
+	argsForCall := fake.execDeleteRevisionArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeGateway) ExecDeleteRevisionReturns(result1 error) {
+	fake.execDeleteRevisionMutex.Lock()
+	defer fake.execDeleteRevisionMutex.Unlock()
+	fake.ExecDeleteRevisionStub = nil
+	fake.execDeleteRevisionReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) ExecDeleteRevisionReturnsOnCall(i int, result1 error) {
+	fake.execDeleteRevisionMutex.Lock()
+	defer fake.execDeleteRevisionMutex.Unlock()
+	fake.ExecDeleteRevisionStub = nil
+	if fake.execDeleteRevisionReturnsOnCall == nil {
+		fake.execDeleteRevisionReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.execDeleteRevisionReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) ExecInsertJob(arg1 context.Context, arg2 *ent.ExecInsertJobParams) error {
+	fake.execInsertJobMutex.Lock()
+	ret, specificReturn := fake.execInsertJobReturnsOnCall[len(fake.execInsertJobArgsForCall)]
+	fake.execInsertJobArgsForCall = append(fake.execInsertJobArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.ExecInsertJobParams
+	}{arg1, arg2})
+	stub := fake.ExecInsertJobStub
+	fakeReturns := fake.execInsertJobReturns
+	fake.recordInvocation("ExecInsertJob", []interface{}{arg1, arg2})
+	fake.execInsertJobMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeGateway) ExecInsertJobCallCount() int {
+	fake.execInsertJobMutex.RLock()
+	defer fake.execInsertJobMutex.RUnlock()
+	return len(fake.execInsertJobArgsForCall)
+}
+
+func (fake *FakeGateway) ExecInsertJobCalls(stub func(context.Context, *ent.ExecInsertJobParams) error) {
+	fake.execInsertJobMutex.Lock()
+	defer fake.execInsertJobMutex.Unlock()
+	fake.ExecInsertJobStub = stub
+}
+
+func (fake *FakeGateway) ExecInsertJobArgsForCall(i int) (context.Context, *ent.ExecInsertJobParams) {
+	fake.execInsertJobMutex.RLock()
+	defer fake.execInsertJobMutex.RUnlock()
+	argsForCall := fake.execInsertJobArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeGateway) ExecInsertJobReturns(result1 error) {
+	fake.execInsertJobMutex.Lock()
+	defer fake.execInsertJobMutex.Unlock()
+	fake.ExecInsertJobStub = nil
+	fake.execInsertJobReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) ExecInsertJobReturnsOnCall(i int, result1 error) {
+	fake.execInsertJobMutex.Lock()
+	defer fake.execInsertJobMutex.Unlock()
+	fake.ExecInsertJobStub = nil
+	if fake.execInsertJobReturnsOnCall == nil {
+		fake.execInsertJobReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.execInsertJobReturnsOnCall[i] = struct {
 		result1 error
 	}{result1}
 }
@@ -340,6 +866,195 @@ func (fake *FakeGateway) ExecInsertRevisionReturnsOnCall(i int, result1 error) {
 	}{result1}
 }
 
+func (fake *FakeGateway) ExecUpdateRevision(arg1 context.Context, arg2 *ent.ExecUpdateRevisionParams) error {
+	fake.execUpdateRevisionMutex.Lock()
+	ret, specificReturn := fake.execUpdateRevisionReturnsOnCall[len(fake.execUpdateRevisionArgsForCall)]
+	fake.execUpdateRevisionArgsForCall = append(fake.execUpdateRevisionArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.ExecUpdateRevisionParams
+	}{arg1, arg2})
+	stub := fake.ExecUpdateRevisionStub
+	fakeReturns := fake.execUpdateRevisionReturns
+	fake.recordInvocation("ExecUpdateRevision", []interface{}{arg1, arg2})
+	fake.execUpdateRevisionMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeGateway) ExecUpdateRevisionCallCount() int {
+	fake.execUpdateRevisionMutex.RLock()
+	defer fake.execUpdateRevisionMutex.RUnlock()
+	return len(fake.execUpdateRevisionArgsForCall)
+}
+
+func (fake *FakeGateway) ExecUpdateRevisionCalls(stub func(context.Context, *ent.ExecUpdateRevisionParams) error) {
+	fake.execUpdateRevisionMutex.Lock()
+	defer fake.execUpdateRevisionMutex.Unlock()
+	fake.ExecUpdateRevisionStub = stub
+}
+
+func (fake *FakeGateway) ExecUpdateRevisionArgsForCall(i int) (context.Context, *ent.ExecUpdateRevisionParams) {
+	fake.execUpdateRevisionMutex.RLock()
+	defer fake.execUpdateRevisionMutex.RUnlock()
+	argsForCall := fake.execUpdateRevisionArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeGateway) ExecUpdateRevisionReturns(result1 error) {
+	fake.execUpdateRevisionMutex.Lock()
+	defer fake.execUpdateRevisionMutex.Unlock()
+	fake.ExecUpdateRevisionStub = nil
+	fake.execUpdateRevisionReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) ExecUpdateRevisionReturnsOnCall(i int, result1 error) {
+	fake.execUpdateRevisionMutex.Lock()
+	defer fake.execUpdateRevisionMutex.Unlock()
+	fake.ExecUpdateRevisionStub = nil
+	if fake.execUpdateRevisionReturnsOnCall == nil {
+		fake.execUpdateRevisionReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.execUpdateRevisionReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) ExecUpsertRevision(arg1 context.Context, arg2 *ent.ExecUpsertRevisionParams) error {
+	fake.execUpsertRevisionMutex.Lock()
+	ret, specificReturn := fake.execUpsertRevisionReturnsOnCall[len(fake.execUpsertRevisionArgsForCall)]
+	fake.execUpsertRevisionArgsForCall = append(fake.execUpsertRevisionArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.ExecUpsertRevisionParams
+	}{arg1, arg2})
+	stub := fake.ExecUpsertRevisionStub
+	fakeReturns := fake.execUpsertRevisionReturns
+	fake.recordInvocation("ExecUpsertRevision", []interface{}{arg1, arg2})
+	fake.execUpsertRevisionMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeGateway) ExecUpsertRevisionCallCount() int {
+	fake.execUpsertRevisionMutex.RLock()
+	defer fake.execUpsertRevisionMutex.RUnlock()
+	return len(fake.execUpsertRevisionArgsForCall)
+}
+
+func (fake *FakeGateway) ExecUpsertRevisionCalls(stub func(context.Context, *ent.ExecUpsertRevisionParams) error) {
+	fake.execUpsertRevisionMutex.Lock()
+	defer fake.execUpsertRevisionMutex.Unlock()
+	fake.ExecUpsertRevisionStub = stub
+}
+
+func (fake *FakeGateway) ExecUpsertRevisionArgsForCall(i int) (context.Context, *ent.ExecUpsertRevisionParams) {
+	fake.execUpsertRevisionMutex.RLock()
+	defer fake.execUpsertRevisionMutex.RUnlock()
+	argsForCall := fake.execUpsertRevisionArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeGateway) ExecUpsertRevisionReturns(result1 error) {
+	fake.execUpsertRevisionMutex.Lock()
+	defer fake.execUpsertRevisionMutex.Unlock()
+	fake.ExecUpsertRevisionStub = nil
+	fake.execUpsertRevisionReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) ExecUpsertRevisionReturnsOnCall(i int, result1 error) {
+	fake.execUpsertRevisionMutex.Lock()
+	defer fake.execUpsertRevisionMutex.Unlock()
+	fake.ExecUpsertRevisionStub = nil
+	if fake.execUpsertRevisionReturnsOnCall == nil {
+		fake.execUpsertRevisionReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.execUpsertRevisionReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) GetJob(arg1 context.Context, arg2 *ent.GetJobParams) (*ent.Job, error) {
+	fake.getJobMutex.Lock()
+	ret, specificReturn := fake.getJobReturnsOnCall[len(fake.getJobArgsForCall)]
+	fake.getJobArgsForCall = append(fake.getJobArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.GetJobParams
+	}{arg1, arg2})
+	stub := fake.GetJobStub
+	fakeReturns := fake.getJobReturns
+	fake.recordInvocation("GetJob", []interface{}{arg1, arg2})
+	fake.getJobMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeGateway) GetJobCallCount() int {
+	fake.getJobMutex.RLock()
+	defer fake.getJobMutex.RUnlock()
+	return len(fake.getJobArgsForCall)
+}
+
+func (fake *FakeGateway) GetJobCalls(stub func(context.Context, *ent.GetJobParams) (*ent.Job, error)) {
+	fake.getJobMutex.Lock()
+	defer fake.getJobMutex.Unlock()
+	fake.GetJobStub = stub
+}
+
+func (fake *FakeGateway) GetJobArgsForCall(i int) (context.Context, *ent.GetJobParams) {
+	fake.getJobMutex.RLock()
+	defer fake.getJobMutex.RUnlock()
+	argsForCall := fake.getJobArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeGateway) GetJobReturns(result1 *ent.Job, result2 error) {
+	fake.getJobMutex.Lock()
+	defer fake.getJobMutex.Unlock()
+	fake.GetJobStub = nil
+	fake.getJobReturns = struct {
+		result1 *ent.Job
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGateway) GetJobReturnsOnCall(i int, result1 *ent.Job, result2 error) {
+	fake.getJobMutex.Lock()
+	defer fake.getJobMutex.Unlock()
+	fake.GetJobStub = nil
+	if fake.getJobReturnsOnCall == nil {
+		fake.getJobReturnsOnCall = make(map[int]struct {
+			result1 *ent.Job
+			result2 error
+		})
+	}
+	fake.getJobReturnsOnCall[i] = struct {
+		result1 *ent.Job
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeGateway) GetRevision(arg1 context.Context, arg2 *ent.GetRevisionParams) (*ent.Revision, error) {
 	fake.getRevisionMutex.Lock()
 	ret, specificReturn := fake.getRevisionReturnsOnCall[len(fake.getRevisionArgsForCall)]
@@ -401,6 +1116,71 @@ func (fake *FakeGateway) GetRevisionReturnsOnCall(i int, result1 *ent.Revision, 
 	}
 	fake.getRevisionReturnsOnCall[i] = struct {
 		result1 *ent.Revision
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGateway) InsertJob(arg1 context.Context, arg2 *ent.InsertJobParams) (*ent.Job, error) {
+	fake.insertJobMutex.Lock()
+	ret, specificReturn := fake.insertJobReturnsOnCall[len(fake.insertJobArgsForCall)]
+	fake.insertJobArgsForCall = append(fake.insertJobArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.InsertJobParams
+	}{arg1, arg2})
+	stub := fake.InsertJobStub
+	fakeReturns := fake.insertJobReturns
+	fake.recordInvocation("InsertJob", []interface{}{arg1, arg2})
+	fake.insertJobMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeGateway) InsertJobCallCount() int {
+	fake.insertJobMutex.RLock()
+	defer fake.insertJobMutex.RUnlock()
+	return len(fake.insertJobArgsForCall)
+}
+
+func (fake *FakeGateway) InsertJobCalls(stub func(context.Context, *ent.InsertJobParams) (*ent.Job, error)) {
+	fake.insertJobMutex.Lock()
+	defer fake.insertJobMutex.Unlock()
+	fake.InsertJobStub = stub
+}
+
+func (fake *FakeGateway) InsertJobArgsForCall(i int) (context.Context, *ent.InsertJobParams) {
+	fake.insertJobMutex.RLock()
+	defer fake.insertJobMutex.RUnlock()
+	argsForCall := fake.insertJobArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeGateway) InsertJobReturns(result1 *ent.Job, result2 error) {
+	fake.insertJobMutex.Lock()
+	defer fake.insertJobMutex.Unlock()
+	fake.InsertJobStub = nil
+	fake.insertJobReturns = struct {
+		result1 *ent.Job
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGateway) InsertJobReturnsOnCall(i int, result1 *ent.Job, result2 error) {
+	fake.insertJobMutex.Lock()
+	defer fake.insertJobMutex.Unlock()
+	fake.InsertJobStub = nil
+	if fake.insertJobReturnsOnCall == nil {
+		fake.insertJobReturnsOnCall = make(map[int]struct {
+			result1 *ent.Job
+			result2 error
+		})
+	}
+	fake.insertJobReturnsOnCall[i] = struct {
+		result1 *ent.Job
 		result2 error
 	}{result1, result2}
 }
@@ -658,17 +1438,70 @@ func (fake *FakeGateway) RunInTxReturnsOnCall(i int, result1 error) {
 	}{result1}
 }
 
-func (fake *FakeGateway) WaitForJob(arg1 context.Context, arg2 *ent.WaitForJobParams) (bool, error) {
-	fake.waitForJobMutex.Lock()
-	ret, specificReturn := fake.waitForJobReturnsOnCall[len(fake.waitForJobArgsForCall)]
-	fake.waitForJobArgsForCall = append(fake.waitForJobArgsForCall, struct {
+func (fake *FakeGateway) Tx() ent.DBTX {
+	fake.txMutex.Lock()
+	ret, specificReturn := fake.txReturnsOnCall[len(fake.txArgsForCall)]
+	fake.txArgsForCall = append(fake.txArgsForCall, struct {
+	}{})
+	stub := fake.TxStub
+	fakeReturns := fake.txReturns
+	fake.recordInvocation("Tx", []interface{}{})
+	fake.txMutex.Unlock()
+	if stub != nil {
+		return stub()
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeGateway) TxCallCount() int {
+	fake.txMutex.RLock()
+	defer fake.txMutex.RUnlock()
+	return len(fake.txArgsForCall)
+}
+
+func (fake *FakeGateway) TxCalls(stub func() ent.DBTX) {
+	fake.txMutex.Lock()
+	defer fake.txMutex.Unlock()
+	fake.TxStub = stub
+}
+
+func (fake *FakeGateway) TxReturns(result1 ent.DBTX) {
+	fake.txMutex.Lock()
+	defer fake.txMutex.Unlock()
+	fake.TxStub = nil
+	fake.txReturns = struct {
+		result1 ent.DBTX
+	}{result1}
+}
+
+func (fake *FakeGateway) TxReturnsOnCall(i int, result1 ent.DBTX) {
+	fake.txMutex.Lock()
+	defer fake.txMutex.Unlock()
+	fake.TxStub = nil
+	if fake.txReturnsOnCall == nil {
+		fake.txReturnsOnCall = make(map[int]struct {
+			result1 ent.DBTX
+		})
+	}
+	fake.txReturnsOnCall[i] = struct {
+		result1 ent.DBTX
+	}{result1}
+}
+
+func (fake *FakeGateway) UpdateRevision(arg1 context.Context, arg2 *ent.UpdateRevisionParams) (*ent.Revision, error) {
+	fake.updateRevisionMutex.Lock()
+	ret, specificReturn := fake.updateRevisionReturnsOnCall[len(fake.updateRevisionArgsForCall)]
+	fake.updateRevisionArgsForCall = append(fake.updateRevisionArgsForCall, struct {
 		arg1 context.Context
-		arg2 *ent.WaitForJobParams
+		arg2 *ent.UpdateRevisionParams
 	}{arg1, arg2})
-	stub := fake.WaitForJobStub
-	fakeReturns := fake.waitForJobReturns
-	fake.recordInvocation("WaitForJob", []interface{}{arg1, arg2})
-	fake.waitForJobMutex.Unlock()
+	stub := fake.UpdateRevisionStub
+	fakeReturns := fake.updateRevisionReturns
+	fake.recordInvocation("UpdateRevision", []interface{}{arg1, arg2})
+	fake.updateRevisionMutex.Unlock()
 	if stub != nil {
 		return stub(arg1, arg2)
 	}
@@ -678,47 +1511,112 @@ func (fake *FakeGateway) WaitForJob(arg1 context.Context, arg2 *ent.WaitForJobPa
 	return fakeReturns.result1, fakeReturns.result2
 }
 
-func (fake *FakeGateway) WaitForJobCallCount() int {
-	fake.waitForJobMutex.RLock()
-	defer fake.waitForJobMutex.RUnlock()
-	return len(fake.waitForJobArgsForCall)
+func (fake *FakeGateway) UpdateRevisionCallCount() int {
+	fake.updateRevisionMutex.RLock()
+	defer fake.updateRevisionMutex.RUnlock()
+	return len(fake.updateRevisionArgsForCall)
 }
 
-func (fake *FakeGateway) WaitForJobCalls(stub func(context.Context, *ent.WaitForJobParams) (bool, error)) {
-	fake.waitForJobMutex.Lock()
-	defer fake.waitForJobMutex.Unlock()
-	fake.WaitForJobStub = stub
+func (fake *FakeGateway) UpdateRevisionCalls(stub func(context.Context, *ent.UpdateRevisionParams) (*ent.Revision, error)) {
+	fake.updateRevisionMutex.Lock()
+	defer fake.updateRevisionMutex.Unlock()
+	fake.UpdateRevisionStub = stub
 }
 
-func (fake *FakeGateway) WaitForJobArgsForCall(i int) (context.Context, *ent.WaitForJobParams) {
-	fake.waitForJobMutex.RLock()
-	defer fake.waitForJobMutex.RUnlock()
-	argsForCall := fake.waitForJobArgsForCall[i]
+func (fake *FakeGateway) UpdateRevisionArgsForCall(i int) (context.Context, *ent.UpdateRevisionParams) {
+	fake.updateRevisionMutex.RLock()
+	defer fake.updateRevisionMutex.RUnlock()
+	argsForCall := fake.updateRevisionArgsForCall[i]
 	return argsForCall.arg1, argsForCall.arg2
 }
 
-func (fake *FakeGateway) WaitForJobReturns(result1 bool, result2 error) {
-	fake.waitForJobMutex.Lock()
-	defer fake.waitForJobMutex.Unlock()
-	fake.WaitForJobStub = nil
-	fake.waitForJobReturns = struct {
-		result1 bool
+func (fake *FakeGateway) UpdateRevisionReturns(result1 *ent.Revision, result2 error) {
+	fake.updateRevisionMutex.Lock()
+	defer fake.updateRevisionMutex.Unlock()
+	fake.UpdateRevisionStub = nil
+	fake.updateRevisionReturns = struct {
+		result1 *ent.Revision
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeGateway) WaitForJobReturnsOnCall(i int, result1 bool, result2 error) {
-	fake.waitForJobMutex.Lock()
-	defer fake.waitForJobMutex.Unlock()
-	fake.WaitForJobStub = nil
-	if fake.waitForJobReturnsOnCall == nil {
-		fake.waitForJobReturnsOnCall = make(map[int]struct {
-			result1 bool
+func (fake *FakeGateway) UpdateRevisionReturnsOnCall(i int, result1 *ent.Revision, result2 error) {
+	fake.updateRevisionMutex.Lock()
+	defer fake.updateRevisionMutex.Unlock()
+	fake.UpdateRevisionStub = nil
+	if fake.updateRevisionReturnsOnCall == nil {
+		fake.updateRevisionReturnsOnCall = make(map[int]struct {
+			result1 *ent.Revision
 			result2 error
 		})
 	}
-	fake.waitForJobReturnsOnCall[i] = struct {
-		result1 bool
+	fake.updateRevisionReturnsOnCall[i] = struct {
+		result1 *ent.Revision
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGateway) UpsertRevision(arg1 context.Context, arg2 *ent.UpsertRevisionParams) (*ent.Revision, error) {
+	fake.upsertRevisionMutex.Lock()
+	ret, specificReturn := fake.upsertRevisionReturnsOnCall[len(fake.upsertRevisionArgsForCall)]
+	fake.upsertRevisionArgsForCall = append(fake.upsertRevisionArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.UpsertRevisionParams
+	}{arg1, arg2})
+	stub := fake.UpsertRevisionStub
+	fakeReturns := fake.upsertRevisionReturns
+	fake.recordInvocation("UpsertRevision", []interface{}{arg1, arg2})
+	fake.upsertRevisionMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeGateway) UpsertRevisionCallCount() int {
+	fake.upsertRevisionMutex.RLock()
+	defer fake.upsertRevisionMutex.RUnlock()
+	return len(fake.upsertRevisionArgsForCall)
+}
+
+func (fake *FakeGateway) UpsertRevisionCalls(stub func(context.Context, *ent.UpsertRevisionParams) (*ent.Revision, error)) {
+	fake.upsertRevisionMutex.Lock()
+	defer fake.upsertRevisionMutex.Unlock()
+	fake.UpsertRevisionStub = stub
+}
+
+func (fake *FakeGateway) UpsertRevisionArgsForCall(i int) (context.Context, *ent.UpsertRevisionParams) {
+	fake.upsertRevisionMutex.RLock()
+	defer fake.upsertRevisionMutex.RUnlock()
+	argsForCall := fake.upsertRevisionArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeGateway) UpsertRevisionReturns(result1 *ent.Revision, result2 error) {
+	fake.upsertRevisionMutex.Lock()
+	defer fake.upsertRevisionMutex.Unlock()
+	fake.UpsertRevisionStub = nil
+	fake.upsertRevisionReturns = struct {
+		result1 *ent.Revision
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGateway) UpsertRevisionReturnsOnCall(i int, result1 *ent.Revision, result2 error) {
+	fake.upsertRevisionMutex.Lock()
+	defer fake.upsertRevisionMutex.Unlock()
+	fake.UpsertRevisionStub = nil
+	if fake.upsertRevisionReturnsOnCall == nil {
+		fake.upsertRevisionReturnsOnCall = make(map[int]struct {
+			result1 *ent.Revision
+			result2 error
+		})
+	}
+	fake.upsertRevisionReturnsOnCall[i] = struct {
+		result1 *ent.Revision
 		result2 error
 	}{result1, result2}
 }

@@ -9,18 +9,43 @@ import (
 )
 
 type Querier interface {
+	// The schema 'sys' is created to hold system-related tables.
+	CreateSchemaSys(ctx context.Context) error
+	// Creates a table named 'sys.jobs' with the following columns:
+	// The table 'sys.jobs' is created to track jobs in the system.
+	CreateTableJobs(ctx context.Context) error
 	// Creates a table named 'aurora_schema_revisions' with the following columns:
 	CreateTableRevisions(ctx context.Context) error
+	// Deletes a row from the table 'sys.jobs' with option ':one'
+	DeleteJob(ctx context.Context, arg *DeleteJobParams) (*Job, error)
+	// Deletes a row from the table 'aurora_schema_revisions' with option ':one'
+	DeleteRevision(ctx context.Context, arg *DeleteRevisionParams) (*Revision, error)
+	// Deletes a row from the table 'sys.jobs' with option ':exec'
+	ExecDeleteJob(ctx context.Context, arg *ExecDeleteJobParams) error
+	// Deletes a row from the table 'aurora_schema_revisions' with option ':exec'
+	ExecDeleteRevision(ctx context.Context, arg *ExecDeleteRevisionParams) error
+	// Inserts a row into the table 'sys.jobs' with option ':exec'
+	ExecInsertJob(ctx context.Context, arg *ExecInsertJobParams) error
 	// Inserts a row into the table 'aurora_schema_revisions' with option ':exec'
 	ExecInsertRevision(ctx context.Context, arg *ExecInsertRevisionParams) error
+	// Updates a row in the table 'revision' with option ':exec'
+	ExecUpdateRevision(ctx context.Context, arg *ExecUpdateRevisionParams) error
+	// Upserts a row into the table 'aurora_schema_revisions' with option ':exec'
+	ExecUpsertRevision(ctx context.Context, arg *ExecUpsertRevisionParams) error
+	// Retrieves a row from the table 'sys.jobs' with option ':one'
+	GetJob(ctx context.Context, arg *GetJobParams) (*Job, error)
 	// Retrieves a row from the table 'aurora_schema_revisions' with option ':one'
 	GetRevision(ctx context.Context, arg *GetRevisionParams) (*Revision, error)
+	// Inserts a row into the table 'sys.jobs' with option ':one'
+	InsertJob(ctx context.Context, arg *InsertJobParams) (*Job, error)
 	// Inserts a row into the table 'aurora_schema_revisions' with option ':one'
 	InsertRevision(ctx context.Context, arg *InsertRevisionParams) (*Revision, error)
 	// Retrieves a list of rows from the table 'aurora_schema_revisions' with option ':many'
 	ListRevisions(ctx context.Context, arg *ListRevisionsParams) ([]*Revision, error)
-	// Waits for a job to complete by its ID.
-	WaitForJob(ctx context.Context, arg *WaitForJobParams) (bool, error)
+	// Updates a row in the table 'revision' with option ':one'
+	UpdateRevision(ctx context.Context, arg *UpdateRevisionParams) (*Revision, error)
+	// Upserts a row into the table 'aurora_schema_revisions' with option ':one'
+	UpsertRevision(ctx context.Context, arg *UpsertRevisionParams) (*Revision, error)
 }
 
 var _ Querier = (*Queries)(nil)
