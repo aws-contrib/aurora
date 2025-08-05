@@ -88,6 +88,14 @@ func main() {
 				},
 				Commands: []*cli.Command{
 					{
+						Name:  "init",
+						Usage: "Creates the necessary tables in the database.",
+						Action: func(ctx context.Context, command *cli.Command) error {
+							gateway := command.Root().Metadata["gateway"].(ent.Gateway)
+							return gateway.CreateTableRevisions(ctx)
+						},
+					},
+					{
 						Name:  "apply",
 						Usage: "Applies pending migration files on the connected database.",
 						Action: func(ctx context.Context, command *cli.Command) error {
@@ -100,18 +108,37 @@ func main() {
 								Revision: ent.Mutex,
 								Timeout:  1 * time.Minute,
 							}
-							fmt.Println("Applying migrations started...")
 							// lock the execution
 							if err := repository.LockRevision(ctx, lock); err != nil {
 								return err
 							}
 
-							time.Sleep(30 * time.Second)
+							revisions, err := repository.ListRevisions(ctx, &ent.ListRevisionsParams{})
+							if err != nil {
+								return err
+							}
+
+							for _, revision := range revisions {
+								params := &ent.ApplyRevisionParams{
+									Revision: revision,
+								}
+
+								fmt.Println("Migrating", params.Revision.ID)
+								if err := repository.ApplyRevision(ctx, params); err != nil {
+									return err
+								}
+
+								if params.Revision.Error != nil {
+									fmt.Println("Migrating", params.Revision.ID, "failed")
+									fmt.Println("Error:", *params.Revision.Error)
+									fmt.Println("SQL:", *params.Revision.ErrorStmt)
+									break
+								}
+							}
 
 							unlock := &ent.UnlockRevisionParams{
 								Revision: ent.Mutex,
 							}
-							fmt.Println("Applying migrations completed...")
 							// unlock the execution
 							if err := repository.UnlockRevision(ctx, unlock); err != nil {
 								return err

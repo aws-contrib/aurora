@@ -46,6 +46,16 @@ type FakeGateway struct {
 	createTableRevisionsReturnsOnCall map[int]struct {
 		result1 error
 	}
+	DatabaseStub        func() ent.DBTX
+	databaseMutex       sync.RWMutex
+	databaseArgsForCall []struct {
+	}
+	databaseReturns struct {
+		result1 ent.DBTX
+	}
+	databaseReturnsOnCall map[int]struct {
+		result1 ent.DBTX
+	}
 	DeleteJobStub        func(context.Context, *ent.DeleteJobParams) (*ent.Job, error)
 	deleteJobMutex       sync.RWMutex
 	deleteJobArgsForCall []struct {
@@ -238,16 +248,6 @@ type FakeGateway struct {
 	}
 	runInTxReturnsOnCall map[int]struct {
 		result1 error
-	}
-	TxStub        func() ent.DBTX
-	txMutex       sync.RWMutex
-	txArgsForCall []struct {
-	}
-	txReturns struct {
-		result1 ent.DBTX
-	}
-	txReturnsOnCall map[int]struct {
-		result1 ent.DBTX
 	}
 	UpdateRevisionStub        func(context.Context, *ent.UpdateRevisionParams) (*ent.Revision, error)
 	updateRevisionMutex       sync.RWMutex
@@ -485,6 +485,59 @@ func (fake *FakeGateway) CreateTableRevisionsReturnsOnCall(i int, result1 error)
 	}
 	fake.createTableRevisionsReturnsOnCall[i] = struct {
 		result1 error
+	}{result1}
+}
+
+func (fake *FakeGateway) Database() ent.DBTX {
+	fake.databaseMutex.Lock()
+	ret, specificReturn := fake.databaseReturnsOnCall[len(fake.databaseArgsForCall)]
+	fake.databaseArgsForCall = append(fake.databaseArgsForCall, struct {
+	}{})
+	stub := fake.DatabaseStub
+	fakeReturns := fake.databaseReturns
+	fake.recordInvocation("Database", []interface{}{})
+	fake.databaseMutex.Unlock()
+	if stub != nil {
+		return stub()
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeGateway) DatabaseCallCount() int {
+	fake.databaseMutex.RLock()
+	defer fake.databaseMutex.RUnlock()
+	return len(fake.databaseArgsForCall)
+}
+
+func (fake *FakeGateway) DatabaseCalls(stub func() ent.DBTX) {
+	fake.databaseMutex.Lock()
+	defer fake.databaseMutex.Unlock()
+	fake.DatabaseStub = stub
+}
+
+func (fake *FakeGateway) DatabaseReturns(result1 ent.DBTX) {
+	fake.databaseMutex.Lock()
+	defer fake.databaseMutex.Unlock()
+	fake.DatabaseStub = nil
+	fake.databaseReturns = struct {
+		result1 ent.DBTX
+	}{result1}
+}
+
+func (fake *FakeGateway) DatabaseReturnsOnCall(i int, result1 ent.DBTX) {
+	fake.databaseMutex.Lock()
+	defer fake.databaseMutex.Unlock()
+	fake.DatabaseStub = nil
+	if fake.databaseReturnsOnCall == nil {
+		fake.databaseReturnsOnCall = make(map[int]struct {
+			result1 ent.DBTX
+		})
+	}
+	fake.databaseReturnsOnCall[i] = struct {
+		result1 ent.DBTX
 	}{result1}
 }
 
@@ -1435,59 +1488,6 @@ func (fake *FakeGateway) RunInTxReturnsOnCall(i int, result1 error) {
 	}
 	fake.runInTxReturnsOnCall[i] = struct {
 		result1 error
-	}{result1}
-}
-
-func (fake *FakeGateway) Tx() ent.DBTX {
-	fake.txMutex.Lock()
-	ret, specificReturn := fake.txReturnsOnCall[len(fake.txArgsForCall)]
-	fake.txArgsForCall = append(fake.txArgsForCall, struct {
-	}{})
-	stub := fake.TxStub
-	fakeReturns := fake.txReturns
-	fake.recordInvocation("Tx", []interface{}{})
-	fake.txMutex.Unlock()
-	if stub != nil {
-		return stub()
-	}
-	if specificReturn {
-		return ret.result1
-	}
-	return fakeReturns.result1
-}
-
-func (fake *FakeGateway) TxCallCount() int {
-	fake.txMutex.RLock()
-	defer fake.txMutex.RUnlock()
-	return len(fake.txArgsForCall)
-}
-
-func (fake *FakeGateway) TxCalls(stub func() ent.DBTX) {
-	fake.txMutex.Lock()
-	defer fake.txMutex.Unlock()
-	fake.TxStub = stub
-}
-
-func (fake *FakeGateway) TxReturns(result1 ent.DBTX) {
-	fake.txMutex.Lock()
-	defer fake.txMutex.Unlock()
-	fake.TxStub = nil
-	fake.txReturns = struct {
-		result1 ent.DBTX
-	}{result1}
-}
-
-func (fake *FakeGateway) TxReturnsOnCall(i int, result1 ent.DBTX) {
-	fake.txMutex.Lock()
-	defer fake.txMutex.Unlock()
-	fake.TxStub = nil
-	if fake.txReturnsOnCall == nil {
-		fake.txReturnsOnCall = make(map[int]struct {
-			result1 ent.DBTX
-		})
-	}
-	fake.txReturnsOnCall[i] = struct {
-		result1 ent.DBTX
 	}{result1}
 }
 

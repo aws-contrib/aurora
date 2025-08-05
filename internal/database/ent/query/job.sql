@@ -13,56 +13,56 @@ CREATE SCHEMA IF NOT EXISTS sys;
 -- name: CreateTableJobs :exec
 CREATE TABLE IF NOT EXISTS sys.jobs (
     -- primary key column
-    id TEXT PRIMARY KEY,
+    job_id TEXT PRIMARY KEY,
     -- revision name
     status TEXT NOT NULL,
     -- total number of statements
-    details TEXT NOT NULL
+    details TEXT NULL
 );
 
 -- Inserts a row into the table 'sys.jobs' with option ':one'
 -- name: InsertJob :one
 INSERT INTO sys.jobs (
-    id,
+    job_id,
     status,
     details
 ) VALUES (
-    sqlc.arg(id),
+    sqlc.arg(job_id),
     sqlc.arg(status),
-    sqlc.arg(details)
+    sqlc.narg(details)
 )
 RETURNING *;
 
 -- Inserts a row into the table 'sys.jobs' with option ':exec'
 -- name: ExecInsertJob :exec
 INSERT INTO sys.jobs (
-    id,
+    job_id,
     status,
     details
 ) VALUES (
-    sqlc.arg(id),
+    sqlc.arg(job_id),
     sqlc.arg(status),
-    sqlc.arg(details)
+    sqlc.narg(details)
 );
 
 -- Retrieves a row from the table 'sys.jobs' with option ':one'
 -- name: GetJob :one
 SELECT
-    id,
+    job_id,
     status,
     details
 FROM
     sys.jobs
 WHERE
-    id = sqlc.arg(id);
+    job_id = sqlc.arg(job_id);
 
 -- Deletes a row from the table 'sys.jobs' with option ':one'
 -- name: DeleteJob :one
 DELETE FROM sys.jobs
-WHERE id = sqlc.arg(id)
+WHERE job_id = sqlc.arg(job_id)
 RETURNING *;
 
 -- Deletes a row from the table 'sys.jobs' with option ':exec'
 -- name: ExecDeleteJob :exec
 DELETE FROM sys.jobs
-WHERE id = sqlc.arg(id);
+WHERE job_id = sqlc.arg(job_id);

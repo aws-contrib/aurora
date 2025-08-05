@@ -22,11 +22,11 @@ func (q *Queries) CreateSchemaSys(ctx context.Context) error {
 const createTableJobs = `-- name: CreateTableJobs :exec
 CREATE TABLE IF NOT EXISTS sys.jobs (
     -- primary key column
-    id TEXT PRIMARY KEY,
+    job_id TEXT PRIMARY KEY,
     -- revision name
     status TEXT NOT NULL,
     -- total number of statements
-    details TEXT NOT NULL
+    details TEXT NULL
 )
 `
 
@@ -39,40 +39,40 @@ func (q *Queries) CreateTableJobs(ctx context.Context) error {
 
 const deleteJob = `-- name: DeleteJob :one
 DELETE FROM sys.jobs
-WHERE id = $1
-RETURNING id, status, details
+WHERE job_id = $1
+RETURNING job_id, status, details
 `
 
 type DeleteJobParams struct {
-	ID string `db:"id" json:"id"`
+	JobID string `db:"job_id" json:"job_id"`
 }
 
 // Deletes a row from the table 'sys.jobs' with option ':one'
 func (q *Queries) DeleteJob(ctx context.Context, arg *DeleteJobParams) (*Job, error) {
-	row := q.db.QueryRow(ctx, deleteJob, arg.ID)
+	row := q.db.QueryRow(ctx, deleteJob, arg.JobID)
 	var i Job
-	err := row.Scan(&i.ID, &i.Status, &i.Details)
+	err := row.Scan(&i.JobID, &i.Status, &i.Details)
 	return &i, err
 }
 
 const execDeleteJob = `-- name: ExecDeleteJob :exec
 DELETE FROM sys.jobs
-WHERE id = $1
+WHERE job_id = $1
 `
 
 type ExecDeleteJobParams struct {
-	ID string `db:"id" json:"id"`
+	JobID string `db:"job_id" json:"job_id"`
 }
 
 // Deletes a row from the table 'sys.jobs' with option ':exec'
 func (q *Queries) ExecDeleteJob(ctx context.Context, arg *ExecDeleteJobParams) error {
-	_, err := q.db.Exec(ctx, execDeleteJob, arg.ID)
+	_, err := q.db.Exec(ctx, execDeleteJob, arg.JobID)
 	return err
 }
 
 const execInsertJob = `-- name: ExecInsertJob :exec
 INSERT INTO sys.jobs (
-    id,
+    job_id,
     status,
     details
 ) VALUES (
@@ -83,43 +83,43 @@ INSERT INTO sys.jobs (
 `
 
 type ExecInsertJobParams struct {
-	ID      string `db:"id" json:"id"`
-	Status  string `db:"status" json:"status"`
-	Details string `db:"details" json:"details"`
+	JobID   string  `db:"job_id" json:"job_id"`
+	Status  string  `db:"status" json:"status"`
+	Details *string `db:"details" json:"details"`
 }
 
 // Inserts a row into the table 'sys.jobs' with option ':exec'
 func (q *Queries) ExecInsertJob(ctx context.Context, arg *ExecInsertJobParams) error {
-	_, err := q.db.Exec(ctx, execInsertJob, arg.ID, arg.Status, arg.Details)
+	_, err := q.db.Exec(ctx, execInsertJob, arg.JobID, arg.Status, arg.Details)
 	return err
 }
 
 const getJob = `-- name: GetJob :one
 SELECT
-    id,
+    job_id,
     status,
     details
 FROM
     sys.jobs
 WHERE
-    id = $1
+    job_id = $1
 `
 
 type GetJobParams struct {
-	ID string `db:"id" json:"id"`
+	JobID string `db:"job_id" json:"job_id"`
 }
 
 // Retrieves a row from the table 'sys.jobs' with option ':one'
 func (q *Queries) GetJob(ctx context.Context, arg *GetJobParams) (*Job, error) {
-	row := q.db.QueryRow(ctx, getJob, arg.ID)
+	row := q.db.QueryRow(ctx, getJob, arg.JobID)
 	var i Job
-	err := row.Scan(&i.ID, &i.Status, &i.Details)
+	err := row.Scan(&i.JobID, &i.Status, &i.Details)
 	return &i, err
 }
 
 const insertJob = `-- name: InsertJob :one
 INSERT INTO sys.jobs (
-    id,
+    job_id,
     status,
     details
 ) VALUES (
@@ -127,19 +127,19 @@ INSERT INTO sys.jobs (
     $2,
     $3
 )
-RETURNING id, status, details
+RETURNING job_id, status, details
 `
 
 type InsertJobParams struct {
-	ID      string `db:"id" json:"id"`
-	Status  string `db:"status" json:"status"`
-	Details string `db:"details" json:"details"`
+	JobID   string  `db:"job_id" json:"job_id"`
+	Status  string  `db:"status" json:"status"`
+	Details *string `db:"details" json:"details"`
 }
 
 // Inserts a row into the table 'sys.jobs' with option ':one'
 func (q *Queries) InsertJob(ctx context.Context, arg *InsertJobParams) (*Job, error) {
-	row := q.db.QueryRow(ctx, insertJob, arg.ID, arg.Status, arg.Details)
+	row := q.db.QueryRow(ctx, insertJob, arg.JobID, arg.Status, arg.Details)
 	var i Job
-	err := row.Scan(&i.ID, &i.Status, &i.Details)
+	err := row.Scan(&i.JobID, &i.Status, &i.Details)
 	return &i, err
 }

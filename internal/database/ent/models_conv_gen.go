@@ -7,7 +7,7 @@ type DeleteJobParamsConverterImpl struct{}
 
 func (c *DeleteJobParamsConverterImpl) SetFromJob(target *DeleteJobParams, source *Job) {
 	if source != nil {
-		target.ID = source.ID
+		target.JobID = source.JobID
 	}
 }
 
@@ -23,7 +23,7 @@ type ExecDeleteJobParamsConverterImpl struct{}
 
 func (c *ExecDeleteJobParamsConverterImpl) SetFromJob(target *ExecDeleteJobParams, source *Job) {
 	if source != nil {
-		target.ID = source.ID
+		target.JobID = source.JobID
 	}
 }
 
@@ -39,7 +39,7 @@ type ExecInsertJobParamsConverterImpl struct{}
 
 func (c *ExecInsertJobParamsConverterImpl) SetFromJob(target *ExecInsertJobParams, source *Job) {
 	if source != nil {
-		target.ID = source.ID
+		target.JobID = source.JobID
 		target.Status = source.Status
 		target.Details = source.Details
 	}
@@ -94,7 +94,7 @@ type GetJobParamsConverterImpl struct{}
 
 func (c *GetJobParamsConverterImpl) SetFromJob(target *GetJobParams, source *Job) {
 	if source != nil {
-		target.ID = source.ID
+		target.JobID = source.JobID
 	}
 }
 
@@ -110,7 +110,7 @@ type InsertJobParamsConverterImpl struct{}
 
 func (c *InsertJobParamsConverterImpl) SetFromJob(target *InsertJobParams, source *Job) {
 	if source != nil {
-		target.ID = source.ID
+		target.JobID = source.JobID
 		target.Status = source.Status
 		target.Details = source.Details
 	}

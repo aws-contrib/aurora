@@ -32,7 +32,7 @@ var _ = Describe("JobRepository", func() {
 			gateway.GetJobReturnsOnCall(0, entity, nil)
 
 			params = &ent.WaitJobParams{}
-			params.ID = entity.ID
+			params.JobID = entity.JobID
 		})
 
 		When("the job is completed", func() {

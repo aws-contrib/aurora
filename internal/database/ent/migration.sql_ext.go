@@ -14,7 +14,10 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-var asyncre = regexp.MustCompile(`(?i)CONCURRENTLY`)
+var (
+	commentRegexp      = regexp.MustCompile(`(?m)^\s*--.*$`)
+	concurrentlyRegexp = regexp.MustCompile(`(?i)CONCURRENTLY`)
+)
 
 //counterfeiter:generate -o ./fake . FileSystem
 
@@ -31,8 +34,8 @@ type FileSystem interface {
 	fs.ReadFileFS
 }
 
-// RevisionRepository represents a repository for managing revisions.
-type RevisionRepository struct {
+// MigrationRepository represents a repository for managing revisions.
+type MigrationRepository struct {
 	// Gateway represents the database gateway.
 	Gateway Gateway
 	// FileSystem is the filesystem where the revision files are located.
@@ -48,7 +51,7 @@ type LockRevisionParams struct {
 }
 
 // LockRevision locks the revision for exclusive access.
-func (x *RevisionRepository) LockRevision(ctx context.Context, params *LockRevisionParams) error {
+func (x *MigrationRepository) LockRevision(ctx context.Context, params *LockRevisionParams) error {
 	start := time.Now()
 
 	for {
@@ -81,88 +84,84 @@ type UnlockRevisionParams struct {
 }
 
 // UnlockRevision unlocks the revision after exclusive access.
-func (x *RevisionRepository) UnlockRevision(ctx context.Context, params *UnlockRevisionParams) error {
+func (x *MigrationRepository) UnlockRevision(ctx context.Context, params *UnlockRevisionParams) error {
 	args := &ExecDeleteRevisionParams{}
 	args.ID = params.Revision.ID
 	return x.Gateway.ExecDeleteRevision(ctx, args)
 }
 
-// ApplyRevisionParams represents the parameters for executing a revision.
-type ApplyRevisionParams struct {
-	// Revision contains the parameters for executing a revision.
-	Revision *Revision
+// ApplyMigrationParams represents the parameters for executing a revision.
+type ApplyMigrationParams struct {
+	// Migration contains the parameters for executing a migration.
+	Migration *Migration
 }
 
-// ApplyRevision executes a revision.
-func (x *RevisionRepository) ApplyRevision(ctx context.Context, params *ApplyRevisionParams) error {
-	// read the revision content
-	data, err := fs.ReadFile(x.FileSystem, params.Revision.GetName())
-	if err != nil {
-		return err
+// ApplyMigration executes a revision.
+func (x *MigrationRepository) ApplyMigration(ctx context.Context, params *ApplyMigrationParams) error {
+	repository := &JobRepository{
+		Gateway: x.Gateway,
 	}
 
-	queries := strings.SplitAfter(string(data), ";")
-
-	fmt.Println(queries, len(queries))
-	// prepare the revision
-	params.Revision.Total = len(queries)
-
 	args := &UpsertRevisionParams{}
-	args.SetRevision(params.Revision)
+	args.SetRevision(params.Migration.Revision)
 	// prepare the revision
 	revision, err := x.Gateway.UpsertRevision(ctx, args)
 	if err != nil {
 		return err
 	}
 
-	params.Revision = revision
-	// We should skip the already executed statements
-	queries = queries[params.Revision.Count:]
+	params.Migration.Revision = revision
 
 	start := time.Now()
 	// Apply the statements one by one
-	for index, query := range queries {
-		query = asyncre.ReplaceAllString(query, "ASYNC")
+	for index, query := range params.Migration.Statements {
+		if index+1 <= params.Migration.Revision.Count {
+			continue
+		}
 
-		job := &Job{}
-		// execute the revision
-		err = x.Gateway.Tx().QueryRow(ctx, query).Scan(&job.ID)
+		query = commentRegexp.ReplaceAllString(query, "")
+		query = concurrentlyRegexp.ReplaceAllString(query, "ASYNC")
+		query = strings.TrimSpace(query)
 
-		switch {
-		case err == pgx.ErrNoRows:
-			// We are good to go because the operation does not return job id
-		case err != nil:
-			msg := err.Error()
-			// set the revision error
-			params.Revision.Error = &msg
-		default:
-			repository := &JobRepository{
-				Gateway: x.Gateway,
-			}
+		if len(query) > 0 {
+			// execute the revision
+			row := x.Gateway.Database().QueryRow(ctx, query)
+			// Some queries returns a job id because they are asynchronous
+			var jid string
+			err := row.Scan(&jid)
 
-			args := &WaitJobParams{}
-			args.ID = job.ID
-			// Wait for the job to complete
-			job, err = repository.WaitJob(ctx, args)
 			switch {
 			case err == pgx.ErrNoRows:
+				// We are good to go because the operation does not return job id
 			case err != nil:
 				msg := err.Error()
 				// set the revision error
-				params.Revision.Error = &msg
-			case job.Status == "failed":
-				// set the revision error
-				params.Revision.Error = &job.Details
+				params.Migration.Revision.Error = &msg
+			default:
+				args := &WaitJobParams{}
+				args.JobID = jid
+				// Wait for the job to complete
+				job, err := repository.WaitJob(ctx, args)
+				switch {
+				case err == pgx.ErrNoRows:
+				case err != nil:
+					msg := err.Error()
+					// set the revision error
+					params.Migration.Revision.Error = &msg
+				case job.Status == "failed":
+					// set the revision error
+					params.Migration.Revision.Error = job.Details
+				}
 			}
 		}
 
-		params.Revision.Count = index + 1
-		params.Revision.ErrorStmt = &query
-		params.Revision.ExecutedAt = time.Now().UTC()
-		params.Revision.ExecutionTime = time.Since(start)
+		params.Migration.Revision.Count = index + 1
+		params.Migration.Revision.ErrorStmt = &query
+		params.Migration.Revision.ExecutedAt = time.Now().UTC()
+		params.Migration.Revision.ExecutionTime = time.Since(start)
 
 		args := &ExecUpdateRevisionParams{}
-		args.SetRevision(params.Revision)
+		args.SetRevision(params.Migration.Revision)
 
 		// prepare the mask
 		args.UpdateMask = append(args.UpdateMask, "executed_at")
@@ -178,48 +177,58 @@ func (x *RevisionRepository) ApplyRevision(ctx context.Context, params *ApplyRev
 		if err := x.Gateway.ExecUpdateRevision(ctx, args); err != nil {
 			return err
 		}
+
+		if args.Error != nil {
+			return nil
+		}
 	}
 
 	return nil
 }
 
-// ListRevisions lists all revisions in the repository.
-func (x *RevisionRepository) ListRevisions(ctx context.Context, _ *ListRevisionsParams) (collection []*Revision, _ error) {
+// ListMigrationsParams represents the parameters for listing migrations.
+type ListMigrationsParams struct{}
+
+// ListMigrations lists all revisions in the repository.
+func (x *MigrationRepository) ListMigrations(ctx context.Context, _ *ListMigrationsParams) (collection []*Migration, _ error) {
 	matches, err := fs.Glob(x.FileSystem, "*.sql")
 	if err != nil {
 		return nil, err
 	}
 
-	for index, path := range sort.StringSlice(matches) {
-		revision := &Revision{}
-		revision.SetName(path)
+	fmt.Printf("Found %d migration files\n", len(matches))
 
+	for _, path := range sort.StringSlice(matches) {
 		// read the revision content
-		data, err := fs.ReadFile(x.FileSystem, revision.GetName())
+		data, err := fs.ReadFile(x.FileSystem, path)
 		if err != nil {
 			return nil, err
 		}
 
-		queries := strings.SplitAfter(string(data), ";")
-		// prepare the revision
-		revision.Total = len(queries)
+		migration := &Migration{}
+		migration.Statements = strings.SplitAfter(string(data), ";")
+		migration.Revision = &Revision{}
+		migration.Revision.SetName(path)
+		migration.Revision.Total = len(migration.Statements)
 
 		// append the revision
-		collection = append(collection, revision)
+		collection = append(collection, migration)
 
 		params := &GetRevisionParams{}
-		params.SetRevision(revision)
+		params.SetRevision(migration.Revision)
 
 		// load the revision
-		revision, err = x.Gateway.GetRevision(ctx, params)
+		revision, err := x.Gateway.GetRevision(ctx, params)
 		switch {
 		case err == pgx.ErrNoRows:
 		// We are good to go because the revision does not exist
 		case err != nil:
 			return nil, err
 		default:
-			collection[index] = revision
+			migration.Revision = revision
 		}
+
+		collection = append(collection, migration)
 	}
 
 	return collection, nil

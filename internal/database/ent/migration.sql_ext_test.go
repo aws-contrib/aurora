@@ -10,42 +10,33 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("RevisionRepository", func() {
-	var repository *ent.RevisionRepository
+var _ = Describe("MigrationRepository", func() {
+	var repository *ent.MigrationRepository
 
 	BeforeEach(func(ctx SpecContext) {
-		repository = &ent.RevisionRepository{
+		repository = &ent.MigrationRepository{
 			Gateway:    NewFakeGateway(),
 			FileSystem: NewFakeFileSystem(),
 		}
 	})
 
-	Describe("ApplyRevision", func() {
-		var params *ent.ApplyRevisionParams
+	Describe("ApplyMigration", func() {
+		var params *ent.ApplyMigrationParams
 
 		BeforeEach(func() {
-			params = &ent.ApplyRevisionParams{}
-			params.Revision = NewFakeRevision()
+			params = &ent.ApplyMigrationParams{}
+			params.Migration = NewFakeMigration()
 		})
 
 		It("applies a revision", func(ctx SpecContext) {
-			Expect(repository.ApplyRevision(ctx, params)).To(Succeed())
+			Expect(repository.ApplyMigration(ctx, params)).To(Succeed())
 		})
 
 		ItReturnsError := func(msg string) {
 			It("returns an error", func(ctx SpecContext) {
-				Expect(repository.ApplyRevision(ctx, params)).To(MatchError(msg))
+				Expect(repository.ApplyMigration(ctx, params)).To(MatchError(msg))
 			})
 		}
-
-		When("the file system fails", func() {
-			BeforeEach(func() {
-				fs := repository.FileSystem.(*FakeFileSystem)
-				fs.ReadFileReturns(nil, fmt.Errorf("oh no"))
-			})
-
-			ItReturnsError("oh no")
-		})
 
 		When("the gateway fails", func() {
 			When("the upsert revision fails", func() {
@@ -62,14 +53,14 @@ var _ = Describe("RevisionRepository", func() {
 					row := &FakeRow{}
 					row.ScanReturns(fmt.Errorf("oh no"))
 
-					tx := repository.Gateway.(*FakeGateway).Tx().(*FakeDBTX)
+					tx := repository.Gateway.(*FakeGateway).Database().(*FakeDBTX)
 					tx.QueryRowReturns(row)
 				})
 
 				It("does not return an error", func(ctx SpecContext) {
-					Expect(repository.ApplyRevision(ctx, params)).To(Succeed())
-					Expect(params.Revision.Error).NotTo(BeNil())
-					Expect(*params.Revision.Error).To(Equal("oh no"))
+					Expect(repository.ApplyMigration(ctx, params)).To(Succeed())
+					Expect(params.Migration.Revision.Error).NotTo(BeNil())
+					Expect(*params.Migration.Revision.Error).To(Equal("oh no"))
 				})
 			})
 
@@ -89,8 +80,8 @@ var _ = Describe("RevisionRepository", func() {
 				})
 
 				It("applies a revision", func(ctx SpecContext) {
-					Expect(repository.ApplyRevision(ctx, params)).To(Succeed())
-					Expect(params.Revision.Error).To(BeNil())
+					Expect(repository.ApplyMigration(ctx, params)).To(Succeed())
+					Expect(params.Migration.Revision.Error).To(BeNil())
 				})
 			})
 
@@ -101,49 +92,50 @@ var _ = Describe("RevisionRepository", func() {
 				})
 
 				It("does not return an error", func(ctx SpecContext) {
-					Expect(repository.ApplyRevision(ctx, params)).To(Succeed())
-					Expect(params.Revision.Error).NotTo(BeNil())
-					Expect(*params.Revision.Error).To(Equal("oh no"))
+					Expect(repository.ApplyMigration(ctx, params)).To(Succeed())
+					Expect(params.Migration.Revision.Error).NotTo(BeNil())
+					Expect(*params.Migration.Revision.Error).To(Equal("oh no"))
 				})
 			})
 
 			When("the job fails", func() {
 				BeforeEach(func() {
+					err := "oh no"
 					entity := NewFakeJob()
 					entity.Status = "failed"
-					entity.Details = "oh no"
+					entity.Details = &err
 
 					gateway := repository.Gateway.(*FakeGateway)
 					gateway.GetJobReturns(entity, nil)
 				})
 
 				It("does not return an error", func(ctx SpecContext) {
-					Expect(repository.ApplyRevision(ctx, params)).To(Succeed())
-					Expect(params.Revision.Error).NotTo(BeNil())
-					Expect(*params.Revision.Error).To(Equal("oh no"))
+					Expect(repository.ApplyMigration(ctx, params)).To(Succeed())
+					Expect(params.Migration.Revision.Error).NotTo(BeNil())
+					Expect(*params.Migration.Revision.Error).To(Equal("oh no"))
 				})
 			})
 		})
 	})
 
-	Describe("ListRevisions", func() {
-		var params *ent.ListRevisionsParams
+	Describe("ListMigrations", func() {
+		var params *ent.ListMigrationsParams
 
 		BeforeEach(func() {
-			params = &ent.ListRevisionsParams{}
+			params = &ent.ListMigrationsParams{}
 		})
 
-		It("list the revisions", func(ctx SpecContext) {
-			revisions, err := repository.ListRevisions(ctx, params)
+		It("list the migrations", func(ctx SpecContext) {
+			migrations, err := repository.ListMigrations(ctx, params)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(revisions).NotTo(BeEmpty())
+			Expect(migrations).NotTo(BeEmpty())
 		})
 
 		ItReturnsError := func(msg string) {
 			It("returns an error", func(ctx SpecContext) {
-				revisions, err := repository.ListRevisions(ctx, params)
+				migrations, err := repository.ListMigrations(ctx, params)
 				Expect(err).To(MatchError(msg))
-				Expect(revisions).To(BeEmpty())
+				Expect(migrations).To(BeEmpty())
 			})
 		}
 

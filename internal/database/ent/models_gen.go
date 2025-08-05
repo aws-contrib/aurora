@@ -9,9 +9,9 @@ import (
 )
 
 type Job struct {
-	ID      string `db:"id" json:"id"`
-	Status  string `db:"status" json:"status"`
-	Details string `db:"details" json:"details"`
+	JobID   string  `db:"job_id" json:"job_id"`
+	Status  string  `db:"status" json:"status"`
+	Details *string `db:"details" json:"details"`
 }
 
 type Revision struct {

@@ -87,8 +87,8 @@ func (x *Queries) RunInTx(ctx context.Context, action QuerierAction) (err error)
 	return tx.Commit(ctx)
 }
 
-// Tx returns the underlying transaction interface.
-func (x *Queries) Tx() DBTX {
+// Database returns the underlying transaction interface.
+func (x *Queries) Database() DBTX {
 	return x.db
 }
 

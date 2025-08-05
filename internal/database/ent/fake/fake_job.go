@@ -8,8 +8,7 @@ import (
 // NewFakeJob returns a new job
 func NewFakeJob() *ent.Job {
 	return &ent.Job{
-		ID:      uuid.New().String(),
-		Status:  "completed",
-		Details: "",
+		JobID:  uuid.New().String(),
+		Status: "completed",
 	}
 }

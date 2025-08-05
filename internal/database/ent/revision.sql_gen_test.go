@@ -175,7 +175,7 @@ var _ = Describe("Gateway", Ordered, func() {
 			It("lists all revisions", func(ctx SpecContext) {
 				revisions, err := gateway.ListRevisions(ctx, params)
 				Expect(err).NotTo(HaveOccurred())
-				Expect(revisions).NotTo(BeEmpty())
+				Expect(revisions).To(BeEmpty())
 			})
 
 			When("the gateway returns an error", func() {

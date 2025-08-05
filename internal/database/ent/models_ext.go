@@ -1,6 +1,14 @@
 package ent
 
-import "strings"
+import (
+	"strings"
+)
+
+// Migration represents a database migration with its details.
+type Migration struct {
+	Revision   *Revision
+	Statements []string
+}
 
 // GetName returns the name of the revision file based on its ID and description.
 func (x *Revision) GetName() string {

@@ -85,6 +85,8 @@ Package ent provides an extension to the ent package for database operations.
 - [type InsertRevisionParamsConverterImpl](<#InsertRevisionParamsConverterImpl>)
   - [func \(c \*InsertRevisionParamsConverterImpl\) SetFromRevision\(target \*InsertRevisionParams, source \*Revision\)](<#InsertRevisionParamsConverterImpl.SetFromRevision>)
 - [type Job](<#Job>)
+- [type JobRepository](<#JobRepository>)
+  - [func \(x \*JobRepository\) WaitJob\(ctx context.Context, params \*WaitJobParams\) \(\*Job, error\)](<#JobRepository.WaitJob>)
 - [type ListRevisionsParams](<#ListRevisionsParams>)
 - [type LockRevisionParams](<#LockRevisionParams>)
 - [type Querier](<#Querier>)
@@ -98,6 +100,7 @@ Package ent provides an extension to the ent package for database operations.
   - [func \(q \*Queries\) CreateSchemaSys\(ctx context.Context\) error](<#Queries.CreateSchemaSys>)
   - [func \(q \*Queries\) CreateTableJobs\(ctx context.Context\) error](<#Queries.CreateTableJobs>)
   - [func \(q \*Queries\) CreateTableRevisions\(ctx context.Context\) error](<#Queries.CreateTableRevisions>)
+  - [func \(x \*Queries\) Database\(\) DBTX](<#Queries.Database>)
   - [func \(q \*Queries\) DeleteJob\(ctx context.Context, arg \*DeleteJobParams\) \(\*Job, error\)](<#Queries.DeleteJob>)
   - [func \(q \*Queries\) DeleteRevision\(ctx context.Context, arg \*DeleteRevisionParams\) \(\*Revision, error\)](<#Queries.DeleteRevision>)
   - [func \(q \*Queries\) ExecDeleteJob\(ctx context.Context, arg \*ExecDeleteJobParams\) error](<#Queries.ExecDeleteJob>)
@@ -113,7 +116,6 @@ Package ent provides an extension to the ent package for database operations.
   - [func \(q \*Queries\) ListRevisions\(ctx context.Context, arg \*ListRevisionsParams\) \(\[\]\*Revision, error\)](<#Queries.ListRevisions>)
   - [func \(x \*Queries\) Ping\(ctx context.Context\) error](<#Queries.Ping>)
   - [func \(x \*Queries\) RunInTx\(ctx context.Context, action QuerierAction\) \(err error\)](<#Queries.RunInTx>)
-  - [func \(x \*Queries\) Tx\(\) DBTX](<#Queries.Tx>)
   - [func \(q \*Queries\) UpdateRevision\(ctx context.Context, arg \*UpdateRevisionParams\) \(\*Revision, error\)](<#Queries.UpdateRevision>)
   - [func \(q \*Queries\) UpsertRevision\(ctx context.Context, arg \*UpsertRevisionParams\) \(\*Revision, error\)](<#Queries.UpsertRevision>)
   - [func \(q \*Queries\) WithTx\(tx pgx.Tx\) \*Queries](<#Queries.WithTx>)
@@ -136,6 +138,7 @@ Package ent provides an extension to the ent package for database operations.
 - [type UpsertRevisionParamsConverter](<#UpsertRevisionParamsConverter>)
 - [type UpsertRevisionParamsConverterImpl](<#UpsertRevisionParamsConverterImpl>)
   - [func \(c \*UpsertRevisionParamsConverterImpl\) SetFromRevision\(target \*UpsertRevisionParams, source \*Revision\)](<#UpsertRevisionParamsConverterImpl.SetFromRevision>)
+- [type WaitJobParams](<#WaitJobParams>)
 
 
 ## Variables
@@ -237,7 +240,7 @@ type DBTX interface {
 
 ```go
 type DeleteJobParams struct {
-    ID string `db:"id" json:"id"`
+    JobID string `db:"job_id" json:"job_id"`
 }
 ```
 
@@ -346,7 +349,7 @@ type Error = pgconn.PgError
 
 ```go
 type ExecDeleteJobParams struct {
-    ID string `db:"id" json:"id"`
+    JobID string `db:"job_id" json:"job_id"`
 }
 ```
 
@@ -446,9 +449,9 @@ func (c *ExecDeleteRevisionParamsConverterImpl) SetFromRevision(target *ExecDele
 
 ```go
 type ExecInsertJobParams struct {
-    ID      string `db:"id" json:"id"`
-    Status  string `db:"status" json:"status"`
-    Details string `db:"details" json:"details"`
+    JobID   string  `db:"job_id" json:"job_id"`
+    Status  string  `db:"status" json:"status"`
+    Details *string `db:"details" json:"details"`
 }
 ```
 
@@ -686,8 +689,8 @@ Gateway represents the database gateway.
 type Gateway interface {
     // inherit from Querier
     Querier
-    // Tx returns the underlying transaction interface.
-    Tx() DBTX
+    // Database returns the underlying transaction interface.
+    Database() DBTX
     // RunInTx runs the given function in a transaction.
     RunInTx(context.Context, QuerierAction) error
     // Ping verifies a connection to the database is still alive.
@@ -743,7 +746,7 @@ Apply applies the GatewayOptionFunc to the Gateway.
 
 ```go
 type GetJobParams struct {
-    ID string `db:"id" json:"id"`
+    JobID string `db:"job_id" json:"job_id"`
 }
 ```
 
@@ -843,9 +846,9 @@ func (c *GetRevisionParamsConverterImpl) SetFromRevision(target *GetRevisionPara
 
 ```go
 type InsertJobParams struct {
-    ID      string `db:"id" json:"id"`
-    Status  string `db:"status" json:"status"`
-    Details string `db:"details" json:"details"`
+    JobID   string  `db:"job_id" json:"job_id"`
+    Status  string  `db:"status" json:"status"`
+    Details *string `db:"details" json:"details"`
 }
 ```
 
@@ -952,11 +955,31 @@ func (c *InsertRevisionParamsConverterImpl) SetFromRevision(target *InsertRevisi
 
 ```go
 type Job struct {
-    ID      string `db:"id" json:"id"`
-    Status  string `db:"status" json:"status"`
-    Details string `db:"details" json:"details"`
+    JobID   string  `db:"job_id" json:"job_id"`
+    Status  string  `db:"status" json:"status"`
+    Details *string `db:"details" json:"details"`
 }
 ```
+
+<a name="JobRepository"></a>
+## type [JobRepository](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_ext.go#L11-L13>)
+
+JobRepository provides methods to interact with the Job entity.
+
+```go
+type JobRepository struct {
+    Gateway Gateway
+}
+```
+
+<a name="JobRepository.WaitJob"></a>
+### func \(\*JobRepository\) [WaitJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_ext.go#L22>)
+
+```go
+func (x *JobRepository) WaitJob(ctx context.Context, params *WaitJobParams) (*Job, error)
+```
+
+WaitJob waits for a job to complete and returns the job details.
 
 <a name="ListRevisionsParams"></a>
 ## type [ListRevisionsParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L366-L369>)
@@ -1126,6 +1149,15 @@ func (q *Queries) CreateTableRevisions(ctx context.Context) error
 
 Creates a table named 'aurora\_schema\_revisions' with the following columns:
 
+<a name="Queries.Database"></a>
+### func \(\*Queries\) [Database](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L91>)
+
+```go
+func (x *Queries) Database() DBTX
+```
+
+Database returns the underlying transaction interface.
+
 <a name="Queries.DeleteJob"></a>
 ### func \(\*Queries\) [DeleteJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_gen.go#L51>)
 
@@ -1261,15 +1293,6 @@ func (x *Queries) RunInTx(ctx context.Context, action QuerierAction) (err error)
 
 RunInTx runs the given function in a transaction.
 
-<a name="Queries.Tx"></a>
-### func \(\*Queries\) [Tx](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/db_ext.go#L91>)
-
-```go
-func (x *Queries) Tx() DBTX
-```
-
-Tx returns the underlying transaction interface.
-
 <a name="Queries.UpdateRevision"></a>
 ### func \(\*Queries\) [UpdateRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L457>)
 
@@ -1316,7 +1339,7 @@ type Revision struct {
 ```
 
 <a name="Revision.GetName"></a>
-### func \(\*Revision\) [GetName](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_ext.go#L6>)
+### func \(\*Revision\) [GetName](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_ext.go#L8>)
 
 ```go
 func (x *Revision) GetName() string
@@ -1325,7 +1348,7 @@ func (x *Revision) GetName() string
 GetName returns the name of the revision file based on its ID and description.
 
 <a name="Revision.SetName"></a>
-### func \(\*Revision\) [SetName](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_ext.go#L11>)
+### func \(\*Revision\) [SetName](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_ext.go#L13>)
 
 ```go
 func (x *Revision) SetName(name string)
@@ -1357,7 +1380,7 @@ func (x *RevisionRepository) ApplyRevision(ctx context.Context, params *ApplyRev
 ApplyRevision executes a revision.
 
 <a name="RevisionRepository.ListRevisions"></a>
-### func \(\*RevisionRepository\) [ListRevisions](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L187>)
+### func \(\*RevisionRepository\) [ListRevisions](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L205>)
 
 ```go
 func (x *RevisionRepository) ListRevisions(ctx context.Context, _ *ListRevisionsParams) (collection []*Revision, _ error)
@@ -1510,5 +1533,17 @@ func (c *UpsertRevisionParamsConverterImpl) SetFromRevision(target *UpsertRevisi
 ```
 
 
+
+<a name="WaitJobParams"></a>
+## type [WaitJobParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/job.sql_ext.go#L16-L19>)
+
+WaitJobParams is the parameters for the WaitJob method.
+
+```go
+type WaitJobParams struct {
+    // Job is the job to wait for.
+    JobID string
+}
+```
 
 Generated by [gomarkdoc](<https://github.com/princjef/gomarkdoc>)
