@@ -14,6 +14,11 @@ type Job struct {
 	Details *string `db:"details" json:"details"`
 }
 
+type Lock struct {
+	ID        string    `db:"id" json:"id"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
+}
+
 type Revision struct {
 	ID            string        `db:"id" json:"id"`
 	Description   string        `db:"description" json:"description"`

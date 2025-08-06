@@ -11,6 +11,14 @@ func (c *DeleteJobParamsConverterImpl) SetFromJob(target *DeleteJobParams, sourc
 	}
 }
 
+type DeleteLockParamsConverterImpl struct{}
+
+func (c *DeleteLockParamsConverterImpl) SetFromLock(target *DeleteLockParams, source *Lock) {
+	if source != nil {
+		target.ID = source.ID
+	}
+}
+
 type DeleteRevisionParamsConverterImpl struct{}
 
 func (c *DeleteRevisionParamsConverterImpl) SetFromRevision(target *DeleteRevisionParams, source *Revision) {
@@ -24,6 +32,14 @@ type ExecDeleteJobParamsConverterImpl struct{}
 func (c *ExecDeleteJobParamsConverterImpl) SetFromJob(target *ExecDeleteJobParams, source *Job) {
 	if source != nil {
 		target.JobID = source.JobID
+	}
+}
+
+type ExecDeleteLockParamsConverterImpl struct{}
+
+func (c *ExecDeleteLockParamsConverterImpl) SetFromLock(target *ExecDeleteLockParams, source *Lock) {
+	if source != nil {
+		target.ID = source.ID
 	}
 }
 
@@ -42,6 +58,15 @@ func (c *ExecInsertJobParamsConverterImpl) SetFromJob(target *ExecInsertJobParam
 		target.JobID = source.JobID
 		target.Status = source.Status
 		target.Details = source.Details
+	}
+}
+
+type ExecInsertLockParamsConverterImpl struct{}
+
+func (c *ExecInsertLockParamsConverterImpl) SetFromLock(target *ExecInsertLockParams, source *Lock) {
+	if source != nil {
+		target.ID = source.ID
+		target.CreatedAt = source.CreatedAt
 	}
 }
 
@@ -98,6 +123,14 @@ func (c *GetJobParamsConverterImpl) SetFromJob(target *GetJobParams, source *Job
 	}
 }
 
+type GetLockParamsConverterImpl struct{}
+
+func (c *GetLockParamsConverterImpl) SetFromLock(target *GetLockParams, source *Lock) {
+	if source != nil {
+		target.ID = source.ID
+	}
+}
+
 type GetRevisionParamsConverterImpl struct{}
 
 func (c *GetRevisionParamsConverterImpl) SetFromRevision(target *GetRevisionParams, source *Revision) {
@@ -113,6 +146,15 @@ func (c *InsertJobParamsConverterImpl) SetFromJob(target *InsertJobParams, sourc
 		target.JobID = source.JobID
 		target.Status = source.Status
 		target.Details = source.Details
+	}
+}
+
+type InsertLockParamsConverterImpl struct{}
+
+func (c *InsertLockParamsConverterImpl) SetFromLock(target *InsertLockParams, source *Lock) {
+	if source != nil {
+		target.ID = source.ID
+		target.CreatedAt = source.CreatedAt
 	}
 }
 

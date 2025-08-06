@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime/debug"
 	"time"
 
 	"github.com/aws-contrib/aurora/cmd"
@@ -64,13 +65,17 @@ func main() {
 								return nil, err
 							}
 
+							directory, err = cmd.GetPath(directory)
+							if err != nil {
+								return nil, err
+							}
+
 							gateway, err := ent.Open(ctx, conn)
 							if err != nil {
 								return nil, err
 							}
 
-							command.Root().Metadata["directory"], err = cmd.GetPath(directory)
-							if err != nil {
+							if err := gateway.CreateTableLocks(ctx); err != nil {
 								return nil, err
 							}
 
@@ -78,8 +83,12 @@ func main() {
 								return nil, err
 							}
 
-							command.Root().Metadata["gateway"] = gateway
+							repository := &ent.MigrationRepository{
+								Gateway:    gateway,
+								FileSystem: os.DirFS(directory),
+							}
 
+							command.Root().Metadata["repository"] = repository
 						} else {
 							return nil, fmt.Errorf("environment %s not found in config", name)
 						}
@@ -89,35 +98,26 @@ func main() {
 				},
 				Commands: []*cli.Command{
 					{
-						Name:  "init",
-						Usage: "Creates the necessary tables in the database.",
-						Action: func(ctx context.Context, command *cli.Command) error {
-							gateway := command.Root().Metadata["gateway"].(ent.Gateway)
-							return gateway.CreateTableRevisions(ctx)
-						},
-					},
-					{
 						Name:  "apply",
 						Usage: "Applies pending migration files on the connected database.",
+						Flags: []cli.Flag{
+							&cli.DurationFlag{
+								Name:  "lock-timeout",
+								Usage: "set how long to wait for the database lock",
+								Value: 25 * time.Minute,
+							},
+						},
 						Action: func(ctx context.Context, command *cli.Command) error {
-							repository := &ent.MigrationRepository{
-								Gateway:    command.Root().Metadata["gateway"].(ent.Gateway),
-								FileSystem: os.DirFS(command.Root().Metadata["directory"].(string)),
-							}
+							repository := command.Root().Metadata["repository"].(*ent.MigrationRepository)
 
-							lock := &ent.LockRevisionParams{
-								Revision: ent.Mutex,
-								Timeout:  1 * time.Minute,
-							}
+							args := &ent.LockMigrationParams{}
+							args.Timeout = command.Duration("lock-timeout")
 							// lock the execution
-							if xerr := repository.LockRevision(ctx, lock); xerr != nil {
+							if xerr := repository.LockMigration(ctx, args); xerr != nil {
 								return xerr
 							}
-							unlock := &ent.UnlockRevisionParams{
-								Revision: ent.Mutex,
-							}
 							// unlock the execution
-							defer repository.UnlockRevision(ctx, unlock)
+							defer repository.UnlockMigration(ctx)
 
 							migrations, err := repository.ListMigrations(ctx, &ent.ListMigrationsParams{})
 							if err != nil {
@@ -166,10 +166,7 @@ func main() {
 						Name:  "status",
 						Usage: "Get information about the current migration status.",
 						Action: func(ctx context.Context, command *cli.Command) error {
-							repository := &ent.MigrationRepository{
-								Gateway:    command.Root().Metadata["gateway"].(ent.Gateway),
-								FileSystem: os.DirFS(command.Root().Metadata["directory"].(string)),
-							}
+							repository := command.Root().Metadata["repository"].(*ent.MigrationRepository)
 
 							migrations, err := repository.ListMigrations(ctx, &ent.ListMigrationsParams{})
 							if err != nil {
@@ -200,6 +197,10 @@ func main() {
 				},
 			},
 		},
+	}
+
+	if info, ok := debug.ReadBuildInfo(); ok {
+		cmd.Version = info.Main.Version
 	}
 
 	if err := cmd.Run(context.Background(), os.Args); err != nil {

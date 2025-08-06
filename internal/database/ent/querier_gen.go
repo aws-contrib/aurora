@@ -14,18 +14,26 @@ type Querier interface {
 	// Creates a table named 'sys.jobs' with the following columns:
 	// The table 'sys.jobs' is created to track jobs in the system.
 	CreateTableJobs(ctx context.Context) error
+	// Creates a table named 'aurora_schema_locks' with the following columns:
+	CreateTableLocks(ctx context.Context) error
 	// Creates a table named 'aurora_schema_revisions' with the following columns:
 	CreateTableRevisions(ctx context.Context) error
 	// Deletes a row from the table 'sys.jobs' with option ':one'
 	DeleteJob(ctx context.Context, arg *DeleteJobParams) (*Job, error)
+	// Deletes a row from the table 'aurora_schema_locks' with option ':one'
+	DeleteLock(ctx context.Context, arg *DeleteLockParams) (*Lock, error)
 	// Deletes a row from the table 'aurora_schema_revisions' with option ':one'
 	DeleteRevision(ctx context.Context, arg *DeleteRevisionParams) (*Revision, error)
 	// Deletes a row from the table 'sys.jobs' with option ':exec'
 	ExecDeleteJob(ctx context.Context, arg *ExecDeleteJobParams) error
+	// Deletes a row from the table 'aurora_schema_locks' with option ':exec'
+	ExecDeleteLock(ctx context.Context, arg *ExecDeleteLockParams) error
 	// Deletes a row from the table 'aurora_schema_revisions' with option ':exec'
 	ExecDeleteRevision(ctx context.Context, arg *ExecDeleteRevisionParams) error
 	// Inserts a row into the table 'sys.jobs' with option ':exec'
 	ExecInsertJob(ctx context.Context, arg *ExecInsertJobParams) error
+	// Inserts a row into the table 'aurora_schema_locks' with option ':exec'
+	ExecInsertLock(ctx context.Context, arg *ExecInsertLockParams) error
 	// Inserts a row into the table 'aurora_schema_revisions' with option ':exec'
 	ExecInsertRevision(ctx context.Context, arg *ExecInsertRevisionParams) error
 	// Updates a row in the table 'revision' with option ':exec'
@@ -34,10 +42,14 @@ type Querier interface {
 	ExecUpsertRevision(ctx context.Context, arg *ExecUpsertRevisionParams) error
 	// Retrieves a row from the table 'sys.jobs' with option ':one'
 	GetJob(ctx context.Context, arg *GetJobParams) (*Job, error)
+	// Retrieves a row from the table 'aurora_schema_locks' with option ':one'
+	GetLock(ctx context.Context, arg *GetLockParams) (*Lock, error)
 	// Retrieves a row from the table 'aurora_schema_revisions' with option ':one'
 	GetRevision(ctx context.Context, arg *GetRevisionParams) (*Revision, error)
 	// Inserts a row into the table 'sys.jobs' with option ':one'
 	InsertJob(ctx context.Context, arg *InsertJobParams) (*Job, error)
+	// Inserts a row into the table 'aurora_schema_locks' with option ':one'
+	InsertLock(ctx context.Context, arg *InsertLockParams) (*Lock, error)
 	// Inserts a row into the table 'aurora_schema_revisions' with option ':one'
 	InsertRevision(ctx context.Context, arg *InsertRevisionParams) (*Revision, error)
 	// Retrieves a list of rows from the table 'aurora_schema_revisions' with option ':many'

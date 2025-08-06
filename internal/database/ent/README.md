@@ -22,6 +22,11 @@ Package ent provides an extension to the ent package for database operations.
 - [type DeleteJobParamsConverter](<#DeleteJobParamsConverter>)
 - [type DeleteJobParamsConverterImpl](<#DeleteJobParamsConverterImpl>)
   - [func \(c \*DeleteJobParamsConverterImpl\) SetFromJob\(target \*DeleteJobParams, source \*Job\)](<#DeleteJobParamsConverterImpl.SetFromJob>)
+- [type DeleteLockParams](<#DeleteLockParams>)
+  - [func \(x \*DeleteLockParams\) SetLock\(entity \*Lock\)](<#DeleteLockParams.SetLock>)
+- [type DeleteLockParamsConverter](<#DeleteLockParamsConverter>)
+- [type DeleteLockParamsConverterImpl](<#DeleteLockParamsConverterImpl>)
+  - [func \(c \*DeleteLockParamsConverterImpl\) SetFromLock\(target \*DeleteLockParams, source \*Lock\)](<#DeleteLockParamsConverterImpl.SetFromLock>)
 - [type DeleteRevisionParams](<#DeleteRevisionParams>)
   - [func \(x \*DeleteRevisionParams\) SetRevision\(entity \*Revision\)](<#DeleteRevisionParams.SetRevision>)
 - [type DeleteRevisionParamsConverter](<#DeleteRevisionParamsConverter>)
@@ -33,6 +38,11 @@ Package ent provides an extension to the ent package for database operations.
 - [type ExecDeleteJobParamsConverter](<#ExecDeleteJobParamsConverter>)
 - [type ExecDeleteJobParamsConverterImpl](<#ExecDeleteJobParamsConverterImpl>)
   - [func \(c \*ExecDeleteJobParamsConverterImpl\) SetFromJob\(target \*ExecDeleteJobParams, source \*Job\)](<#ExecDeleteJobParamsConverterImpl.SetFromJob>)
+- [type ExecDeleteLockParams](<#ExecDeleteLockParams>)
+  - [func \(x \*ExecDeleteLockParams\) SetLock\(entity \*Lock\)](<#ExecDeleteLockParams.SetLock>)
+- [type ExecDeleteLockParamsConverter](<#ExecDeleteLockParamsConverter>)
+- [type ExecDeleteLockParamsConverterImpl](<#ExecDeleteLockParamsConverterImpl>)
+  - [func \(c \*ExecDeleteLockParamsConverterImpl\) SetFromLock\(target \*ExecDeleteLockParams, source \*Lock\)](<#ExecDeleteLockParamsConverterImpl.SetFromLock>)
 - [type ExecDeleteRevisionParams](<#ExecDeleteRevisionParams>)
   - [func \(x \*ExecDeleteRevisionParams\) SetRevision\(entity \*Revision\)](<#ExecDeleteRevisionParams.SetRevision>)
 - [type ExecDeleteRevisionParamsConverter](<#ExecDeleteRevisionParamsConverter>)
@@ -43,6 +53,11 @@ Package ent provides an extension to the ent package for database operations.
 - [type ExecInsertJobParamsConverter](<#ExecInsertJobParamsConverter>)
 - [type ExecInsertJobParamsConverterImpl](<#ExecInsertJobParamsConverterImpl>)
   - [func \(c \*ExecInsertJobParamsConverterImpl\) SetFromJob\(target \*ExecInsertJobParams, source \*Job\)](<#ExecInsertJobParamsConverterImpl.SetFromJob>)
+- [type ExecInsertLockParams](<#ExecInsertLockParams>)
+  - [func \(x \*ExecInsertLockParams\) SetLock\(entity \*Lock\)](<#ExecInsertLockParams.SetLock>)
+- [type ExecInsertLockParamsConverter](<#ExecInsertLockParamsConverter>)
+- [type ExecInsertLockParamsConverterImpl](<#ExecInsertLockParamsConverterImpl>)
+  - [func \(c \*ExecInsertLockParamsConverterImpl\) SetFromLock\(target \*ExecInsertLockParams, source \*Lock\)](<#ExecInsertLockParamsConverterImpl.SetFromLock>)
 - [type ExecInsertRevisionParams](<#ExecInsertRevisionParams>)
   - [func \(x \*ExecInsertRevisionParams\) SetRevision\(entity \*Revision\)](<#ExecInsertRevisionParams.SetRevision>)
 - [type ExecInsertRevisionParamsConverter](<#ExecInsertRevisionParamsConverter>)
@@ -69,6 +84,11 @@ Package ent provides an extension to the ent package for database operations.
 - [type GetJobParamsConverter](<#GetJobParamsConverter>)
 - [type GetJobParamsConverterImpl](<#GetJobParamsConverterImpl>)
   - [func \(c \*GetJobParamsConverterImpl\) SetFromJob\(target \*GetJobParams, source \*Job\)](<#GetJobParamsConverterImpl.SetFromJob>)
+- [type GetLockParams](<#GetLockParams>)
+  - [func \(x \*GetLockParams\) SetLock\(entity \*Lock\)](<#GetLockParams.SetLock>)
+- [type GetLockParamsConverter](<#GetLockParamsConverter>)
+- [type GetLockParamsConverterImpl](<#GetLockParamsConverterImpl>)
+  - [func \(c \*GetLockParamsConverterImpl\) SetFromLock\(target \*GetLockParams, source \*Lock\)](<#GetLockParamsConverterImpl.SetFromLock>)
 - [type GetRevisionParams](<#GetRevisionParams>)
   - [func \(x \*GetRevisionParams\) SetRevision\(entity \*Revision\)](<#GetRevisionParams.SetRevision>)
 - [type GetRevisionParamsConverter](<#GetRevisionParamsConverter>)
@@ -79,6 +99,11 @@ Package ent provides an extension to the ent package for database operations.
 - [type InsertJobParamsConverter](<#InsertJobParamsConverter>)
 - [type InsertJobParamsConverterImpl](<#InsertJobParamsConverterImpl>)
   - [func \(c \*InsertJobParamsConverterImpl\) SetFromJob\(target \*InsertJobParams, source \*Job\)](<#InsertJobParamsConverterImpl.SetFromJob>)
+- [type InsertLockParams](<#InsertLockParams>)
+  - [func \(x \*InsertLockParams\) SetLock\(entity \*Lock\)](<#InsertLockParams.SetLock>)
+- [type InsertLockParamsConverter](<#InsertLockParamsConverter>)
+- [type InsertLockParamsConverterImpl](<#InsertLockParamsConverterImpl>)
+  - [func \(c \*InsertLockParamsConverterImpl\) SetFromLock\(target \*InsertLockParams, source \*Lock\)](<#InsertLockParamsConverterImpl.SetFromLock>)
 - [type InsertRevisionParams](<#InsertRevisionParams>)
   - [func \(x \*InsertRevisionParams\) SetRevision\(entity \*Revision\)](<#InsertRevisionParams.SetRevision>)
 - [type InsertRevisionParamsConverter](<#InsertRevisionParamsConverter>)
@@ -89,6 +114,7 @@ Package ent provides an extension to the ent package for database operations.
   - [func \(x \*JobRepository\) WaitJob\(ctx context.Context, params \*WaitJobParams\) \(\*Job, error\)](<#JobRepository.WaitJob>)
 - [type ListMigrationsParams](<#ListMigrationsParams>)
 - [type ListRevisionsParams](<#ListRevisionsParams>)
+- [type Lock](<#Lock>)
 - [type LockRevisionParams](<#LockRevisionParams>)
 - [type Migration](<#Migration>)
 - [type MigrationRepository](<#MigrationRepository>)
@@ -107,19 +133,25 @@ Package ent provides an extension to the ent package for database operations.
   - [func \(x \*Queries\) Close\(\)](<#Queries.Close>)
   - [func \(q \*Queries\) CreateSchemaSys\(ctx context.Context\) error](<#Queries.CreateSchemaSys>)
   - [func \(q \*Queries\) CreateTableJobs\(ctx context.Context\) error](<#Queries.CreateTableJobs>)
+  - [func \(q \*Queries\) CreateTableLocks\(ctx context.Context\) error](<#Queries.CreateTableLocks>)
   - [func \(q \*Queries\) CreateTableRevisions\(ctx context.Context\) error](<#Queries.CreateTableRevisions>)
   - [func \(x \*Queries\) Database\(\) DBTX](<#Queries.Database>)
   - [func \(q \*Queries\) DeleteJob\(ctx context.Context, arg \*DeleteJobParams\) \(\*Job, error\)](<#Queries.DeleteJob>)
+  - [func \(q \*Queries\) DeleteLock\(ctx context.Context, arg \*DeleteLockParams\) \(\*Lock, error\)](<#Queries.DeleteLock>)
   - [func \(q \*Queries\) DeleteRevision\(ctx context.Context, arg \*DeleteRevisionParams\) \(\*Revision, error\)](<#Queries.DeleteRevision>)
   - [func \(q \*Queries\) ExecDeleteJob\(ctx context.Context, arg \*ExecDeleteJobParams\) error](<#Queries.ExecDeleteJob>)
+  - [func \(q \*Queries\) ExecDeleteLock\(ctx context.Context, arg \*ExecDeleteLockParams\) error](<#Queries.ExecDeleteLock>)
   - [func \(q \*Queries\) ExecDeleteRevision\(ctx context.Context, arg \*ExecDeleteRevisionParams\) error](<#Queries.ExecDeleteRevision>)
   - [func \(q \*Queries\) ExecInsertJob\(ctx context.Context, arg \*ExecInsertJobParams\) error](<#Queries.ExecInsertJob>)
+  - [func \(q \*Queries\) ExecInsertLock\(ctx context.Context, arg \*ExecInsertLockParams\) error](<#Queries.ExecInsertLock>)
   - [func \(q \*Queries\) ExecInsertRevision\(ctx context.Context, arg \*ExecInsertRevisionParams\) error](<#Queries.ExecInsertRevision>)
   - [func \(q \*Queries\) ExecUpdateRevision\(ctx context.Context, arg \*ExecUpdateRevisionParams\) error](<#Queries.ExecUpdateRevision>)
   - [func \(q \*Queries\) ExecUpsertRevision\(ctx context.Context, arg \*ExecUpsertRevisionParams\) error](<#Queries.ExecUpsertRevision>)
   - [func \(q \*Queries\) GetJob\(ctx context.Context, arg \*GetJobParams\) \(\*Job, error\)](<#Queries.GetJob>)
+  - [func \(q \*Queries\) GetLock\(ctx context.Context, arg \*GetLockParams\) \(\*Lock, error\)](<#Queries.GetLock>)
   - [func \(q \*Queries\) GetRevision\(ctx context.Context, arg \*GetRevisionParams\) \(\*Revision, error\)](<#Queries.GetRevision>)
   - [func \(q \*Queries\) InsertJob\(ctx context.Context, arg \*InsertJobParams\) \(\*Job, error\)](<#Queries.InsertJob>)
+  - [func \(q \*Queries\) InsertLock\(ctx context.Context, arg \*InsertLockParams\) \(\*Lock, error\)](<#Queries.InsertLock>)
   - [func \(q \*Queries\) InsertRevision\(ctx context.Context, arg \*InsertRevisionParams\) \(\*Revision, error\)](<#Queries.InsertRevision>)
   - [func \(q \*Queries\) ListRevisions\(ctx context.Context, arg \*ListRevisionsParams\) \(\[\]\*Revision, error\)](<#Queries.ListRevisions>)
   - [func \(x \*Queries\) Ping\(ctx context.Context\) error](<#Queries.Ping>)
@@ -286,6 +318,56 @@ func (c *DeleteJobParamsConverterImpl) SetFromJob(target *DeleteJobParams, sourc
 
 
 
+<a name="DeleteLockParams"></a>
+## type [DeleteLockParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock.sql_gen.go#L34-L36>)
+
+
+
+```go
+type DeleteLockParams struct {
+    ID string `db:"id" json:"id"`
+}
+```
+
+<a name="DeleteLockParams.SetLock"></a>
+### func \(\*DeleteLockParams\) [SetLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock_conv_ext.go#L24>)
+
+```go
+func (x *DeleteLockParams) SetLock(entity *Lock)
+```
+
+SetLock sets the params from the entity.
+
+<a name="DeleteLockParamsConverter"></a>
+## type [DeleteLockParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock_conv.go#L34-L37>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type DeleteLockParamsConverter interface {
+    // goverter:update target
+    SetFromLock(target *DeleteLockParams, source *Lock)
+}
+```
+
+<a name="DeleteLockParamsConverterImpl"></a>
+## type [DeleteLockParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L14>)
+
+
+
+```go
+type DeleteLockParamsConverterImpl struct{}
+```
+
+<a name="DeleteLockParamsConverterImpl.SetFromLock"></a>
+### func \(\*DeleteLockParamsConverterImpl\) [SetFromLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L16>)
+
+```go
+func (c *DeleteLockParamsConverterImpl) SetFromLock(target *DeleteLockParams, source *Lock)
+```
+
+
+
 <a name="DeleteRevisionParams"></a>
 ## type [DeleteRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L46-L48>)
 
@@ -319,7 +401,7 @@ type DeleteRevisionParamsConverter interface {
 ```
 
 <a name="DeleteRevisionParamsConverterImpl"></a>
-## type [DeleteRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L14>)
+## type [DeleteRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L22>)
 
 
 
@@ -328,7 +410,7 @@ type DeleteRevisionParamsConverterImpl struct{}
 ```
 
 <a name="DeleteRevisionParamsConverterImpl.SetFromRevision"></a>
-### func \(\*DeleteRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L16>)
+### func \(\*DeleteRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L24>)
 
 ```go
 func (c *DeleteRevisionParamsConverterImpl) SetFromRevision(target *DeleteRevisionParams, source *Revision)
@@ -378,7 +460,7 @@ type ExecDeleteJobParamsConverter interface {
 ```
 
 <a name="ExecDeleteJobParamsConverterImpl"></a>
-## type [ExecDeleteJobParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L22>)
+## type [ExecDeleteJobParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L30>)
 
 
 
@@ -387,10 +469,60 @@ type ExecDeleteJobParamsConverterImpl struct{}
 ```
 
 <a name="ExecDeleteJobParamsConverterImpl.SetFromJob"></a>
-### func \(\*ExecDeleteJobParamsConverterImpl\) [SetFromJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L24>)
+### func \(\*ExecDeleteJobParamsConverterImpl\) [SetFromJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L32>)
 
 ```go
 func (c *ExecDeleteJobParamsConverterImpl) SetFromJob(target *ExecDeleteJobParams, source *Job)
+```
+
+
+
+<a name="ExecDeleteLockParams"></a>
+## type [ExecDeleteLockParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock.sql_gen.go#L51-L53>)
+
+
+
+```go
+type ExecDeleteLockParams struct {
+    ID string `db:"id" json:"id"`
+}
+```
+
+<a name="ExecDeleteLockParams.SetLock"></a>
+### func \(\*ExecDeleteLockParams\) [SetLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock_conv_ext.go#L30>)
+
+```go
+func (x *ExecDeleteLockParams) SetLock(entity *Lock)
+```
+
+SetLock sets the params from the entity.
+
+<a name="ExecDeleteLockParamsConverter"></a>
+## type [ExecDeleteLockParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock_conv.go#L43-L46>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type ExecDeleteLockParamsConverter interface {
+    // goverter:update target
+    SetFromLock(target *ExecDeleteLockParams, source *Lock)
+}
+```
+
+<a name="ExecDeleteLockParamsConverterImpl"></a>
+## type [ExecDeleteLockParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L38>)
+
+
+
+```go
+type ExecDeleteLockParamsConverterImpl struct{}
+```
+
+<a name="ExecDeleteLockParamsConverterImpl.SetFromLock"></a>
+### func \(\*ExecDeleteLockParamsConverterImpl\) [SetFromLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L40>)
+
+```go
+func (c *ExecDeleteLockParamsConverterImpl) SetFromLock(target *ExecDeleteLockParams, source *Lock)
 ```
 
 
@@ -428,7 +560,7 @@ type ExecDeleteRevisionParamsConverter interface {
 ```
 
 <a name="ExecDeleteRevisionParamsConverterImpl"></a>
-## type [ExecDeleteRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L30>)
+## type [ExecDeleteRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L46>)
 
 
 
@@ -437,7 +569,7 @@ type ExecDeleteRevisionParamsConverterImpl struct{}
 ```
 
 <a name="ExecDeleteRevisionParamsConverterImpl.SetFromRevision"></a>
-### func \(\*ExecDeleteRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L32>)
+### func \(\*ExecDeleteRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L48>)
 
 ```go
 func (c *ExecDeleteRevisionParamsConverterImpl) SetFromRevision(target *ExecDeleteRevisionParams, source *Revision)
@@ -480,7 +612,7 @@ type ExecInsertJobParamsConverter interface {
 ```
 
 <a name="ExecInsertJobParamsConverterImpl"></a>
-## type [ExecInsertJobParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L38>)
+## type [ExecInsertJobParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L54>)
 
 
 
@@ -489,10 +621,61 @@ type ExecInsertJobParamsConverterImpl struct{}
 ```
 
 <a name="ExecInsertJobParamsConverterImpl.SetFromJob"></a>
-### func \(\*ExecInsertJobParamsConverterImpl\) [SetFromJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L40>)
+### func \(\*ExecInsertJobParamsConverterImpl\) [SetFromJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L56>)
 
 ```go
 func (c *ExecInsertJobParamsConverterImpl) SetFromJob(target *ExecInsertJobParams, source *Job)
+```
+
+
+
+<a name="ExecInsertLockParams"></a>
+## type [ExecInsertLockParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock.sql_gen.go#L71-L74>)
+
+
+
+```go
+type ExecInsertLockParams struct {
+    ID        string    `db:"id" json:"id"`
+    CreatedAt time.Time `db:"created_at" json:"created_at"`
+}
+```
+
+<a name="ExecInsertLockParams.SetLock"></a>
+### func \(\*ExecInsertLockParams\) [SetLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock_conv_ext.go#L18>)
+
+```go
+func (x *ExecInsertLockParams) SetLock(entity *Lock)
+```
+
+SetLock sets the params from the entity.
+
+<a name="ExecInsertLockParamsConverter"></a>
+## type [ExecInsertLockParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock_conv.go#L25-L28>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type ExecInsertLockParamsConverter interface {
+    // goverter:update target
+    SetFromLock(target *ExecInsertLockParams, source *Lock)
+}
+```
+
+<a name="ExecInsertLockParamsConverterImpl"></a>
+## type [ExecInsertLockParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L64>)
+
+
+
+```go
+type ExecInsertLockParamsConverterImpl struct{}
+```
+
+<a name="ExecInsertLockParamsConverterImpl.SetFromLock"></a>
+### func \(\*ExecInsertLockParamsConverterImpl\) [SetFromLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L66>)
+
+```go
+func (c *ExecInsertLockParamsConverterImpl) SetFromLock(target *ExecInsertLockParams, source *Lock)
 ```
 
 
@@ -537,7 +720,7 @@ type ExecInsertRevisionParamsConverter interface {
 ```
 
 <a name="ExecInsertRevisionParamsConverterImpl"></a>
-## type [ExecInsertRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L48>)
+## type [ExecInsertRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L73>)
 
 
 
@@ -546,7 +729,7 @@ type ExecInsertRevisionParamsConverterImpl struct{}
 ```
 
 <a name="ExecInsertRevisionParamsConverterImpl.SetFromRevision"></a>
-### func \(\*ExecInsertRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L50>)
+### func \(\*ExecInsertRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L75>)
 
 ```go
 func (c *ExecInsertRevisionParamsConverterImpl) SetFromRevision(target *ExecInsertRevisionParams, source *Revision)
@@ -596,7 +779,7 @@ type ExecUpdateRevisionParamsConverter interface {
 ```
 
 <a name="ExecUpdateRevisionParamsConverterImpl"></a>
-## type [ExecUpdateRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L63>)
+## type [ExecUpdateRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L88>)
 
 
 
@@ -605,7 +788,7 @@ type ExecUpdateRevisionParamsConverterImpl struct{}
 ```
 
 <a name="ExecUpdateRevisionParamsConverterImpl.SetFromRevision"></a>
-### func \(\*ExecUpdateRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L65>)
+### func \(\*ExecUpdateRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L90>)
 
 ```go
 func (c *ExecUpdateRevisionParamsConverterImpl) SetFromRevision(target *ExecUpdateRevisionParams, source *Revision)
@@ -653,7 +836,7 @@ type ExecUpsertRevisionParamsConverter interface {
 ```
 
 <a name="ExecUpsertRevisionParamsConverterImpl"></a>
-## type [ExecUpsertRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L78>)
+## type [ExecUpsertRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L103>)
 
 
 
@@ -662,7 +845,7 @@ type ExecUpsertRevisionParamsConverterImpl struct{}
 ```
 
 <a name="ExecUpsertRevisionParamsConverterImpl.SetFromRevision"></a>
-### func \(\*ExecUpsertRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L80>)
+### func \(\*ExecUpsertRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L105>)
 
 ```go
 func (c *ExecUpsertRevisionParamsConverterImpl) SetFromRevision(target *ExecUpsertRevisionParams, source *Revision)
@@ -775,7 +958,7 @@ type GetJobParamsConverter interface {
 ```
 
 <a name="GetJobParamsConverterImpl"></a>
-## type [GetJobParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L93>)
+## type [GetJobParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L118>)
 
 
 
@@ -784,10 +967,60 @@ type GetJobParamsConverterImpl struct{}
 ```
 
 <a name="GetJobParamsConverterImpl.SetFromJob"></a>
-### func \(\*GetJobParamsConverterImpl\) [SetFromJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L95>)
+### func \(\*GetJobParamsConverterImpl\) [SetFromJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L120>)
 
 ```go
 func (c *GetJobParamsConverterImpl) SetFromJob(target *GetJobParams, source *Job)
+```
+
+
+
+<a name="GetLockParams"></a>
+## type [GetLockParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock.sql_gen.go#L92-L94>)
+
+
+
+```go
+type GetLockParams struct {
+    ID string `db:"id" json:"id"`
+}
+```
+
+<a name="GetLockParams.SetLock"></a>
+### func \(\*GetLockParams\) [SetLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock_conv_ext.go#L6>)
+
+```go
+func (x *GetLockParams) SetLock(entity *Lock)
+```
+
+SetLock sets the params from the entity.
+
+<a name="GetLockParamsConverter"></a>
+## type [GetLockParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock_conv.go#L7-L10>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type GetLockParamsConverter interface {
+    // goverter:update target
+    SetFromLock(target *GetLockParams, source *Lock)
+}
+```
+
+<a name="GetLockParamsConverterImpl"></a>
+## type [GetLockParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L126>)
+
+
+
+```go
+type GetLockParamsConverterImpl struct{}
+```
+
+<a name="GetLockParamsConverterImpl.SetFromLock"></a>
+### func \(\*GetLockParamsConverterImpl\) [SetFromLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L128>)
+
+```go
+func (c *GetLockParamsConverterImpl) SetFromLock(target *GetLockParams, source *Lock)
 ```
 
 
@@ -825,7 +1058,7 @@ type GetRevisionParamsConverter interface {
 ```
 
 <a name="GetRevisionParamsConverterImpl"></a>
-## type [GetRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L101>)
+## type [GetRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L134>)
 
 
 
@@ -834,7 +1067,7 @@ type GetRevisionParamsConverterImpl struct{}
 ```
 
 <a name="GetRevisionParamsConverterImpl.SetFromRevision"></a>
-### func \(\*GetRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L103>)
+### func \(\*GetRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L136>)
 
 ```go
 func (c *GetRevisionParamsConverterImpl) SetFromRevision(target *GetRevisionParams, source *Revision)
@@ -877,7 +1110,7 @@ type InsertJobParamsConverter interface {
 ```
 
 <a name="InsertJobParamsConverterImpl"></a>
-## type [InsertJobParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L109>)
+## type [InsertJobParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L142>)
 
 
 
@@ -886,10 +1119,61 @@ type InsertJobParamsConverterImpl struct{}
 ```
 
 <a name="InsertJobParamsConverterImpl.SetFromJob"></a>
-### func \(\*InsertJobParamsConverterImpl\) [SetFromJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L111>)
+### func \(\*InsertJobParamsConverterImpl\) [SetFromJob](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L144>)
 
 ```go
 func (c *InsertJobParamsConverterImpl) SetFromJob(target *InsertJobParams, source *Job)
+```
+
+
+
+<a name="InsertLockParams"></a>
+## type [InsertLockParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock.sql_gen.go#L115-L118>)
+
+
+
+```go
+type InsertLockParams struct {
+    ID        string    `db:"id" json:"id"`
+    CreatedAt time.Time `db:"created_at" json:"created_at"`
+}
+```
+
+<a name="InsertLockParams.SetLock"></a>
+### func \(\*InsertLockParams\) [SetLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock_conv_ext.go#L12>)
+
+```go
+func (x *InsertLockParams) SetLock(entity *Lock)
+```
+
+SetLock sets the params from the entity.
+
+<a name="InsertLockParamsConverter"></a>
+## type [InsertLockParamsConverter](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock_conv.go#L16-L19>)
+
+goverter:converter goverter:skipCopySameType yes goverter:output:file models\_conv\_gen.go goverter:output:package github.com/aws\-contrib/aurora/internal/database/ent
+
+```go
+type InsertLockParamsConverter interface {
+    // goverter:update target
+    SetFromLock(target *InsertLockParams, source *Lock)
+}
+```
+
+<a name="InsertLockParamsConverterImpl"></a>
+## type [InsertLockParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L152>)
+
+
+
+```go
+type InsertLockParamsConverterImpl struct{}
+```
+
+<a name="InsertLockParamsConverterImpl.SetFromLock"></a>
+### func \(\*InsertLockParamsConverterImpl\) [SetFromLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L154>)
+
+```go
+func (c *InsertLockParamsConverterImpl) SetFromLock(target *InsertLockParams, source *Lock)
 ```
 
 
@@ -934,7 +1218,7 @@ type InsertRevisionParamsConverter interface {
 ```
 
 <a name="InsertRevisionParamsConverterImpl"></a>
-## type [InsertRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L119>)
+## type [InsertRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L161>)
 
 
 
@@ -943,7 +1227,7 @@ type InsertRevisionParamsConverterImpl struct{}
 ```
 
 <a name="InsertRevisionParamsConverterImpl.SetFromRevision"></a>
-### func \(\*InsertRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L121>)
+### func \(\*InsertRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L163>)
 
 ```go
 func (c *InsertRevisionParamsConverterImpl) SetFromRevision(target *InsertRevisionParams, source *Revision)
@@ -985,7 +1269,7 @@ func (x *JobRepository) WaitJob(ctx context.Context, params *WaitJobParams) (*Jo
 WaitJob waits for a job to complete and returns the job details.
 
 <a name="ListMigrationsParams"></a>
-## type [ListMigrationsParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/migration.sql_ext.go#L190>)
+## type [ListMigrationsParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/migration.sql_ext.go#L196>)
 
 ListMigrationsParams represents the parameters for listing migrations.
 
@@ -1002,6 +1286,18 @@ type ListMigrationsParams struct{}
 type ListRevisionsParams struct {
     PageOffset *int32 `db:"page_offset" json:"page_offset"`
     PageLimit  *int32 `db:"page_limit" json:"page_limit"`
+}
+```
+
+<a name="Lock"></a>
+## type [Lock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_gen.go#L17-L20>)
+
+
+
+```go
+type Lock struct {
+    ID        string    `db:"id" json:"id"`
+    CreatedAt time.Time `db:"created_at" json:"created_at"`
 }
 ```
 
@@ -1055,7 +1351,7 @@ func (x *MigrationRepository) ApplyMigration(ctx context.Context, params *ApplyM
 ApplyMigration executes a revision.
 
 <a name="MigrationRepository.ListMigrations"></a>
-### func \(\*MigrationRepository\) [ListMigrations](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/migration.sql_ext.go#L193>)
+### func \(\*MigrationRepository\) [ListMigrations](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/migration.sql_ext.go#L199>)
 
 ```go
 func (x *MigrationRepository) ListMigrations(ctx context.Context, _ *ListMigrationsParams) (collection []*Migration, _ error)
@@ -1096,7 +1392,7 @@ type MigrationState struct {
 ```
 
 <a name="Querier"></a>
-## type [Querier](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_gen.go#L11-L49>)
+## type [Querier](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/querier_gen.go#L11-L61>)
 
 
 
@@ -1107,18 +1403,26 @@ type Querier interface {
     // Creates a table named 'sys.jobs' with the following columns:
     // The table 'sys.jobs' is created to track jobs in the system.
     CreateTableJobs(ctx context.Context) error
+    // Creates a table named 'aurora_schema_locks' with the following columns:
+    CreateTableLocks(ctx context.Context) error
     // Creates a table named 'aurora_schema_revisions' with the following columns:
     CreateTableRevisions(ctx context.Context) error
     // Deletes a row from the table 'sys.jobs' with option ':one'
     DeleteJob(ctx context.Context, arg *DeleteJobParams) (*Job, error)
+    // Deletes a row from the table 'aurora_schema_locks' with option ':one'
+    DeleteLock(ctx context.Context, arg *DeleteLockParams) (*Lock, error)
     // Deletes a row from the table 'aurora_schema_revisions' with option ':one'
     DeleteRevision(ctx context.Context, arg *DeleteRevisionParams) (*Revision, error)
     // Deletes a row from the table 'sys.jobs' with option ':exec'
     ExecDeleteJob(ctx context.Context, arg *ExecDeleteJobParams) error
+    // Deletes a row from the table 'aurora_schema_locks' with option ':exec'
+    ExecDeleteLock(ctx context.Context, arg *ExecDeleteLockParams) error
     // Deletes a row from the table 'aurora_schema_revisions' with option ':exec'
     ExecDeleteRevision(ctx context.Context, arg *ExecDeleteRevisionParams) error
     // Inserts a row into the table 'sys.jobs' with option ':exec'
     ExecInsertJob(ctx context.Context, arg *ExecInsertJobParams) error
+    // Inserts a row into the table 'aurora_schema_locks' with option ':exec'
+    ExecInsertLock(ctx context.Context, arg *ExecInsertLockParams) error
     // Inserts a row into the table 'aurora_schema_revisions' with option ':exec'
     ExecInsertRevision(ctx context.Context, arg *ExecInsertRevisionParams) error
     // Updates a row in the table 'revision' with option ':exec'
@@ -1127,10 +1431,14 @@ type Querier interface {
     ExecUpsertRevision(ctx context.Context, arg *ExecUpsertRevisionParams) error
     // Retrieves a row from the table 'sys.jobs' with option ':one'
     GetJob(ctx context.Context, arg *GetJobParams) (*Job, error)
+    // Retrieves a row from the table 'aurora_schema_locks' with option ':one'
+    GetLock(ctx context.Context, arg *GetLockParams) (*Lock, error)
     // Retrieves a row from the table 'aurora_schema_revisions' with option ':one'
     GetRevision(ctx context.Context, arg *GetRevisionParams) (*Revision, error)
     // Inserts a row into the table 'sys.jobs' with option ':one'
     InsertJob(ctx context.Context, arg *InsertJobParams) (*Job, error)
+    // Inserts a row into the table 'aurora_schema_locks' with option ':one'
+    InsertLock(ctx context.Context, arg *InsertLockParams) (*Lock, error)
     // Inserts a row into the table 'aurora_schema_revisions' with option ':one'
     InsertRevision(ctx context.Context, arg *InsertRevisionParams) (*Revision, error)
     // Retrieves a list of rows from the table 'aurora_schema_revisions' with option ':many'
@@ -1228,6 +1536,15 @@ func (q *Queries) CreateTableJobs(ctx context.Context) error
 
 Creates a table named 'sys.jobs' with the following columns: The table 'sys.jobs' is created to track jobs in the system.
 
+<a name="Queries.CreateTableLocks"></a>
+### func \(\*Queries\) [CreateTableLocks](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock.sql_gen.go#L23>)
+
+```go
+func (q *Queries) CreateTableLocks(ctx context.Context) error
+```
+
+Creates a table named 'aurora\_schema\_locks' with the following columns:
+
 <a name="Queries.CreateTableRevisions"></a>
 ### func \(\*Queries\) [CreateTableRevisions](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L35>)
 
@@ -1255,6 +1572,15 @@ func (q *Queries) DeleteJob(ctx context.Context, arg *DeleteJobParams) (*Job, er
 
 Deletes a row from the table 'sys.jobs' with option ':one'
 
+<a name="Queries.DeleteLock"></a>
+### func \(\*Queries\) [DeleteLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock.sql_gen.go#L39>)
+
+```go
+func (q *Queries) DeleteLock(ctx context.Context, arg *DeleteLockParams) (*Lock, error)
+```
+
+Deletes a row from the table 'aurora\_schema\_locks' with option ':one'
+
 <a name="Queries.DeleteRevision"></a>
 ### func \(\*Queries\) [DeleteRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L51>)
 
@@ -1273,6 +1599,15 @@ func (q *Queries) ExecDeleteJob(ctx context.Context, arg *ExecDeleteJobParams) e
 
 Deletes a row from the table 'sys.jobs' with option ':exec'
 
+<a name="Queries.ExecDeleteLock"></a>
+### func \(\*Queries\) [ExecDeleteLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock.sql_gen.go#L56>)
+
+```go
+func (q *Queries) ExecDeleteLock(ctx context.Context, arg *ExecDeleteLockParams) error
+```
+
+Deletes a row from the table 'aurora\_schema\_locks' with option ':exec'
+
 <a name="Queries.ExecDeleteRevision"></a>
 ### func \(\*Queries\) [ExecDeleteRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L77>)
 
@@ -1290,6 +1625,15 @@ func (q *Queries) ExecInsertJob(ctx context.Context, arg *ExecInsertJobParams) e
 ```
 
 Inserts a row into the table 'sys.jobs' with option ':exec'
+
+<a name="Queries.ExecInsertLock"></a>
+### func \(\*Queries\) [ExecInsertLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock.sql_gen.go#L77>)
+
+```go
+func (q *Queries) ExecInsertLock(ctx context.Context, arg *ExecInsertLockParams) error
+```
+
+Inserts a row into the table 'aurora\_schema\_locks' with option ':exec'
 
 <a name="Queries.ExecInsertRevision"></a>
 ### func \(\*Queries\) [ExecInsertRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L116>)
@@ -1327,6 +1671,15 @@ func (q *Queries) GetJob(ctx context.Context, arg *GetJobParams) (*Job, error)
 
 Retrieves a row from the table 'sys.jobs' with option ':one'
 
+<a name="Queries.GetLock"></a>
+### func \(\*Queries\) [GetLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock.sql_gen.go#L97>)
+
+```go
+func (q *Queries) GetLock(ctx context.Context, arg *GetLockParams) (*Lock, error)
+```
+
+Retrieves a row from the table 'aurora\_schema\_locks' with option ':one'
+
 <a name="Queries.GetRevision"></a>
 ### func \(\*Queries\) [GetRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L270>)
 
@@ -1344,6 +1697,15 @@ func (q *Queries) InsertJob(ctx context.Context, arg *InsertJobParams) (*Job, er
 ```
 
 Inserts a row into the table 'sys.jobs' with option ':one'
+
+<a name="Queries.InsertLock"></a>
+### func \(\*Queries\) [InsertLock](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/lock.sql_gen.go#L121>)
+
+```go
+func (q *Queries) InsertLock(ctx context.Context, arg *InsertLockParams) (*Lock, error)
+```
+
+Inserts a row into the table 'aurora\_schema\_locks' with option ':one'
 
 <a name="Queries.InsertRevision"></a>
 ### func \(\*Queries\) [InsertRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L321>)
@@ -1409,7 +1771,7 @@ func (q *Queries) WithTx(tx pgx.Tx) *Queries
 
 
 <a name="Revision"></a>
-## type [Revision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_gen.go#L17-L26>)
+## type [Revision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_gen.go#L22-L31>)
 
 
 
@@ -1498,7 +1860,7 @@ type UpdateRevisionParamsConverter interface {
 ```
 
 <a name="UpdateRevisionParamsConverterImpl"></a>
-## type [UpdateRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L134>)
+## type [UpdateRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L176>)
 
 
 
@@ -1507,7 +1869,7 @@ type UpdateRevisionParamsConverterImpl struct{}
 ```
 
 <a name="UpdateRevisionParamsConverterImpl.SetFromRevision"></a>
-### func \(\*UpdateRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L136>)
+### func \(\*UpdateRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L178>)
 
 ```go
 func (c *UpdateRevisionParamsConverterImpl) SetFromRevision(target *UpdateRevisionParams, source *Revision)
@@ -1555,7 +1917,7 @@ type UpsertRevisionParamsConverter interface {
 ```
 
 <a name="UpsertRevisionParamsConverterImpl"></a>
-## type [UpsertRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L149>)
+## type [UpsertRevisionParamsConverterImpl](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L191>)
 
 
 
@@ -1564,7 +1926,7 @@ type UpsertRevisionParamsConverterImpl struct{}
 ```
 
 <a name="UpsertRevisionParamsConverterImpl.SetFromRevision"></a>
-### func \(\*UpsertRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L151>)
+### func \(\*UpsertRevisionParamsConverterImpl\) [SetFromRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_conv_gen.go#L193>)
 
 ```go
 func (c *UpsertRevisionParamsConverterImpl) SetFromRevision(target *UpsertRevisionParams, source *Revision)

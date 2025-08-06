@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -21,18 +22,15 @@ var (
 
 //counterfeiter:generate -o ./fake . FileSystem
 
-// Mutex is a special revision that represents a lock on the database.
-var Mutex = &Revision{
-	ID:          "20060102150405",
-	Description: "lock",
-}
-
 // FileSystem represents a filesystem that supports globbing and reading files.
 type FileSystem interface {
 	fs.FS
 	fs.GlobFS
 	fs.ReadFileFS
 }
+
+// MigrationLock is a UUID used to identify the migration lock in the database.
+var MigrationLock = uuid.NewMD5(uuid.NameSpaceOID, []byte("aurora_schema_migrations"))
 
 // MigrationRepository represents a repository for managing revisions.
 type MigrationRepository struct {
@@ -42,28 +40,24 @@ type MigrationRepository struct {
 	FileSystem fs.FS
 }
 
-// LockRevisionParams represents the parameters for locking a revision.
-type LockRevisionParams struct {
-	// Revision contains the parameters for locking a revision.
-	Revision *Revision
+// LockMigrationParams represents the parameters for locking a revision.
+type LockMigrationParams struct {
 	// Timeout is the maximum time to wait for the lock.
 	Timeout time.Duration
 }
 
-// LockRevision locks the revision for exclusive access.
-func (x *MigrationRepository) LockRevision(ctx context.Context, params *LockRevisionParams) error {
+// LockMigration locks a revision for exclusive access.
+func (x *MigrationRepository) LockMigration(ctx context.Context, params *LockMigrationParams) error {
 	start := time.Now()
 
 	for {
-		// prepare the parameters
-		params.Revision.ExecutedAt = time.Now().UTC()
-		params.Revision.ExecutionTime = time.Since(start)
-
 		// create the revision
-		args := &InsertRevisionParams{}
-		args.SetRevision(params.Revision)
-		_, err := x.Gateway.InsertRevision(ctx, args)
+		args := &ExecInsertLockParams{}
+		args.ID = MigrationLock.String()
+		args.CreatedAt = time.Now().UTC()
 
+		err := x.Gateway.ExecInsertLock(ctx, args)
+		// Waiting for the lock to be acquired
 		switch {
 		case err == nil:
 			return nil
@@ -77,17 +71,12 @@ func (x *MigrationRepository) LockRevision(ctx context.Context, params *LockRevi
 	}
 }
 
-// UnlockRevisionParams represents the parameters for unlocking a revision.
-type UnlockRevisionParams struct {
-	// Revision contains the parameters for unlocking a revision.
-	Revision *Revision
-}
+// UnlockMigration unlocks the revision after exclusive access.
+func (x *MigrationRepository) UnlockMigration(ctx context.Context) error {
+	args := &ExecDeleteLockParams{}
+	args.ID = MigrationLock.String()
 
-// UnlockRevision unlocks the revision after exclusive access.
-func (x *MigrationRepository) UnlockRevision(ctx context.Context, params *UnlockRevisionParams) error {
-	args := &ExecDeleteRevisionParams{}
-	args.ID = params.Revision.ID
-	return x.Gateway.ExecDeleteRevision(ctx, args)
+	return x.Gateway.ExecDeleteLock(ctx, args)
 }
 
 // ApplyMigrationParams represents the parameters for executing a revision.

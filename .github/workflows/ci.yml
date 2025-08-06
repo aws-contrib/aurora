@@ -1,0 +1,17 @@
+name: ci
+on:
+  push:
+    branches:
+      - main
+permissions: write-all
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Run tests with coverage report output
+        run: go tool ginkgo -r -coverprofile=coverprofile.out
+      - uses: k1LoW/octocov-action@v1

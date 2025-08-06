@@ -31,6 +31,17 @@ type FakeQuerier struct {
 	createTableJobsReturnsOnCall map[int]struct {
 		result1 error
 	}
+	CreateTableLocksStub        func(context.Context) error
+	createTableLocksMutex       sync.RWMutex
+	createTableLocksArgsForCall []struct {
+		arg1 context.Context
+	}
+	createTableLocksReturns struct {
+		result1 error
+	}
+	createTableLocksReturnsOnCall map[int]struct {
+		result1 error
+	}
 	CreateTableRevisionsStub        func(context.Context) error
 	createTableRevisionsMutex       sync.RWMutex
 	createTableRevisionsArgsForCall []struct {
@@ -54,6 +65,20 @@ type FakeQuerier struct {
 	}
 	deleteJobReturnsOnCall map[int]struct {
 		result1 *ent.Job
+		result2 error
+	}
+	DeleteLockStub        func(context.Context, *ent.DeleteLockParams) (*ent.Lock, error)
+	deleteLockMutex       sync.RWMutex
+	deleteLockArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.DeleteLockParams
+	}
+	deleteLockReturns struct {
+		result1 *ent.Lock
+		result2 error
+	}
+	deleteLockReturnsOnCall map[int]struct {
+		result1 *ent.Lock
 		result2 error
 	}
 	DeleteRevisionStub        func(context.Context, *ent.DeleteRevisionParams) (*ent.Revision, error)
@@ -82,6 +107,18 @@ type FakeQuerier struct {
 	execDeleteJobReturnsOnCall map[int]struct {
 		result1 error
 	}
+	ExecDeleteLockStub        func(context.Context, *ent.ExecDeleteLockParams) error
+	execDeleteLockMutex       sync.RWMutex
+	execDeleteLockArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.ExecDeleteLockParams
+	}
+	execDeleteLockReturns struct {
+		result1 error
+	}
+	execDeleteLockReturnsOnCall map[int]struct {
+		result1 error
+	}
 	ExecDeleteRevisionStub        func(context.Context, *ent.ExecDeleteRevisionParams) error
 	execDeleteRevisionMutex       sync.RWMutex
 	execDeleteRevisionArgsForCall []struct {
@@ -104,6 +141,18 @@ type FakeQuerier struct {
 		result1 error
 	}
 	execInsertJobReturnsOnCall map[int]struct {
+		result1 error
+	}
+	ExecInsertLockStub        func(context.Context, *ent.ExecInsertLockParams) error
+	execInsertLockMutex       sync.RWMutex
+	execInsertLockArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.ExecInsertLockParams
+	}
+	execInsertLockReturns struct {
+		result1 error
+	}
+	execInsertLockReturnsOnCall map[int]struct {
 		result1 error
 	}
 	ExecInsertRevisionStub        func(context.Context, *ent.ExecInsertRevisionParams) error
@@ -156,6 +205,20 @@ type FakeQuerier struct {
 		result1 *ent.Job
 		result2 error
 	}
+	GetLockStub        func(context.Context, *ent.GetLockParams) (*ent.Lock, error)
+	getLockMutex       sync.RWMutex
+	getLockArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.GetLockParams
+	}
+	getLockReturns struct {
+		result1 *ent.Lock
+		result2 error
+	}
+	getLockReturnsOnCall map[int]struct {
+		result1 *ent.Lock
+		result2 error
+	}
 	GetRevisionStub        func(context.Context, *ent.GetRevisionParams) (*ent.Revision, error)
 	getRevisionMutex       sync.RWMutex
 	getRevisionArgsForCall []struct {
@@ -182,6 +245,20 @@ type FakeQuerier struct {
 	}
 	insertJobReturnsOnCall map[int]struct {
 		result1 *ent.Job
+		result2 error
+	}
+	InsertLockStub        func(context.Context, *ent.InsertLockParams) (*ent.Lock, error)
+	insertLockMutex       sync.RWMutex
+	insertLockArgsForCall []struct {
+		arg1 context.Context
+		arg2 *ent.InsertLockParams
+	}
+	insertLockReturns struct {
+		result1 *ent.Lock
+		result2 error
+	}
+	insertLockReturnsOnCall map[int]struct {
+		result1 *ent.Lock
 		result2 error
 	}
 	InsertRevisionStub        func(context.Context, *ent.InsertRevisionParams) (*ent.Revision, error)
@@ -366,6 +443,67 @@ func (fake *FakeQuerier) CreateTableJobsReturnsOnCall(i int, result1 error) {
 	}{result1}
 }
 
+func (fake *FakeQuerier) CreateTableLocks(arg1 context.Context) error {
+	fake.createTableLocksMutex.Lock()
+	ret, specificReturn := fake.createTableLocksReturnsOnCall[len(fake.createTableLocksArgsForCall)]
+	fake.createTableLocksArgsForCall = append(fake.createTableLocksArgsForCall, struct {
+		arg1 context.Context
+	}{arg1})
+	stub := fake.CreateTableLocksStub
+	fakeReturns := fake.createTableLocksReturns
+	fake.recordInvocation("CreateTableLocks", []interface{}{arg1})
+	fake.createTableLocksMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeQuerier) CreateTableLocksCallCount() int {
+	fake.createTableLocksMutex.RLock()
+	defer fake.createTableLocksMutex.RUnlock()
+	return len(fake.createTableLocksArgsForCall)
+}
+
+func (fake *FakeQuerier) CreateTableLocksCalls(stub func(context.Context) error) {
+	fake.createTableLocksMutex.Lock()
+	defer fake.createTableLocksMutex.Unlock()
+	fake.CreateTableLocksStub = stub
+}
+
+func (fake *FakeQuerier) CreateTableLocksArgsForCall(i int) context.Context {
+	fake.createTableLocksMutex.RLock()
+	defer fake.createTableLocksMutex.RUnlock()
+	argsForCall := fake.createTableLocksArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeQuerier) CreateTableLocksReturns(result1 error) {
+	fake.createTableLocksMutex.Lock()
+	defer fake.createTableLocksMutex.Unlock()
+	fake.CreateTableLocksStub = nil
+	fake.createTableLocksReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeQuerier) CreateTableLocksReturnsOnCall(i int, result1 error) {
+	fake.createTableLocksMutex.Lock()
+	defer fake.createTableLocksMutex.Unlock()
+	fake.CreateTableLocksStub = nil
+	if fake.createTableLocksReturnsOnCall == nil {
+		fake.createTableLocksReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.createTableLocksReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
 func (fake *FakeQuerier) CreateTableRevisions(arg1 context.Context) error {
 	fake.createTableRevisionsMutex.Lock()
 	ret, specificReturn := fake.createTableRevisionsReturnsOnCall[len(fake.createTableRevisionsArgsForCall)]
@@ -488,6 +626,71 @@ func (fake *FakeQuerier) DeleteJobReturnsOnCall(i int, result1 *ent.Job, result2
 	}
 	fake.deleteJobReturnsOnCall[i] = struct {
 		result1 *ent.Job
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeQuerier) DeleteLock(arg1 context.Context, arg2 *ent.DeleteLockParams) (*ent.Lock, error) {
+	fake.deleteLockMutex.Lock()
+	ret, specificReturn := fake.deleteLockReturnsOnCall[len(fake.deleteLockArgsForCall)]
+	fake.deleteLockArgsForCall = append(fake.deleteLockArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.DeleteLockParams
+	}{arg1, arg2})
+	stub := fake.DeleteLockStub
+	fakeReturns := fake.deleteLockReturns
+	fake.recordInvocation("DeleteLock", []interface{}{arg1, arg2})
+	fake.deleteLockMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeQuerier) DeleteLockCallCount() int {
+	fake.deleteLockMutex.RLock()
+	defer fake.deleteLockMutex.RUnlock()
+	return len(fake.deleteLockArgsForCall)
+}
+
+func (fake *FakeQuerier) DeleteLockCalls(stub func(context.Context, *ent.DeleteLockParams) (*ent.Lock, error)) {
+	fake.deleteLockMutex.Lock()
+	defer fake.deleteLockMutex.Unlock()
+	fake.DeleteLockStub = stub
+}
+
+func (fake *FakeQuerier) DeleteLockArgsForCall(i int) (context.Context, *ent.DeleteLockParams) {
+	fake.deleteLockMutex.RLock()
+	defer fake.deleteLockMutex.RUnlock()
+	argsForCall := fake.deleteLockArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeQuerier) DeleteLockReturns(result1 *ent.Lock, result2 error) {
+	fake.deleteLockMutex.Lock()
+	defer fake.deleteLockMutex.Unlock()
+	fake.DeleteLockStub = nil
+	fake.deleteLockReturns = struct {
+		result1 *ent.Lock
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeQuerier) DeleteLockReturnsOnCall(i int, result1 *ent.Lock, result2 error) {
+	fake.deleteLockMutex.Lock()
+	defer fake.deleteLockMutex.Unlock()
+	fake.DeleteLockStub = nil
+	if fake.deleteLockReturnsOnCall == nil {
+		fake.deleteLockReturnsOnCall = make(map[int]struct {
+			result1 *ent.Lock
+			result2 error
+		})
+	}
+	fake.deleteLockReturnsOnCall[i] = struct {
+		result1 *ent.Lock
 		result2 error
 	}{result1, result2}
 }
@@ -619,6 +822,68 @@ func (fake *FakeQuerier) ExecDeleteJobReturnsOnCall(i int, result1 error) {
 	}{result1}
 }
 
+func (fake *FakeQuerier) ExecDeleteLock(arg1 context.Context, arg2 *ent.ExecDeleteLockParams) error {
+	fake.execDeleteLockMutex.Lock()
+	ret, specificReturn := fake.execDeleteLockReturnsOnCall[len(fake.execDeleteLockArgsForCall)]
+	fake.execDeleteLockArgsForCall = append(fake.execDeleteLockArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.ExecDeleteLockParams
+	}{arg1, arg2})
+	stub := fake.ExecDeleteLockStub
+	fakeReturns := fake.execDeleteLockReturns
+	fake.recordInvocation("ExecDeleteLock", []interface{}{arg1, arg2})
+	fake.execDeleteLockMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeQuerier) ExecDeleteLockCallCount() int {
+	fake.execDeleteLockMutex.RLock()
+	defer fake.execDeleteLockMutex.RUnlock()
+	return len(fake.execDeleteLockArgsForCall)
+}
+
+func (fake *FakeQuerier) ExecDeleteLockCalls(stub func(context.Context, *ent.ExecDeleteLockParams) error) {
+	fake.execDeleteLockMutex.Lock()
+	defer fake.execDeleteLockMutex.Unlock()
+	fake.ExecDeleteLockStub = stub
+}
+
+func (fake *FakeQuerier) ExecDeleteLockArgsForCall(i int) (context.Context, *ent.ExecDeleteLockParams) {
+	fake.execDeleteLockMutex.RLock()
+	defer fake.execDeleteLockMutex.RUnlock()
+	argsForCall := fake.execDeleteLockArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeQuerier) ExecDeleteLockReturns(result1 error) {
+	fake.execDeleteLockMutex.Lock()
+	defer fake.execDeleteLockMutex.Unlock()
+	fake.ExecDeleteLockStub = nil
+	fake.execDeleteLockReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeQuerier) ExecDeleteLockReturnsOnCall(i int, result1 error) {
+	fake.execDeleteLockMutex.Lock()
+	defer fake.execDeleteLockMutex.Unlock()
+	fake.ExecDeleteLockStub = nil
+	if fake.execDeleteLockReturnsOnCall == nil {
+		fake.execDeleteLockReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.execDeleteLockReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
 func (fake *FakeQuerier) ExecDeleteRevision(arg1 context.Context, arg2 *ent.ExecDeleteRevisionParams) error {
 	fake.execDeleteRevisionMutex.Lock()
 	ret, specificReturn := fake.execDeleteRevisionReturnsOnCall[len(fake.execDeleteRevisionArgsForCall)]
@@ -739,6 +1004,68 @@ func (fake *FakeQuerier) ExecInsertJobReturnsOnCall(i int, result1 error) {
 		})
 	}
 	fake.execInsertJobReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeQuerier) ExecInsertLock(arg1 context.Context, arg2 *ent.ExecInsertLockParams) error {
+	fake.execInsertLockMutex.Lock()
+	ret, specificReturn := fake.execInsertLockReturnsOnCall[len(fake.execInsertLockArgsForCall)]
+	fake.execInsertLockArgsForCall = append(fake.execInsertLockArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.ExecInsertLockParams
+	}{arg1, arg2})
+	stub := fake.ExecInsertLockStub
+	fakeReturns := fake.execInsertLockReturns
+	fake.recordInvocation("ExecInsertLock", []interface{}{arg1, arg2})
+	fake.execInsertLockMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeQuerier) ExecInsertLockCallCount() int {
+	fake.execInsertLockMutex.RLock()
+	defer fake.execInsertLockMutex.RUnlock()
+	return len(fake.execInsertLockArgsForCall)
+}
+
+func (fake *FakeQuerier) ExecInsertLockCalls(stub func(context.Context, *ent.ExecInsertLockParams) error) {
+	fake.execInsertLockMutex.Lock()
+	defer fake.execInsertLockMutex.Unlock()
+	fake.ExecInsertLockStub = stub
+}
+
+func (fake *FakeQuerier) ExecInsertLockArgsForCall(i int) (context.Context, *ent.ExecInsertLockParams) {
+	fake.execInsertLockMutex.RLock()
+	defer fake.execInsertLockMutex.RUnlock()
+	argsForCall := fake.execInsertLockArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeQuerier) ExecInsertLockReturns(result1 error) {
+	fake.execInsertLockMutex.Lock()
+	defer fake.execInsertLockMutex.Unlock()
+	fake.ExecInsertLockStub = nil
+	fake.execInsertLockReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeQuerier) ExecInsertLockReturnsOnCall(i int, result1 error) {
+	fake.execInsertLockMutex.Lock()
+	defer fake.execInsertLockMutex.Unlock()
+	fake.ExecInsertLockStub = nil
+	if fake.execInsertLockReturnsOnCall == nil {
+		fake.execInsertLockReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.execInsertLockReturnsOnCall[i] = struct {
 		result1 error
 	}{result1}
 }
@@ -994,6 +1321,71 @@ func (fake *FakeQuerier) GetJobReturnsOnCall(i int, result1 *ent.Job, result2 er
 	}{result1, result2}
 }
 
+func (fake *FakeQuerier) GetLock(arg1 context.Context, arg2 *ent.GetLockParams) (*ent.Lock, error) {
+	fake.getLockMutex.Lock()
+	ret, specificReturn := fake.getLockReturnsOnCall[len(fake.getLockArgsForCall)]
+	fake.getLockArgsForCall = append(fake.getLockArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.GetLockParams
+	}{arg1, arg2})
+	stub := fake.GetLockStub
+	fakeReturns := fake.getLockReturns
+	fake.recordInvocation("GetLock", []interface{}{arg1, arg2})
+	fake.getLockMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeQuerier) GetLockCallCount() int {
+	fake.getLockMutex.RLock()
+	defer fake.getLockMutex.RUnlock()
+	return len(fake.getLockArgsForCall)
+}
+
+func (fake *FakeQuerier) GetLockCalls(stub func(context.Context, *ent.GetLockParams) (*ent.Lock, error)) {
+	fake.getLockMutex.Lock()
+	defer fake.getLockMutex.Unlock()
+	fake.GetLockStub = stub
+}
+
+func (fake *FakeQuerier) GetLockArgsForCall(i int) (context.Context, *ent.GetLockParams) {
+	fake.getLockMutex.RLock()
+	defer fake.getLockMutex.RUnlock()
+	argsForCall := fake.getLockArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeQuerier) GetLockReturns(result1 *ent.Lock, result2 error) {
+	fake.getLockMutex.Lock()
+	defer fake.getLockMutex.Unlock()
+	fake.GetLockStub = nil
+	fake.getLockReturns = struct {
+		result1 *ent.Lock
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeQuerier) GetLockReturnsOnCall(i int, result1 *ent.Lock, result2 error) {
+	fake.getLockMutex.Lock()
+	defer fake.getLockMutex.Unlock()
+	fake.GetLockStub = nil
+	if fake.getLockReturnsOnCall == nil {
+		fake.getLockReturnsOnCall = make(map[int]struct {
+			result1 *ent.Lock
+			result2 error
+		})
+	}
+	fake.getLockReturnsOnCall[i] = struct {
+		result1 *ent.Lock
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeQuerier) GetRevision(arg1 context.Context, arg2 *ent.GetRevisionParams) (*ent.Revision, error) {
 	fake.getRevisionMutex.Lock()
 	ret, specificReturn := fake.getRevisionReturnsOnCall[len(fake.getRevisionArgsForCall)]
@@ -1120,6 +1512,71 @@ func (fake *FakeQuerier) InsertJobReturnsOnCall(i int, result1 *ent.Job, result2
 	}
 	fake.insertJobReturnsOnCall[i] = struct {
 		result1 *ent.Job
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeQuerier) InsertLock(arg1 context.Context, arg2 *ent.InsertLockParams) (*ent.Lock, error) {
+	fake.insertLockMutex.Lock()
+	ret, specificReturn := fake.insertLockReturnsOnCall[len(fake.insertLockArgsForCall)]
+	fake.insertLockArgsForCall = append(fake.insertLockArgsForCall, struct {
+		arg1 context.Context
+		arg2 *ent.InsertLockParams
+	}{arg1, arg2})
+	stub := fake.InsertLockStub
+	fakeReturns := fake.insertLockReturns
+	fake.recordInvocation("InsertLock", []interface{}{arg1, arg2})
+	fake.insertLockMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeQuerier) InsertLockCallCount() int {
+	fake.insertLockMutex.RLock()
+	defer fake.insertLockMutex.RUnlock()
+	return len(fake.insertLockArgsForCall)
+}
+
+func (fake *FakeQuerier) InsertLockCalls(stub func(context.Context, *ent.InsertLockParams) (*ent.Lock, error)) {
+	fake.insertLockMutex.Lock()
+	defer fake.insertLockMutex.Unlock()
+	fake.InsertLockStub = stub
+}
+
+func (fake *FakeQuerier) InsertLockArgsForCall(i int) (context.Context, *ent.InsertLockParams) {
+	fake.insertLockMutex.RLock()
+	defer fake.insertLockMutex.RUnlock()
+	argsForCall := fake.insertLockArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeQuerier) InsertLockReturns(result1 *ent.Lock, result2 error) {
+	fake.insertLockMutex.Lock()
+	defer fake.insertLockMutex.Unlock()
+	fake.InsertLockStub = nil
+	fake.insertLockReturns = struct {
+		result1 *ent.Lock
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeQuerier) InsertLockReturnsOnCall(i int, result1 *ent.Lock, result2 error) {
+	fake.insertLockMutex.Lock()
+	defer fake.insertLockMutex.Unlock()
+	fake.InsertLockStub = nil
+	if fake.insertLockReturnsOnCall == nil {
+		fake.insertLockReturnsOnCall = make(map[int]struct {
+			result1 *ent.Lock
+			result2 error
+		})
+	}
+	fake.insertLockReturnsOnCall[i] = struct {
+		result1 *ent.Lock
 		result2 error
 	}{result1, result2}
 }
