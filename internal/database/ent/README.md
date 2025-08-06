@@ -14,7 +14,7 @@ Package ent provides an extension to the ent package for database operations.
 - [func IsErrorCode\(err error, code string\) bool](<#IsErrorCode>)
 - [func IsErrorNotFound\(err error\) bool](<#IsErrorNotFound>)
 - [func WithURL\(\) string](<#WithURL>)
-- [type ApplyRevisionParams](<#ApplyRevisionParams>)
+- [type ApplyMigrationParams](<#ApplyMigrationParams>)
 - [type Batch](<#Batch>)
 - [type DBTX](<#DBTX>)
 - [type DeleteJobParams](<#DeleteJobParams>)
@@ -87,8 +87,16 @@ Package ent provides an extension to the ent package for database operations.
 - [type Job](<#Job>)
 - [type JobRepository](<#JobRepository>)
   - [func \(x \*JobRepository\) WaitJob\(ctx context.Context, params \*WaitJobParams\) \(\*Job, error\)](<#JobRepository.WaitJob>)
+- [type ListMigrationsParams](<#ListMigrationsParams>)
 - [type ListRevisionsParams](<#ListRevisionsParams>)
 - [type LockRevisionParams](<#LockRevisionParams>)
+- [type Migration](<#Migration>)
+- [type MigrationRepository](<#MigrationRepository>)
+  - [func \(x \*MigrationRepository\) ApplyMigration\(ctx context.Context, params \*ApplyMigrationParams\) error](<#MigrationRepository.ApplyMigration>)
+  - [func \(x \*MigrationRepository\) ListMigrations\(ctx context.Context, \_ \*ListMigrationsParams\) \(collection \[\]\*Migration, \_ error\)](<#MigrationRepository.ListMigrations>)
+  - [func \(x \*MigrationRepository\) LockRevision\(ctx context.Context, params \*LockRevisionParams\) error](<#MigrationRepository.LockRevision>)
+  - [func \(x \*MigrationRepository\) UnlockRevision\(ctx context.Context, params \*UnlockRevisionParams\) error](<#MigrationRepository.UnlockRevision>)
+- [type MigrationState](<#MigrationState>)
 - [type Querier](<#Querier>)
 - [type QuerierAction](<#QuerierAction>)
   - [func NewQueryPipeline\(collection ...QuerierFunc\) QuerierAction](<#NewQueryPipeline>)
@@ -122,11 +130,6 @@ Package ent provides an extension to the ent package for database operations.
 - [type Revision](<#Revision>)
   - [func \(x \*Revision\) GetName\(\) string](<#Revision.GetName>)
   - [func \(x \*Revision\) SetName\(name string\)](<#Revision.SetName>)
-- [type RevisionRepository](<#RevisionRepository>)
-  - [func \(x \*RevisionRepository\) ApplyRevision\(ctx context.Context, params \*ApplyRevisionParams\) error](<#RevisionRepository.ApplyRevision>)
-  - [func \(x \*RevisionRepository\) ListRevisions\(ctx context.Context, \_ \*ListRevisionsParams\) \(collection \[\]\*Revision, \_ error\)](<#RevisionRepository.ListRevisions>)
-  - [func \(x \*RevisionRepository\) LockRevision\(ctx context.Context, params \*LockRevisionParams\) error](<#RevisionRepository.LockRevision>)
-  - [func \(x \*RevisionRepository\) UnlockRevision\(ctx context.Context, params \*UnlockRevisionParams\) error](<#RevisionRepository.UnlockRevision>)
 - [type UnlockRevisionParams](<#UnlockRevisionParams>)
 - [type UpdateRevisionParams](<#UpdateRevisionParams>)
   - [func \(x \*UpdateRevisionParams\) SetRevision\(entity \*Revision\)](<#UpdateRevisionParams.SetRevision>)
@@ -196,15 +199,15 @@ func WithURL() string
 
 WithURL returns the database URL.
 
-<a name="ApplyRevisionParams"></a>
-## type [ApplyRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L91-L94>)
+<a name="ApplyMigrationParams"></a>
+## type [ApplyMigrationParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/migration.sql_ext.go#L94-L97>)
 
-ApplyRevisionParams represents the parameters for executing a revision.
+ApplyMigrationParams represents the parameters for executing a revision.
 
 ```go
-type ApplyRevisionParams struct {
-    // Revision contains the parameters for executing a revision.
-    Revision *Revision
+type ApplyMigrationParams struct {
+    // Migration contains the parameters for executing a migration.
+    Migration *Migration
 }
 ```
 
@@ -668,7 +671,7 @@ func (c *ExecUpsertRevisionParamsConverterImpl) SetFromRevision(target *ExecUpse
 
 
 <a name="FileSystem"></a>
-## type [FileSystem](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L28-L32>)
+## type [FileSystem](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/migration.sql_ext.go#L31-L35>)
 
 FileSystem represents a filesystem that supports globbing and reading files.
 
@@ -981,6 +984,15 @@ func (x *JobRepository) WaitJob(ctx context.Context, params *WaitJobParams) (*Jo
 
 WaitJob waits for a job to complete and returns the job details.
 
+<a name="ListMigrationsParams"></a>
+## type [ListMigrationsParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/migration.sql_ext.go#L190>)
+
+ListMigrationsParams represents the parameters for listing migrations.
+
+```go
+type ListMigrationsParams struct{}
+```
+
 <a name="ListRevisionsParams"></a>
 ## type [ListRevisionsParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_gen.go#L366-L369>)
 
@@ -994,7 +1006,7 @@ type ListRevisionsParams struct {
 ```
 
 <a name="LockRevisionParams"></a>
-## type [LockRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L43-L48>)
+## type [LockRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/migration.sql_ext.go#L46-L51>)
 
 LockRevisionParams represents the parameters for locking a revision.
 
@@ -1004,6 +1016,82 @@ type LockRevisionParams struct {
     Revision *Revision
     // Timeout is the maximum time to wait for the lock.
     Timeout time.Duration
+}
+```
+
+<a name="Migration"></a>
+## type [Migration](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_ext.go#L8-L11>)
+
+Migration represents a database migration with its details.
+
+```go
+type Migration struct {
+    Revision   *Revision
+    Statements []string
+}
+```
+
+<a name="MigrationRepository"></a>
+## type [MigrationRepository](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/migration.sql_ext.go#L38-L43>)
+
+MigrationRepository represents a repository for managing revisions.
+
+```go
+type MigrationRepository struct {
+    // Gateway represents the database gateway.
+    Gateway Gateway
+    // FileSystem is the filesystem where the revision files are located.
+    FileSystem fs.FS
+}
+```
+
+<a name="MigrationRepository.ApplyMigration"></a>
+### func \(\*MigrationRepository\) [ApplyMigration](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/migration.sql_ext.go#L100>)
+
+```go
+func (x *MigrationRepository) ApplyMigration(ctx context.Context, params *ApplyMigrationParams) error
+```
+
+ApplyMigration executes a revision.
+
+<a name="MigrationRepository.ListMigrations"></a>
+### func \(\*MigrationRepository\) [ListMigrations](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/migration.sql_ext.go#L193>)
+
+```go
+func (x *MigrationRepository) ListMigrations(ctx context.Context, _ *ListMigrationsParams) (collection []*Migration, _ error)
+```
+
+ListMigrations lists all revisions in the repository.
+
+<a name="MigrationRepository.LockRevision"></a>
+### func \(\*MigrationRepository\) [LockRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/migration.sql_ext.go#L54>)
+
+```go
+func (x *MigrationRepository) LockRevision(ctx context.Context, params *LockRevisionParams) error
+```
+
+LockRevision locks the revision for exclusive access.
+
+<a name="MigrationRepository.UnlockRevision"></a>
+### func \(\*MigrationRepository\) [UnlockRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/migration.sql_ext.go#L87>)
+
+```go
+func (x *MigrationRepository) UnlockRevision(ctx context.Context, params *UnlockRevisionParams) error
+```
+
+UnlockRevision unlocks the revision after exclusive access.
+
+<a name="MigrationState"></a>
+## type [MigrationState](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_ext.go#L14-L19>)
+
+MigrationState represents the state of a migration operation.
+
+```go
+type MigrationState struct {
+    Next     *Revision
+    Current  *Revision
+    Pending  []*Revision
+    Executed []*Revision
 }
 ```
 
@@ -1339,7 +1427,7 @@ type Revision struct {
 ```
 
 <a name="Revision.GetName"></a>
-### func \(\*Revision\) [GetName](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_ext.go#L8>)
+### func \(\*Revision\) [GetName](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_ext.go#L22>)
 
 ```go
 func (x *Revision) GetName() string
@@ -1348,7 +1436,7 @@ func (x *Revision) GetName() string
 GetName returns the name of the revision file based on its ID and description.
 
 <a name="Revision.SetName"></a>
-### func \(\*Revision\) [SetName](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_ext.go#L13>)
+### func \(\*Revision\) [SetName](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/models_ext.go#L27>)
 
 ```go
 func (x *Revision) SetName(name string)
@@ -1356,58 +1444,8 @@ func (x *Revision) SetName(name string)
 
 SetName sets the name of the revision file.
 
-<a name="RevisionRepository"></a>
-## type [RevisionRepository](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L35-L40>)
-
-RevisionRepository represents a repository for managing revisions.
-
-```go
-type RevisionRepository struct {
-    // Gateway represents the database gateway.
-    Gateway Gateway
-    // FileSystem is the filesystem where the revision files are located.
-    FileSystem fs.FS
-}
-```
-
-<a name="RevisionRepository.ApplyRevision"></a>
-### func \(\*RevisionRepository\) [ApplyRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L97>)
-
-```go
-func (x *RevisionRepository) ApplyRevision(ctx context.Context, params *ApplyRevisionParams) error
-```
-
-ApplyRevision executes a revision.
-
-<a name="RevisionRepository.ListRevisions"></a>
-### func \(\*RevisionRepository\) [ListRevisions](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L205>)
-
-```go
-func (x *RevisionRepository) ListRevisions(ctx context.Context, _ *ListRevisionsParams) (collection []*Revision, _ error)
-```
-
-ListRevisions lists all revisions in the repository.
-
-<a name="RevisionRepository.LockRevision"></a>
-### func \(\*RevisionRepository\) [LockRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L51>)
-
-```go
-func (x *RevisionRepository) LockRevision(ctx context.Context, params *LockRevisionParams) error
-```
-
-LockRevision locks the revision for exclusive access.
-
-<a name="RevisionRepository.UnlockRevision"></a>
-### func \(\*RevisionRepository\) [UnlockRevision](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L84>)
-
-```go
-func (x *RevisionRepository) UnlockRevision(ctx context.Context, params *UnlockRevisionParams) error
-```
-
-UnlockRevision unlocks the revision after exclusive access.
-
 <a name="UnlockRevisionParams"></a>
-## type [UnlockRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/revision.sql_ext.go#L78-L81>)
+## type [UnlockRevisionParams](<https://github.com/aws-contrib/aurora/blob/main/internal/database/ent/migration.sql_ext.go#L81-L84>)
 
 UnlockRevisionParams represents the parameters for unlocking a revision.
 

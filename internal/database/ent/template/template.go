@@ -20,12 +20,12 @@ var FunMap = template.FuncMap{
 	},
 }
 
-//go:embed *.txt
+//go:embed *.tpl
 var fs embed.FS
 
 // Execute executes a template with the given name and data, writing the output to the provided writer.
 func Execute(w io.Writer, name string, data any) error {
-	name = fmt.Sprintf("template_%s.txt", name)
+	name = fmt.Sprintf("template_%s.tpl", name)
 
 	tmpl, err := template.New(name).Funcs(FunMap).ParseFS(fs, name)
 	if err != nil {

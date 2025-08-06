@@ -110,12 +110,10 @@ func (x *MigrationRepository) ApplyMigration(ctx context.Context, params *ApplyM
 		return err
 	}
 
-	params.Migration.Revision = revision
-
 	start := time.Now()
 	// Apply the statements one by one
 	for index, query := range params.Migration.Statements {
-		if index+1 <= params.Migration.Revision.Count {
+		if index+1 <= revision.Count {
 			continue
 		}
 
@@ -132,11 +130,12 @@ func (x *MigrationRepository) ApplyMigration(ctx context.Context, params *ApplyM
 
 			switch {
 			case err == pgx.ErrNoRows:
-				// We are good to go because the operation does not return job id
+				revision.Count = index + 1
 			case err != nil:
 				msg := err.Error()
 				// set the revision error
-				params.Migration.Revision.Error = &msg
+				revision.Error = &msg
+				revision.ErrorStmt = &query
 			default:
 				args := &WaitJobParams{}
 				args.JobID = jid
@@ -144,25 +143,29 @@ func (x *MigrationRepository) ApplyMigration(ctx context.Context, params *ApplyM
 				job, err := repository.WaitJob(ctx, args)
 				switch {
 				case err == pgx.ErrNoRows:
+					revision.Count = index + 1
 				case err != nil:
 					msg := err.Error()
 					// set the revision error
-					params.Migration.Revision.Error = &msg
+					revision.Error = &msg
+					revision.ErrorStmt = &query
 				case job.Status == "failed":
 					// set the revision error
-					params.Migration.Revision.Error = job.Details
+					revision.Error = job.Details
+					revision.ErrorStmt = &query
+				default:
+					revision.Count = index + 1
 				}
 			}
+		} else {
+			revision.Count = index + 1
 		}
 
-		params.Migration.Revision.Count = index + 1
-		params.Migration.Revision.ErrorStmt = &query
-		params.Migration.Revision.ExecutedAt = time.Now().UTC()
-		params.Migration.Revision.ExecutionTime = time.Since(start)
+		revision.ExecutedAt = time.Now().UTC()
+		revision.ExecutionTime = time.Since(start)
 
 		args := &ExecUpdateRevisionParams{}
-		args.SetRevision(params.Migration.Revision)
-
+		args.SetRevision(revision)
 		// prepare the mask
 		args.UpdateMask = append(args.UpdateMask, "executed_at")
 		args.UpdateMask = append(args.UpdateMask, "execution_time")
@@ -178,6 +181,9 @@ func (x *MigrationRepository) ApplyMigration(ctx context.Context, params *ApplyM
 			return err
 		}
 
+		// Update the migration parameters
+		params.Migration.Revision = revision
+		// Stop processing if there is an error
 		if args.Error != nil {
 			return nil
 		}
@@ -208,9 +214,6 @@ func (x *MigrationRepository) ListMigrations(ctx context.Context, _ *ListMigrati
 		migration.Revision = &Revision{}
 		migration.Revision.SetName(path)
 		migration.Revision.Total = len(migration.Statements)
-
-		// append the revision
-		collection = append(collection, migration)
 
 		params := &GetRevisionParams{}
 		params.SetRevision(migration.Revision)

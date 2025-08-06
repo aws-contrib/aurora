@@ -1,6 +1,6 @@
 Migration Status: {{ if .Current }}{{- if eq .Current.Count .Current.Total }}{{ green "OK" }}{{- else }}{{ yellow "PENDING" }}{{- end }}{{- else }}{{ yellow "PENDING" }}{{- end }}
   {{ yellow "--" }} Current Version: {{ if .Current }}{{ cyan .Current.ID }}{{- if lt .Current.Count .Current.Total }}{{ printf " (%s statements applied)" (yellow "%d" .Current.Count) }}{{- end }}{{- else }}{{ cyan "No migration applied yet" }}{{- end }}
-  {{ yellow "--" }} Next Version:    {{ if .Next }}{{ cyan .Next.ID }}{{- if lt .Next.Count .Next.Total }}{{ printf " (%s statements left)" (yellow "%d" (sub .Next.Total .Next.Count)) }}{{- end }}{{- else }}UNKNOWN{{- end }}
+  {{ yellow "--" }} Next Version:    {{ if .Next }}{{ cyan .Next.ID }}{{- if lt .Next.Count .Next.Total }}{{ printf " (%s statements left)" (yellow "%d" (sub .Next.Total .Next.Count)) }}{{- end }}{{- else }}NONE{{- end }}
   {{ yellow "--" }} Executed Files:  {{ len .Executed }}{{ if and .Current (lt .Current.Count .Current.Total) }} (last one partially){{ end }}
   {{ yellow "--" }} Pending Files:   {{ len .Pending }}
 

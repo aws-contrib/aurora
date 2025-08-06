@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS aurora_schema_revisions (
     -- error_stmt is the statement that caused the error
     error_stmt TEXT NULL,
     -- execution timestamp column
-    executed_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    executed_at TIMESTAMP WITH TIME ZONE NOT NULL,
     -- execution time column
     execution_time BIGINT NOT NULL DEFAULT 0
 )

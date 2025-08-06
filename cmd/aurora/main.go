@@ -110,41 +110,56 @@ func main() {
 								Timeout:  1 * time.Minute,
 							}
 							// lock the execution
-							if err := repository.LockRevision(ctx, lock); err != nil {
-								return err
+							if xerr := repository.LockRevision(ctx, lock); xerr != nil {
+								return xerr
 							}
+							unlock := &ent.UnlockRevisionParams{
+								Revision: ent.Mutex,
+							}
+							// unlock the execution
+							defer repository.UnlockRevision(ctx, unlock)
 
 							migrations, err := repository.ListMigrations(ctx, &ent.ListMigrationsParams{})
 							if err != nil {
 								return err
 							}
 
+							state := &ent.MigrationState{}
+							// prepare the status
 							for _, migration := range migrations {
-								params := &ent.ApplyMigrationParams{
-									Migration: migration,
+								if state.Next == nil {
+									state.Next = migration.Revision
 								}
 
-								if err := repository.ApplyMigration(ctx, params); err != nil {
-									return err
+								if err == nil {
+									if state.Current == nil || state.Current.Error == nil {
+										params := &ent.ApplyMigrationParams{}
+										params.Migration = migration
+										// apply the migration
+										err = repository.ApplyMigration(ctx, params)
+										// update the migration state
+										migration = params.Migration
+									}
 								}
 
-								// if params.Revision.Error != nil {
-								// 	fmt.Println("Migrating", params.Revision.ID, "failed")
-								// 	fmt.Println("Error:", *params.Revision.Error)
-								// 	fmt.Println("SQL:", *params.Revision.ErrorStmt)
-								// 	break
-								// }
+								if migration.Revision.ExecutedAt.IsZero() {
+									state.Pending = append(state.Pending, migration.Revision)
+								} else {
+									state.Executed = append(state.Executed, migration.Revision)
+									state.Current = migration.Revision
+									state.Next = nil
+								}
 							}
 
-							unlock := &ent.UnlockRevisionParams{
-								Revision: ent.Mutex,
-							}
-							// unlock the execution
-							if err := repository.UnlockRevision(ctx, unlock); err != nil {
-								return err
-							}
+							// print the status
+							template.Execute(os.Stdout, "status", state)
 
-							return nil
+							if state.Current != nil && state.Current.Error != nil {
+								// return the error
+								return cli.Exit("", 1)
+							}
+							// done!
+							return err
 						},
 					},
 					{
@@ -176,8 +191,10 @@ func main() {
 									state.Next = nil
 								}
 							}
-
-							return template.Execute(os.Stdout, "status", state)
+							// print the status
+							template.Execute(os.Stdout, "status", state)
+							// done!
+							return nil
 						},
 					},
 				},
