@@ -9,6 +9,7 @@ import (
 
 	"github.com/aws-contrib/aurora/cmd"
 	"github.com/aws-contrib/aurora/internal/database/ent"
+	"github.com/aws-contrib/aurora/internal/database/ent/template"
 	"github.com/urfave/cli/v3"
 )
 
@@ -99,7 +100,7 @@ func main() {
 						Name:  "apply",
 						Usage: "Applies pending migration files on the connected database.",
 						Action: func(ctx context.Context, command *cli.Command) error {
-							repository := &ent.RevisionRepository{
+							repository := &ent.MigrationRepository{
 								Gateway:    command.Root().Metadata["gateway"].(ent.Gateway),
 								FileSystem: os.DirFS(command.Root().Metadata["directory"].(string)),
 							}
@@ -113,27 +114,26 @@ func main() {
 								return err
 							}
 
-							revisions, err := repository.ListRevisions(ctx, &ent.ListRevisionsParams{})
+							migrations, err := repository.ListMigrations(ctx, &ent.ListMigrationsParams{})
 							if err != nil {
 								return err
 							}
 
-							for _, revision := range revisions {
-								params := &ent.ApplyRevisionParams{
-									Revision: revision,
+							for _, migration := range migrations {
+								params := &ent.ApplyMigrationParams{
+									Migration: migration,
 								}
 
-								fmt.Println("Migrating", params.Revision.ID)
-								if err := repository.ApplyRevision(ctx, params); err != nil {
+								if err := repository.ApplyMigration(ctx, params); err != nil {
 									return err
 								}
 
-								if params.Revision.Error != nil {
-									fmt.Println("Migrating", params.Revision.ID, "failed")
-									fmt.Println("Error:", *params.Revision.Error)
-									fmt.Println("SQL:", *params.Revision.ErrorStmt)
-									break
-								}
+								// if params.Revision.Error != nil {
+								// 	fmt.Println("Migrating", params.Revision.ID, "failed")
+								// 	fmt.Println("Error:", *params.Revision.Error)
+								// 	fmt.Println("SQL:", *params.Revision.ErrorStmt)
+								// 	break
+								// }
 							}
 
 							unlock := &ent.UnlockRevisionParams{
@@ -151,21 +151,33 @@ func main() {
 						Name:  "status",
 						Usage: "Get information about the current migration status.",
 						Action: func(ctx context.Context, command *cli.Command) error {
-							repository := &ent.RevisionRepository{
+							repository := &ent.MigrationRepository{
 								Gateway:    command.Root().Metadata["gateway"].(ent.Gateway),
 								FileSystem: os.DirFS(command.Root().Metadata["directory"].(string)),
 							}
 
-							revisions, err := repository.ListRevisions(ctx, &ent.ListRevisionsParams{})
+							migrations, err := repository.ListMigrations(ctx, &ent.ListMigrationsParams{})
 							if err != nil {
 								return err
 							}
 
-							for _, revision := range revisions {
-								fmt.Println("Current migration status:", revision.GetName())
+							state := &ent.MigrationState{}
+							// prepare the status
+							for _, migration := range migrations {
+								if state.Next == nil {
+									state.Next = migration.Revision
+								}
+
+								if migration.Revision.ExecutedAt.IsZero() {
+									state.Pending = append(state.Pending, migration.Revision)
+								} else {
+									state.Executed = append(state.Executed, migration.Revision)
+									state.Current = migration.Revision
+									state.Next = nil
+								}
 							}
 
-							return nil
+							return template.Execute(os.Stdout, "status", state)
 						},
 					},
 				},

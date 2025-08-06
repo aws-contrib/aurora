@@ -10,6 +10,14 @@ type Migration struct {
 	Statements []string
 }
 
+// MigrationState represents the state of a migration operation.
+type MigrationState struct {
+	Next     *Revision
+	Current  *Revision
+	Pending  []*Revision
+	Executed []*Revision
+}
+
 // GetName returns the name of the revision file based on its ID and description.
 func (x *Revision) GetName() string {
 	return x.ID + "_" + x.Description + ".sql"

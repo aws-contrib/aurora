@@ -196,8 +196,6 @@ func (x *MigrationRepository) ListMigrations(ctx context.Context, _ *ListMigrati
 		return nil, err
 	}
 
-	fmt.Printf("Found %d migration files\n", len(matches))
-
 	for _, path := range sort.StringSlice(matches) {
 		// read the revision content
 		data, err := fs.ReadFile(x.FileSystem, path)
