@@ -17,6 +17,7 @@ import (
 
 var (
 	commentRegexp      = regexp.MustCompile(`(?m)^\s*--.*$`)
+	indexRegexp        = regexp.MustCompile(`(?i)INDEX`)
 	concurrentlyRegexp = regexp.MustCompile(`(?i)CONCURRENTLY`)
 )
 
@@ -107,7 +108,8 @@ func (x *MigrationRepository) ApplyMigration(ctx context.Context, params *ApplyM
 		}
 
 		query = commentRegexp.ReplaceAllString(query, "")
-		query = concurrentlyRegexp.ReplaceAllString(query, "ASYNC")
+		query = concurrentlyRegexp.ReplaceAllString(query, "")
+		query = indexRegexp.ReplaceAllString(query, "INDEX ASYNC")
 		query = strings.TrimSpace(query)
 
 		if len(query) > 0 {
