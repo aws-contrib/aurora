@@ -25,6 +25,9 @@ This command-line tool was built because [Atlas](https://atlasgo.io/) currently 
   - Use `IF NOT EXISTS` for `CREATE` statements.
   - Use `IF EXISTS` for `DROP` statements.
   - Avoid operations that cannot be safely re-run.
+- **All SQL statements in migration files must end with `;`** because:
+  - The `aurora` CLI splits migration files by `;`.
+  - Aurora DSQL does **not** support executing multiple DDL or DML statements in a single query, so each statement must be executed individually.
 
 #### Example: Idempotent migration
 
