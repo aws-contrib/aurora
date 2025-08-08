@@ -35,67 +35,6 @@ func main() {
 						Required: true,
 					},
 				},
-				Before: func(ctx context.Context, command *cli.Command) (context.Context, error) {
-					path, err := cmd.GetPath(command.String("config"))
-					if err != nil {
-						return nil, err
-					}
-
-					data, err := os.ReadFile(path)
-					if err != nil {
-						return nil, err
-					}
-
-					config := &cmd.Config{}
-					if err := config.UnmarshalText(data); err != nil {
-						return nil, err
-					}
-
-					if name := command.String("env"); name != "" {
-						command.Root().Metadata = make(map[string]any)
-
-						if config := config.GetEnvironment(name); config != nil {
-							conn, err := config.GetURL()
-							if err != nil {
-								return nil, err
-							}
-
-							directory, err := config.Migration.GetDir()
-							if err != nil {
-								return nil, err
-							}
-
-							directory, err = cmd.GetPath(directory)
-							if err != nil {
-								return nil, err
-							}
-
-							gateway, err := ent.Open(ctx, conn)
-							if err != nil {
-								return nil, err
-							}
-
-							if err := gateway.CreateTableLocks(ctx); err != nil {
-								return nil, err
-							}
-
-							if err := gateway.CreateTableRevisions(ctx); err != nil {
-								return nil, err
-							}
-
-							repository := &ent.MigrationRepository{
-								Gateway:    gateway,
-								FileSystem: os.DirFS(directory),
-							}
-
-							command.Root().Metadata["repository"] = repository
-						} else {
-							return nil, fmt.Errorf("environment %s not found in config", name)
-						}
-					}
-
-					return ctx, nil
-				},
 				Commands: []*cli.Command{
 					{
 						Name:  "apply",
@@ -108,7 +47,10 @@ func main() {
 							},
 						},
 						Action: func(ctx context.Context, command *cli.Command) error {
-							repository := command.Root().Metadata["repository"].(*ent.MigrationRepository)
+							repository, err := NewRepository(ctx, command)
+							if err != nil {
+								return err
+							}
 
 							args := &ent.LockMigrationParams{}
 							args.Timeout = command.Duration("lock-timeout")
@@ -166,7 +108,10 @@ func main() {
 						Name:  "status",
 						Usage: "Get information about the current migration status.",
 						Action: func(ctx context.Context, command *cli.Command) error {
-							repository := command.Root().Metadata["repository"].(*ent.MigrationRepository)
+							repository, err := NewRepository(ctx, command)
+							if err != nil {
+								return err
+							}
 
 							migrations, err := repository.ListMigrations(ctx, &ent.ListMigrationsParams{})
 							if err != nil {
@@ -206,4 +151,62 @@ func main() {
 	if err := cmd.Run(context.Background(), os.Args); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func NewRepository(ctx context.Context, command *cli.Command) (*ent.MigrationRepository, error) {
+	path, err := cmd.GetPath(command.String("config"))
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+
+	config := &cmd.Config{}
+	if err := config.UnmarshalText(data); err != nil {
+		return nil, err
+	}
+
+	name := command.String("env")
+	// Get the environment configuration
+	if config := config.GetEnvironment(name); config != nil {
+		conn, err := config.GetURL()
+		if err != nil {
+			return nil, err
+		}
+
+		directory, err := config.Migration.GetDir()
+		if err != nil {
+			return nil, err
+		}
+
+		directory, err = cmd.GetPath(directory)
+		if err != nil {
+			return nil, err
+		}
+
+		gateway, err := ent.Open(ctx, conn)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := gateway.CreateTableLocks(ctx); err != nil {
+			return nil, err
+		}
+
+		if err := gateway.CreateTableRevisions(ctx); err != nil {
+			return nil, err
+		}
+
+		repository := &ent.MigrationRepository{
+			Gateway:    gateway,
+			FileSystem: os.DirFS(directory),
+		}
+
+		return repository, nil
+	}
+
+	return nil, fmt.Errorf("environment %s not found in config", name)
 }
