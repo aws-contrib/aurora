@@ -98,7 +98,7 @@ func main() {
 
 							if state.Current != nil && state.Current.Error != nil {
 								// return the error
-								return cli.Exit("", 1)
+								return cli.Exit("There are errors in the migration", 1)
 							}
 							// done!
 							return err
@@ -107,36 +107,69 @@ func main() {
 					{
 						Name:  "status",
 						Usage: "Get information about the current migration status.",
+						Flags: []cli.Flag{
+							&cli.BoolFlag{
+								Name:  "wait",
+								Usage: "wait for the database pending migrations to be applied",
+								Value: false,
+							},
+							&cli.DurationFlag{
+								Name:  "wait-timeout",
+								Usage: "set how long to wait for the database pending migrations",
+								Value: 25 * time.Minute,
+							},
+						},
 						Action: func(ctx context.Context, command *cli.Command) error {
 							repository, err := NewRepository(ctx, command)
 							if err != nil {
 								return err
 							}
 
-							migrations, err := repository.ListMigrations(ctx, &ent.ListMigrationsParams{})
-							if err != nil {
-								return err
-							}
-
+							start := time.Now()
 							state := &ent.MigrationState{}
-							// prepare the status
-							for _, migration := range migrations {
-								if state.Next == nil {
-									state.Next = migration.Revision
+
+							for {
+								migrations, merr := repository.ListMigrations(ctx, &ent.ListMigrationsParams{})
+								if merr != nil {
+									return merr
 								}
 
-								if migration.Revision.ExecutedAt.IsZero() {
-									state.Pending = append(state.Pending, migration.Revision)
-								} else {
-									state.Executed = append(state.Executed, migration.Revision)
-									state.Current = migration.Revision
-									state.Next = nil
+								state = &ent.MigrationState{}
+								// prepare the status
+								for _, migration := range migrations {
+									if state.Next == nil {
+										state.Next = migration.Revision
+									}
+
+									if migration.Revision.ExecutedAt.IsZero() {
+										state.Pending = append(state.Pending, migration.Revision)
+										// We should exit if there are pending migrations
+										err = cli.Exit("There are pending migrations", 1)
+									} else {
+										state.Executed = append(state.Executed, migration.Revision)
+										state.Current = migration.Revision
+										state.Next = nil
+									}
 								}
+
+								if state.Next != nil {
+									// Wait for the migrations to be applied
+									if command.Bool("wait") {
+										if time.Since(start) < command.Duration("wait-timeout") {
+											// Give some time for the migrations to be applied
+											time.Sleep(250 * time.Millisecond)
+											continue
+										}
+									}
+								}
+								// we should stop re-trying
+								break
 							}
+
 							// print the status
 							template.Execute(os.Stdout, "status", state)
 							// done!
-							return nil
+							return err
 						},
 					},
 				},
