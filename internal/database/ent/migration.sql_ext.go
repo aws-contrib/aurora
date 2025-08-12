@@ -16,9 +16,8 @@ import (
 )
 
 var (
-	commentRegexp      = regexp.MustCompile(`(?m)^\s*--.*$`)
-	indexRegexp        = regexp.MustCompile(`(?i)INDEX`)
-	concurrentlyRegexp = regexp.MustCompile(`(?i)CONCURRENTLY`)
+	commentRegexp     = regexp.MustCompile(`(?m)^\s*--.*$`)
+	createIndexRegexp = regexp.MustCompile(`(?i)CREATE\s+(UNIQUE\s+)?INDEX(\s+(?:CONCURRENTLY|ASYNC))?`)
 )
 
 //counterfeiter:generate -o ./fake . FileSystem
@@ -108,8 +107,7 @@ func (x *MigrationRepository) ApplyMigration(ctx context.Context, params *ApplyM
 		}
 
 		query = commentRegexp.ReplaceAllString(query, "")
-		query = concurrentlyRegexp.ReplaceAllString(query, "")
-		query = indexRegexp.ReplaceAllString(query, "INDEX ASYNC")
+		query = createIndexRegexp.ReplaceAllString(query, "CREATE ${1}INDEX ASYNC")
 		query = strings.TrimSpace(query)
 
 		if len(query) > 0 {
