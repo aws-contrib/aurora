@@ -24,7 +24,7 @@ require (
 	github.com/onsi/ginkgo/v2 v2.24.0
 	github.com/onsi/gomega v1.38.0
 	github.com/urfave/cli/v3 v3.4.1
-	github.com/zclconf/go-cty v1.16.3
+	github.com/zclconf/go-cty v1.16.4
 )
 
 require (
