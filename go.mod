@@ -12,9 +12,9 @@ tool (
 )
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.39.2
+	github.com/aws/aws-sdk-go-v2 v1.39.3
 	github.com/aws/aws-sdk-go-v2/config v1.31.12
-	github.com/aws/aws-sdk-go-v2/feature/dsql/auth v1.1.9
+	github.com/aws/aws-sdk-go-v2/feature/dsql/auth v1.1.10
 	github.com/fatih/color v1.18.0
 	github.com/golang-cz/devslog v0.0.15
 	github.com/google/uuid v1.6.0
@@ -72,7 +72,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sso v1.29.6 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.35.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.38.6 // indirect
-	github.com/aws/smithy-go v1.23.0 // indirect
+	github.com/aws/smithy-go v1.23.1 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.8.1 // indirect
 	github.com/bradleyfalzon/ghinstallation/v2 v2.15.0 // indirect
 	github.com/buildkite/interpolate v0.1.5 // indirect
