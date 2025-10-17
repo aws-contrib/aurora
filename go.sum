@@ -1277,8 +1277,8 @@ github.com/aws/aws-sdk-go-v2/config v1.31.12 h1:pYM1Qgy0dKZLHX2cXslNacbcEFMkDMl+
 github.com/aws/aws-sdk-go-v2/config v1.31.12/go.mod h1:/MM0dyD7KSDPR+39p9ZNVKaHDLb9qnfDurvVS2KAhN8=
 github.com/aws/aws-sdk-go-v2/credentials v1.18.16 h1:4JHirI4zp958zC026Sm+V4pSDwW4pwLefKrc0bF2lwI=
 github.com/aws/aws-sdk-go-v2/credentials v1.18.16/go.mod h1:qQMtGx9OSw7ty1yLclzLxXCRbrkjWAM7JnObZjmCB7I=
-github.com/aws/aws-sdk-go-v2/feature/dsql/auth v1.1.9 h1:DJlOPMBMvoeu1NXHEJxrQWENPGcWLkmoUC0S4Lo2w+s=
-github.com/aws/aws-sdk-go-v2/feature/dsql/auth v1.1.9/go.mod h1:exw8WAHhaSWpTa5lT7snyY7oGVdUtEA/IfeOeiokO+E=
+github.com/aws/aws-sdk-go-v2/feature/dsql/auth v1.1.10 h1:eP1C/1w30htQ/TUrek3GPR5rucSkskb1dzzKqqLKnXE=
+github.com/aws/aws-sdk-go-v2/feature/dsql/auth v1.1.10/go.mod h1:RtXrA2WbRzFhZJqI/VEycbJ+pUI5kRgvg3zW3W+ri44=
 github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.18.9 h1:Mv4Bc0mWmv6oDuSWTKnk+wgeqPL5DRFu5bQL9BGPQ8Y=
 github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.18.9/go.mod h1:IKlKfRppK2a1y0gy1yH6zD+yX5uplJ6UuPlgd48dJiQ=
 github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.17.79 h1:mGo6WGWry+s5GEf2GLfw3zkHad109FQmtvBV3VYQ8mA=
