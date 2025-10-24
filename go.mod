@@ -12,7 +12,7 @@ tool (
 )
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.39.3
+	github.com/aws/aws-sdk-go-v2 v1.39.4
 	github.com/aws/aws-sdk-go-v2/config v1.31.14
 	github.com/aws/aws-sdk-go-v2/feature/dsql/auth v1.1.10
 	github.com/fatih/color v1.18.0
