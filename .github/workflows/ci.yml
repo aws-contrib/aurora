@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Setup Devcontainer
         uses: devcontainer-env/devcontainer-ci@v1
       - name: Install Nix
@@ -52,7 +52,7 @@ jobs:
       BIN_PATH: aurora-${{ matrix.nix_system }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v22
       - name: Setup Nix Cache
@@ -85,7 +85,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Create Release PR
@@ -104,7 +104,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Login to GHCR
         uses: docker/login-action@v4
         with:
